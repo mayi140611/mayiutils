@@ -4,7 +4,7 @@
 from mayiutils.pickle_wrapper import pickle_wrapper
 from mayiutils.crawl import requests_wrapper as rw
 from mayiutils.crawl import pyquery_wrapper as pw
-from mayiutils.pymongo_wrapper import PyMongoWrapper
+from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 
 def parseList(url, selectors, saveTo='mongodb', dbname=None, tablename=None, filepath=None,
               nextTag='下一页', pretag=''):

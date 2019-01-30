@@ -7,7 +7,7 @@
 @file: pymongotest.py
 @time: 2019/1/21 16:11
 """
-from mayiutils.pymongo_wrapper import PyMongoWrapper
+from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 import pandas as pd
 
 if __name__ == '__main__':

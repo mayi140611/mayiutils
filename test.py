@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from mayiutils.pypinyin_wrapper import PyPinyinWrapper
-from mayiutils.pymongo_wrapper import PyMongoWrapper
+from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 
 if __name__ == "__main__":
     ppw = PyPinyinWrapper()
