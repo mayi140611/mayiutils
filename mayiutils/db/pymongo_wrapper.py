@@ -75,7 +75,15 @@ class PyMongoWrapper(object):
         :fielddict: 如{'f1':'v1','f2':'v2'}
         '''
         return collection.update_many(conditions,{ "$set": fielddict})
-    
+    def deleteDoc(self, collection, conditions):
+        '''
+        删除符合条件的一个文档
+        :param collection:
+        :param conditions: 过滤条件
+            {'_id': i['_id']}
+        :return:
+        '''
+        return collection.delete_one(conditions)
     def removeDocFields(self, collection, conditions,fieldslist):
         '''
         更新表中符合条件的一条记录。注意：如果field存在，则更新值，如果不存在，则新增；但是不能删除field

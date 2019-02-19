@@ -11,8 +11,9 @@ pip install pymysql
 """
 import pymysql
 
+
 class PyMysqlWrapper:
-    def __init__(self, user='root',passwd='!Aa123456',db='daozhen',host='127.0.0.1',use_unicode=True,charset='utf8'):
+    def __init__(self, user='root', passwd='!Aa123456', db='daozhen', host='127.0.0.1', use_unicode=True, charset='utf8'):
         """
         创建连接、创建游标
         :param user:
@@ -23,10 +24,18 @@ class PyMysqlWrapper:
         :param charset:
         :return:
         """
-        self._conn = pymysql.connect(user, passwd, db, host, use_unicode, charset)
+        self._conn = pymysql.connect(user=user, passwd=passwd, db=db, host=host, use_unicode=use_unicode, charset=charset)
         self._cursor = self._conn.cursor()
 
     def execute(self, query, args=None):
+        """
+        Execute a query 并且提交,返回查询结果条数
+        :return:
+        """
+        n = self._cursor.execute(query, args)
+        return n
+
+    def executeAndCommit(self, query, args=None):
         """
         Execute a query 并且提交,返回查询结果条数
         :return:

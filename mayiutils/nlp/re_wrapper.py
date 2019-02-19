@@ -25,7 +25,19 @@ class ReWrapper(object):
         return nltk.re_show(regexp, string, left, right)
 
     @classmethod
-    def findall(self, regexp, string):
+    def getPattern(cls, regex, flags=re.DOTALL):
+        '''
+        生成pattern对象
+
+        :param regex: 正则表达式, 如 r'\d'
+        :param flags:
+            re.DOTALL 可以让正则表达式中的点（.）匹配包括换行符在内的任意字符
+        :return:
+        '''
+        return re.compile(regex, flags=flags)
+
+    @classmethod
+    def findall(self, regexp, string, flags=0):
         '''
         如果regexp中不包含小括号，如
         re.findall('[a-zA-Z]+','12fFdsDFDS3rtG4')#['fFdsDFDS', 'rtG']
@@ -34,7 +46,7 @@ class ReWrapper(object):
         re.findall('(\d)\s+(\d)','12 3fFdsDFDS3 4rtG4')#[('2', '3'), ('3', '4')]
         :return: list
         '''
-        return re.findall(regexp, string)
+        return re.findall(regexp, string, flags=flags)
 
     @classmethod
     def match(cls, pattern, string, flags=0):
@@ -86,7 +98,7 @@ class ReWrapper(object):
         return re.sub(pattern, repl, string)
 
     @classmethod
-    def split(cls,pattern, string, maxsplit=0, flags=0):
+    def split(cls, pattern, string, maxsplit=0, flags=0):
         """
         re.split(r' ', '1 2 2 3 4')
             ['1', '2', '2', '3', '4']
@@ -98,4 +110,4 @@ class ReWrapper(object):
         :param flags:
         :return:
         """
-        return re.split(pattern, string, maxsplit)
+        return re.split(pattern, string, maxsplit, flags=flags)

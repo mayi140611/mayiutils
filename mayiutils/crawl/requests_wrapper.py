@@ -10,8 +10,17 @@ class RequestsWrapper(object):
         self._headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.79 Safari/537.36 Maxthon/5.2.1.6000'
         }
+
     def getResponse(self, encoding='utf8', data=None, allow_redirects=False, proxies=None):
-        r = requests.get(self._url,headers=self._headers,allow_redirects=allow_redirects,proxies=proxies)
+        '''
+
+        :param encoding:
+        :param data:
+        :param allow_redirects:
+        :param proxies:
+        :return:
+        '''
+        r = requests.get(self._url, headers=self._headers, allow_redirects=allow_redirects,proxies=proxies)
         r.encoding=encoding
         return r
     
