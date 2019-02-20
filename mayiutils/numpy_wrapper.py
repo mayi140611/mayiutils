@@ -4,9 +4,10 @@
 import numpy as np
 
 
-class numpy_wrapper(object):
+class NumpyWrapper(object):
     def __init__(self):
         pass
+
     @classmethod
     def arange(self, start, stop, step=1, dtype=None):
         '''
@@ -14,6 +15,7 @@ class numpy_wrapper(object):
         Return evenly spaced values within a given interval.
         '''
         return np.arange(start, stop, step, dtype)
+
     @classmethod
     def linspace(self, start, stop, num=50, endpoint=True, retstep=False, dtype=None):
         '''
@@ -21,6 +23,7 @@ class numpy_wrapper(object):
         Return evenly spaced numbers over a specified interval.
         '''
         return np.linspace(start, stop, num, endpoint, retstep, dtype)
+
     @classmethod
     def build_array_from_seq(self, start, stop, step=1, shape=None, dtype=None):
         '''
@@ -28,9 +31,17 @@ class numpy_wrapper(object):
         @shape: list or tuple
         '''
         return np.arange(start, stop, step, dtype).reshape(shape)
+
     @classmethod
-    def build_array_from_arraylist(self, arraylist):
-        return np.array(arraylist)
+    def buildArrayFromArrayList(cls, arraylist, dtype=np.int32):
+        """
+
+        :param arraylist:
+            [[1, 2], [3, 4]]
+        :return:
+        """
+        return np.array(arraylist, dtype)
+
     @classmethod
     def build_zeros_array(self,shape, dtype=float, order='C'):
         return np.zeros(shape,dtype,order)
@@ -130,6 +141,7 @@ class numpy_wrapper(object):
     # 线性代数
     # ---------------------------------------------------------------------------------
     # '''
+
     @classmethod
     def inv(self, matr):
         '''
@@ -145,3 +157,62 @@ class numpy_wrapper(object):
     @classmethod
     def sum(self, matr, axis=None, dtype=None, out=None):
         return np.sum(matr, axis, dtype, out)
+
+    # '''
+    # ---------------------------------------------------------------------------------
+    # 文件保存和读取
+    # ---------------------------------------------------------------------------------
+    # '''
+    @classmethod
+    def save(cls, array, filepath):
+        """
+        默认情况下，数组以未压缩的原始二进制格式保存在扩展名为npy的文件中
+        :param array:
+        :param filepath: 't.npy'
+        :return:
+        """
+        return np.save(filepath, array)
+
+    @classmethod
+    def load(cls, filepath):
+        """
+        加载save保存的npy文件
+        :param filepath:
+        :return:
+        """
+        return np.load(filepath)
+
+    @classmethod
+    def saveTxt(cls, array, filepath):
+        """
+        将1D/2D数组写入以某种分隔符隔开的文本文件中, 注意保存三维以上的数据会报错
+        :param array:
+        :param filepath: 't.txt'
+        :return:
+        """
+        return np.savetxt(filepath, array)
+
+    @classmethod
+    def loadTxt(cls, filepath):
+        """
+        加载savetxt保存的txt文件
+        :param filepath:
+        :return:
+        """
+        return np.loadtxt(filepath)
+    @classmethod
+    def savez(cls, array, filepath):
+        """
+        Save several arrays into a single file in uncompressed .npz format.
+        示例函数，
+            arr1 = npw.buildArrayFromArrayList([[1,2]])
+            arr2 = npw.buildArrayFromArrayList([[3,4]])
+            np.savez('tmp/a.npz', arr1=arr1, arr2=arr2) 或者压缩格式
+            np.savez_compressed('tmp/a_compressed.npz', arr1=arr1, arr2=arr2)
+            a = np.load('tmp/a.npz')
+            print(a['arr1'], a['arr2'])
+        :param array:
+        :param filepath: 't.txt'
+        :return:
+        """
+        return np.savez(filepath, array)
