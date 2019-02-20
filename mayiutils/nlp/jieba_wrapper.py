@@ -67,7 +67,7 @@ class JieBaWrapper(object):
         return jieba.load_userdict(filename)
 
     @classmethod
-    def add_word(cls, word, freq=None, tag=None):
+    def addWord(cls, word, freq=None, tag=None):
         '''
         Add a word to dictionary.
 
@@ -77,14 +77,14 @@ class JieBaWrapper(object):
         return jieba.add_word(word, freq, tag)
 
     @classmethod
-    def del_word(cls, word):
+    def delWord(cls, word):
         '''
         Convenient function for deleting a word.
         '''
         return jieba.del_word(word)
 
     @classmethod
-    def suggest_freq(cls, segment, tune=False):
+    def suggestFreq(cls, segment, tune=False):
         '''
         Suggest word frequency to force the characters in a word to be
         joined or splitted.
