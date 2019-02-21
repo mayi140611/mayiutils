@@ -13,6 +13,12 @@ import pymysql
 
 
 class PyMysqlWrapper:
+    """
+    常用是sql场景：
+    查询不重复的记录：
+        select distinct name from user;
+        select id,name from user group by name;
+    """
     def __init__(self, user='root', passwd='!Aa123456', db='daozhen', host='127.0.0.1', use_unicode=True, charset='utf8'):
         """
         创建连接、创建游标

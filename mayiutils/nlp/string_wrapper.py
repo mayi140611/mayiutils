@@ -7,7 +7,12 @@
 @file: string_wrapper.py
 @time: 2019/1/27 20:40
 """
+
+
 class StringWrapper:
+    """
+    主要是对python中的string的相关操作的封装
+    """
     @classmethod
     def formatFloat(cls, strformat, inputs):
         """
