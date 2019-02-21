@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-from mayiutils.pypinyin_wrapper import PyPinyinWrapper
+from mayiutils.nlp.pypinyin_wrapper import PyPinyinWrapper
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 
 if __name__ == "__main__":
