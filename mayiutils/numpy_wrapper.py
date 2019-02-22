@@ -8,6 +8,11 @@ class NumpyWrapper(object):
     def __init__(self):
         pass
 
+    # '''
+    # ---------------------------------------------------------------------------------
+    # 生成ndarray对象
+    # ---------------------------------------------------------------------------------
+    # '''
     @classmethod
     def arange(self, start, stop, step=1, dtype=None):
         '''
@@ -25,36 +30,84 @@ class NumpyWrapper(object):
         return np.linspace(start, stop, num, endpoint, retstep, dtype)
 
     @classmethod
-    def build_array_from_seq(self, start, stop, step=1, shape=None, dtype=None):
-        '''
-        由序列生成数组
-        @shape: list or tuple
-        '''
-        return np.arange(start, stop, step, dtype).reshape(shape)
-
-    @classmethod
     def buildArrayFromArrayList(cls, arraylist, dtype=np.int32):
         """
 
         :param arraylist:
-            [[1, 2], [3, 4]]
+            [[1, 2], [3, 4]],  [1, 2, 3, 4]
         :return:
         """
         return np.array(arraylist, dtype)
 
     @classmethod
-    def build_zeros_array(self,shape, dtype=float, order='C'):
+    def buildZerosArray(cls, shape, dtype=np.float, order='C'):
+        """
+        构建全0矩阵
+        :param shape:
+        :param dtype:
+        :param order:
+        :return:
+        """
         return np.zeros(shape,dtype,order)
-    
+
     @classmethod
-    def add_newaxis_last(self,matr):
+    def buildOnesArray(cls, shape, dtype=np.float, order='C'):
+        """
+        构建全1矩阵
+        :param shape:
+        :param dtype:
+        :param order:
+        :return:
+        """
+        return np.ones(shape, dtype, order)
+
+    @classmethod
+    def buildEmptyArray(cls, shape, dtype=np.float, order='C'):
+        """
+        Return a new array of given shape and type, without initializing entries
+        empty, unlike zeros, does not set the array values to zero, and may therefore be marginally faster.
+        On the other hand, it requires the user to manually set all the values in the array, and should be used with caution.
+        :param shape:
+        :param dtype:
+        :param order:
+        :return:
+        """
+        return np.empty(shape, dtype, order)
+
+    @classmethod
+    def buildEye(cls, N, M=None, k=0, dtype=float, order='C'):
+        """
+        单位矩阵
+        Return a 2-D array with ones on the diagonal and zeros elsewhere.
+        :param shape:
+        :param dtype:
+        :param order:
+        :return:
+        """
+        return np.fromfunction().eye(N, M, k, dtype, order)
+
+    @classmethod
+    def buildFromFunction(cls, function, shape, **kwargs):
+        """
+        Construct an array by executing a function over each coordinate.
+        The resulting array therefore has a value fn(x, y, z) at coordinate (x, y, z).
+        :param function:
+        :param shape:
+        :param kwargs:
+        :return:
+        """
+        return np.fromfunction(function, shape, **kwargs)
+
+    @classmethod
+    def addNewAxisLast(cls, matr):
         '''
         在matr的最后加一个维度
         @matr: 1D ndarray
         '''
-        return matr[:,np.newaxis]
+        return matr[:, np.newaxis]
+
     @classmethod
-    def flatten(self,order='C'):
+    def flatten(cls, order='C'):
         '''
         Return a copy of the array collapsed(坍塌) into one dimension.
         @order: {'C', 'F', 'A', 'K'}, optional
@@ -72,14 +125,14 @@ class NumpyWrapper(object):
     # ---------------------------------------------------------------------------------
     
     @classmethod
-    def max(self, a, axis=None):
+    def max(cls, a, axis=None):
         '''
         求最大值
         @axis: None表示求整个数组的最大值；0表示求每列最大值；1表示求每行最大值
         '''
         return np.max(a, axis)
     @classmethod
-    def min(self, a, axis=None):
+    def min(cls, a, axis=None):
         '''
         求最大值
         @axis: None表示求整个数组的最大值；0表示求每列最大值；1表示求每行最大值
@@ -160,6 +213,21 @@ class NumpyWrapper(object):
 
     # '''
     # ---------------------------------------------------------------------------------
+    # ndarray合并
+    # ---------------------------------------------------------------------------------
+    # '''
+    @classmethod
+    def vstack(cls, tup):
+        """
+        列向叠加ndarray
+        :param tup: 由ndarray对象组成的元组
+            (sequence of ndarrays) The arrays must have the same shape along all but the first axis.
+            1-D arrays must have the same length.
+        :return:
+        """
+        return np.vstack(tup)
+    # '''
+    # ---------------------------------------------------------------------------------
     # 文件保存和读取
     # ---------------------------------------------------------------------------------
     # '''
@@ -216,3 +284,20 @@ class NumpyWrapper(object):
         :return:
         """
         return np.savez(filepath, array)
+
+
+if __name__ == '__main__':
+    # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
+    # a = NumpyWrapper.linspace(1, 5, num=5)#[1. 2. 3. 4. 5.]
+    a = NumpyWrapper.buildEmptyArray([2,3])
+    b = NumpyWrapper.buildZerosArray([2,3])
+    # a = NumpyWrapper.vstack((a, b))
+    # b = NumpyWrapper.addNewAxisLast(a)
+    b = np.array([b])
+    a = np.array([a])
+    b = NumpyWrapper.vstack((a, b))
+    print(b)
+    print(a)
+
+    print(a == None)
+    print(None == None)

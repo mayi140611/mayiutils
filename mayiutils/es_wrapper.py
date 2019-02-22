@@ -99,19 +99,49 @@ class EsWrapper:
     def __init__(self, hosts):
         self._es = Elasticsearch(hosts)
 
-    def createIndex(self, index):
-        '''
+    def createIndex(self, indexname, body=None, params=None):
+        """
         创建索引库
-        :param name:
+        PUT /customer?pretty
+        :param indexname: 索引名
+            索引名规范：仅限小写；不能以-、_、+开头；不能超过255字节
+        :param body:
+        设置分片数和副本数（默认是5个分片，1个副本
+            {
+              "settings" : {
+                "index" : {
+                  "number_of_shards" : 3,
+                  "number_of_replicas" : 2
+                }
+              }
+            }
+        创建索引时还可以提供一个type的mapping
+            {
+              "settings" : {
+                "number_of_shards" : 1
+              },
+              "mappings" : {
+                "_doc" : {
+                  "properties" : {
+                  "field1" : { "type" : "text" }
+                  }
+                }
+              }
+            }
+        :param params:
+        :return:
+        """
+        '''
         :return:
         '''
         #注意这里我们的代码里面使用了 ignore 参数为 400，
         # 这说明如果返回结果是 400 的话，就忽略这个错误不会报错，程序不会执行抛出异常。
-        return self._es.indices.create(index=index, ignore=400)
+        return self._es.indices.create(index=indexname, body=body, ignore=400)
 
     def deleteIndex(self, index):
         '''
         删除索引库
+        DELETE /customer?pretty
         :param name:
         :return:
         '''
