@@ -54,6 +54,20 @@ class OsWrapper(object):
         return os.path.join(path, *paths)
 
     @classmethod
+    def walk(cls, top, topdown=True, onerror=None, followlinks=False):
+        """
+        遍历文件夹， 返回一个generator对象
+        Generate the file names in a directory tree by walking the tree either top-down or bottom-up.
+        For each directory in the tree rooted at directory top (including top itself),
+        it yields a 3-tuple (dirpath, dirnames, filenames).
+        :param topdown:
+        :param onerror:
+        :param followlinks:
+        :return:
+        """
+        return os.walk(top, topdown, onerror, followlinks)
+
+    @classmethod
     def listDir(cls, filepath):
         """
         列出filepath下所有文件名和文件夹名，不递归
@@ -102,3 +116,9 @@ class OsWrapper(object):
         :return:
         """
         return os.rmdir(filepath)
+
+
+# if __name__=='__main__':
+
+
+            # break

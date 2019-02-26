@@ -36,6 +36,6 @@ if __name__ == '__main__':
     print(type(img), img)
     print(np.max(img, axis=0))
     print(img.shape)
-    # plt.imshow(img)
-    # plt.show()
+    plt.imshow(img)
+    plt.show()
     scipy.misc.imsave(out_path, img)#转换为jpg格式存储
