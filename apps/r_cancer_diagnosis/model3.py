@@ -9,6 +9,7 @@
 """
 import pandas as pd
 from mayiutils.filesystem.os_wrapper import OsWrapper as osw
+from mayiutils.pickle_wrapper import PickleWrapper as pkw
 import numpy as np
 import cv2
 from keras.utils import np_utils
@@ -54,12 +55,13 @@ class Model:
                     destArr = destArr[:maxSlicesNum, :, :]
                 train_set.append(destArr[:clip2, :clip1, :clip1])
                 train_label.append(line[2])
-                train_set.append(destArr[:clip2, -1*clip1:, :clip1])
-                train_label.append(line[2])
+                # train_set.append(destArr[:clip2, -1*clip1:, :clip1])
+                # train_label.append(line[2])
 
         train_set = np.array(train_set)
         train_label = np.array(train_label)
         train_arr = train_set.reshape(-1, clip2, clip1, clip1, 1)
+        train_arr = train_arr / 255.0
         train_label1 = np_utils.to_categorical(train_label, num_classes=2)
         return (train_arr, train_label1)
 
@@ -122,6 +124,7 @@ class Model:
                     train_set = list()
                     train_label = list()
                     count0 = 0
+                    train_arr = train_arr / 255.0
                     yield (train_arr, train_label1)
                 else:
                     count0 += 1
@@ -136,10 +139,6 @@ class Model:
         model.add(Convolution3D(64, 5, strides=1, padding='same', activation='relu'))
         model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         model.add(Convolution3D(64, 5, strides=1, padding='same', activation='relu'))
-        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-        model.add(Convolution3D(128, 5, strides=1, padding='same', activation='relu'))
-        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-        model.add(Convolution3D(128, 5, strides=1, padding='same', activation='relu'))
         model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         # 把第二个池化层的输出扁平化为1维
         model.add(Flatten())
@@ -175,7 +174,11 @@ if __name__ == '__main__':
     #当评价指标不在提升时，减少学习率
     rr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
     callback_lists = [tensorboard,checkpoint, rr]  # 因为callback是list型,必须转化为list
-    model.fit_generator(batchs, steps_per_epoch=20, epochs=180, workers=24, use_multiprocessing=True, validation_data=valdata)
+
+    history = model.fit_generator(batchs, steps_per_epoch=20, epochs=180, workers=24, use_multiprocessing=True, validation_data=valdata)
+    model.save('m190227.h5')
+    pkw.dump2File(history, 'history190227.pkl')
+    print('--------------------训练完成--------------------')
     """
     1/8 [==>...........................] - ETA: 56:53 - loss: 1.3589 - acc: 0.5000
     2/8 [======>.......................] - ETA: 44:11 - loss: 0.6795 - acc: 0.7500

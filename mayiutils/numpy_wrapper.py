@@ -285,6 +285,34 @@ class NumpyWrapper(object):
         """
         return np.savez(filepath, array)
 
+    @classmethod
+    def shuffle(cls, arr):
+        """
+        就地shuffle打乱数据
+        Modify a sequence in-place by shuffling its contents.
+        This function only shuffles the array along the first axis of a multi-dimensional array. The order of sub-arrays is changed but their contents remains the same.
+        三行代码打乱样本数据：
+        >>> permutation = np.random.permutation(train_label.shape[0])
+        >>> shuffled_dataset = train_data[permutation, :, :]
+        >>> shuffled_labels = train_label[permutation]
+
+        示例
+        >>> arr = np.arange(10)
+        >>> np.random.shuffle(arr)
+        >>> arr
+        [1 7 5 2 9 4 3 6 0 8]
+        Multi-dimensional arrays are only shuffled along the first axis:
+        >>> arr = np.arange(9).reshape((3, 3))
+        >>> np.random.shuffle(arr)
+        >>> arr
+        array([[3, 4, 5],
+               [6, 7, 8],
+               [0, 1, 2]]
+        :param arr: array_like
+        The array or list to be shuffled.
+        :return:
+        """
+        return np.random.shuffle(arr)
 
 if __name__ == '__main__':
     # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
@@ -306,3 +334,9 @@ if __name__ == '__main__':
     #按照第一个维度打乱
     np.random.shuffle(arr)
     print(arr)
+    permutation = np.random.permutation(arr.shape[0])
+    print(type(permutation), permutation)
+    b = arr[permutation, :]
+    print(b)
+    #不能是list对象，会报错。只能是ndarray对象
+    print(arr[list(permutation), :])
