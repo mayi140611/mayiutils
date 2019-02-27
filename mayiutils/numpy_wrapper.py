@@ -301,3 +301,8 @@ if __name__ == '__main__':
 
     print(a == None)
     print(None == None)
+    arr1 = np.arange(16).reshape(8, 2)
+    arr = np.arange(8)
+    #按照第一个维度打乱
+    np.random.shuffle(arr)
+    print(arr)
