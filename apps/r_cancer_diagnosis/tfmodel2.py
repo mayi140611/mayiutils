@@ -184,7 +184,7 @@ class TfKerasModel:
 
     def prepareTestDataset(self, imagePatharr):
         dataset1 = Dataset.from_tensor_slices((imagePatharr, np.zeros((imagePatharr.shape[0], 1))))
-        dataset2 = dataset1.map(_parse_function).repeat(2).batch(5)
+        dataset2 = dataset1.map(_parse_function).batch(5)
         # dataset2 = dataset2.prefetch(2)
         return dataset2
 
