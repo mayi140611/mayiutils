@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding: utf-8
 import pandas as pd
-
+import matplotlib.pyplot as plt
 class series_wrapper(object):
     def __init__(self):
         pass
@@ -54,3 +54,11 @@ class series_wrapper(object):
         dtype: int64
         '''
         return series.iloc[series.nonzero()[0]]
+
+if __name__ == '__main__':
+    s = pd.Series([1,2,3,4,5,4,2,1,2,1])
+    # print(s.value_counts())
+    print(s.value_counts().sort_values(ascending=False))
+    plt.figure()
+    s.hist()
+    plt.show()
