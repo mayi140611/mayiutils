@@ -32,7 +32,25 @@ FLAGS['data_dir'] = '/home/ikbeom/Desktop/DL/MNIST_simpleCNN/data'
 FLAGS['num_class'] = 4
 
 maxSlicesNum = 587#train1和train2中最大的切片数量
+def prepareFileSamples2Ndarray(filepath):
+    """
+    整理出[[[file1,file2,...], label1],
+            [[file1,file2,...], label1],
+            ...
+        ]
+    :return:
+    """
+    samplelist = list()
+    labellist = list()
+    for f in ['train1_label.csv', 'train2_label.csv']:
+        df = pd.read_csv(os.path.join(filepath, f))
+        for line in df.itertuples():
+            imglist = os.listdir(os.path.join(filepath, '{}_jpg'.format(f.split('_')[0]), line[1]))[:5]
 
+            samplelist.append([os.path.join(filepath, '{}_jpg'.format(f.split('_')[0]), line[1], i) for i in imglist])
+            labellist.append([line[2]])
+    print(np.array(samplelist))
+    np.savez_compressed('filesamples.npy', samplelist=np.array(samplelist), labellist=np.array(labellist))
 
 def getMaxSlicesNum(filepath):
     """
@@ -318,15 +336,16 @@ if __name__ == "__main__":
     # test(filedir)
     # X_train, y_train, X_test, y_test = get_files()
     # np.savez_compressed('littleCBIRdatasets.npz', X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
-    # filedir = sys.argv[1]
+    filedir = sys.argv[1]
     # prepareTrainData2(filedir)
     # prepareTestData(filedir)
     # filedir = 'D:/Desktop/DF'
     # n = getMaxSlicesNum(filedir)#587
     # print(n)
     # print(np.all(np.array([-1])==-1))
-    for i in range(5):
-        a = getBatch()
-        print(a)
+    # for i in range(5):
+    #     a = getBatch()
+    #     print(a)
+    prepareFileSamples2Ndarray(filedir)
 
 

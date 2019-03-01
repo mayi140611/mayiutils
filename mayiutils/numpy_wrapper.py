@@ -315,28 +315,33 @@ class NumpyWrapper(object):
         return np.random.shuffle(arr)
 
 if __name__ == '__main__':
-    # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
-    # a = NumpyWrapper.linspace(1, 5, num=5)#[1. 2. 3. 4. 5.]
-    a = NumpyWrapper.buildEmptyArray([2,3])
-    b = NumpyWrapper.buildZerosArray([2,3])
-    # a = NumpyWrapper.vstack((a, b))
-    # b = NumpyWrapper.addNewAxisLast(a)
-    b = np.array([b])
-    a = np.array([a])
-    b = NumpyWrapper.vstack((a, b))
-    print(b)
-    print(a)
+    select = 1
+    #测试dtype转换
+    a = np.array(['我fadffs'], dtype=str)
+    print(a.dtype)
+    if select == 0:
+        # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
+        # a = NumpyWrapper.linspace(1, 5, num=5)#[1. 2. 3. 4. 5.]
+        a = NumpyWrapper.buildEmptyArray([2,3])
+        b = NumpyWrapper.buildZerosArray([2,3])
+        # a = NumpyWrapper.vstack((a, b))
+        # b = NumpyWrapper.addNewAxisLast(a)
+        b = np.array([b])
+        a = np.array([a])
+        b = NumpyWrapper.vstack((a, b))
+        print(b)
+        print(a)
 
-    print(a == None)
-    print(None == None)
-    arr1 = np.arange(16).reshape(8, 2)
-    arr = np.arange(8)
-    #按照第一个维度打乱
-    np.random.shuffle(arr)
-    print(arr)
-    permutation = np.random.permutation(arr.shape[0])
-    print(type(permutation), permutation)
-    b = arr[permutation, :]
-    print(b)
-    #不能是list对象，会报错。只能是ndarray对象
-    print(arr[list(permutation), :])
+        print(a == None)
+        print(None == None)
+        arr1 = np.arange(16).reshape(8, 2)
+        arr = np.arange(8)
+        #按照第一个维度打乱
+        np.random.shuffle(arr)
+        print(arr)
+        permutation = np.random.permutation(arr.shape[0])
+        print(type(permutation), permutation)
+        b = arr[permutation, :]
+        print(b)
+        #不能是list对象，会报错。只能是ndarray对象
+        print(arr[list(permutation), :])
