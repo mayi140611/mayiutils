@@ -2,6 +2,8 @@
 # encoding: utf-8
 import pandas as pd
 import matplotlib.pyplot as plt
+
+
 class series_wrapper(object):
     def __init__(self):
         pass
@@ -57,6 +59,7 @@ class series_wrapper(object):
 
 if __name__ == '__main__':
     s = pd.Series([1,2,3,4,5,4,2,1,2,1])
+    s.sort_index()
     # print(s.value_counts())
     print(s.value_counts().sort_values(ascending=False))
     plt.figure()
