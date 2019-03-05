@@ -17,18 +17,19 @@ import tensorflow as tf
 from tensorflow.data import Dataset
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Conv3D, MaxPooling3D, Flatten, Dense, Dropout
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam, RMSprop
 from tensorflow.keras.models import load_model
 
-imagesize = 72
+imagesize = 64
 imagesize_cropped = 64
 
 def change_img(x, y):
-    i = random.randint(0, 3)
     x = tf.image.random_flip_left_right(x)
     x = tf.image.random_flip_up_down(x)
     print(x)
-    x = tf.image.random_crop(x, [128, 64, 64, 1])#注意用法
+    x1 = tf.image.random_crop(x, [128, 58, 58, 1])#注意用法
+    print(x1)
+    # x = tf.image.pad_to_bounding_box(x, 3, 3, 64, 64)#补0 offset_height, offset_width, target_height, target_width
     print(x)
     # if i == 0:
     #     x = tf.image.random_flip_left_right(x)
@@ -198,13 +199,13 @@ class TfKerasModel:
 
     def prepareValDataset(self, imagePatharr, labelarr):
         dataset1 = Dataset.from_tensor_slices((imagePatharr[self._trainsetNum:], labelarr[self._trainsetNum:]))
-        dataset2 = dataset1.map(_parse_function).repeat(100000000).map(change_img).batch(1)
+        dataset2 = dataset1.map(_parse_function).repeat(100000000).batch(2)
         # dataset2 = dataset2.prefetch(2)
         return dataset2
 
     def prepareTestDataset(self, imagePatharr):
         dataset1 = Dataset.from_tensor_slices((imagePatharr, np.zeros((imagePatharr.shape[0], 1))))
-        dataset2 = dataset1.map(_parse_function).map(change_img).batch(5)
+        dataset2 = dataset1.map(_parse_function).batch(5)
         # dataset2 = dataset2.prefetch(2)
         return dataset2
 
@@ -219,11 +220,36 @@ class TfKerasModel:
         model.add(Conv3D(64, 5, strides=1, padding='same', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
         model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         model.add(Flatten())
-        adam = Adam(lr=1e-4)
+        # adam = Adam(lr=1e-4)
+        optimizer= RMSprop(lr=1e-4)
         # model.add(Dense(1, activation='softmax'))
         # model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
         model.add(Dense(1, activation='sigmoid'))
-        model.compile(optimizer=adam, loss='binary_crossentropy', metrics=['accuracy'])
+        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+        return model
+
+    def buildSimpleModel(self):
+        """
+        :return:
+        """
+        model = tf.keras.Sequential()
+        model.add(Conv3D(32, 5, strides=1, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize_cropped, imagesize_cropped, 1)))
+        model.add(Conv3D(32, 5, strides=1, padding='valid', activation='relu'))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Conv3D(64, 5, strides=1, padding='valid', activation='relu'))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Flatten())
+        model.add(Dense(256, activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(128, activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(1, activation='sigmoid'))
+        optimizer = Adam(lr=1e-4)
+        # optimizer= RMSprop(lr=1e-4)
+        # model.add(Dense(1, activation='softmax'))
+        # model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
+        model.add(Dense(1, activation='sigmoid'))
+        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
         return model
 
     def buildVgg11Model(self):
@@ -235,27 +261,28 @@ class TfKerasModel:
         model.add(Conv3D(64, 3, strides=1, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize_cropped, imagesize_cropped, 1)))
         model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='valid'))
         model.add(Conv3D(128, 3, strides=1, padding='valid', activation='relu'))
-        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='valid'))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         model.add(Conv3D(256, 3, strides=1, padding='valid', activation='relu'))
         model.add(Conv3D(256, 3, strides=1, padding='valid', activation='relu'))
-        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='valid'))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         # model.add(Conv3D(512, 3, strides=1, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
         # model.add(Conv3D(512, 3, strides=1, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
         # model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='valid'))
         # model.add(Conv3D(512, 3, strides=1, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
         model.add(Conv3D(512, 3, strides=1, padding='valid', activation='relu'))
-        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='valid'))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
         model.add(Flatten())
         model.add(Dense(4096, activation='relu'))
         model.add(Dropout(0.5))
         model.add(Dense(4096, activation='relu'))
         model.add(Dropout(0.5))
         model.add(Dense(1, activation='sigmoid'))
-        adam = Adam(lr=1e-4)
+        # adam = Adam(lr=1e-4)
+        optimizer= RMSprop(lr=1e-4)
         # model.add(Dense(1, activation='softmax'))
         # model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
         model.add(Dense(1, activation='sigmoid'))
-        model.compile(optimizer=adam, loss='binary_crossentropy', metrics=['accuracy'])
+        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
         return model
 
     def loadModel(self, filename):
@@ -266,9 +293,61 @@ class TfKerasModel:
 
 
 if __name__ == '__main__':
-    mode = sys.argv[1]
-    # mode = '3'
+    if len(sys.argv) > 1:
+        print(type(sys.argv))#
+        mode = sys.argv[1]
+    else:
+        mode = '3'
     m = TfKerasModel()
+    if mode == '6':
+
+        model = m.buildSimpleModel()
+        print(model.summary())
+        print('训练模式-simplemodel')
+        imagePatharr, labelarr = m.prepareTrainandValImagePath()
+        trainDataset = m.prepareTrainDataSet(imagePatharr, labelarr)
+        valDataset = m.prepareValDataset(imagePatharr, labelarr)
+        filepath1 = "result/models/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        callbacks = [
+            # Interrupt training if `val_loss` stops improving for over 2 epochs
+            # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
+            # Write TensorBoard logs to `./logs` directory
+            tf.keras.callbacks.TensorBoard(log_dir='./result/log'),
+            tf.keras.callbacks.ModelCheckpoint(filepath1, verbose=1),
+            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=20, verbose=0, mode='auto', cooldown=0, min_lr=0)
+        ]
+        print('开启训练')
+        model.fit(trainDataset, steps_per_epoch=68, epochs=5000, validation_data=valDataset, validation_steps=387, callbacks=callbacks)
+        print('train finished!')
+    if mode == '5':
+        print('换一种优化器RMSprop，接着训练')
+        modelname = sys.argv[2]
+        testPatharr = m.prepareTestImagePath()
+        testDataset = m.prepareTestDataset(testPatharr)
+        print('加载模型{}'.format(modelname))
+        model = m.loadModel(modelname)
+        optimizer = RMSprop(lr=1e-4)
+        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+        print(model.summary())
+        imagePatharr, labelarr = m.prepareTrainandValImagePath()
+        # print(imagePatharr.shape, labelarr.shape)#(7574, 128) (7574, 1)
+        trainDataset = m.prepareTrainDataSet(imagePatharr, labelarr)
+        # print(trainDataset.output_types)  # ==> (tf.string, tf.int64)
+        # print(trainDataset.output_shapes)  # ==> (TensorShape([Dimension(128)]), TensorShape([Dimension(1)]))
+        valDataset = m.prepareValDataset(imagePatharr, labelarr)
+        filepath1 = "result/models/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        callbacks = [
+            # Interrupt training if `val_loss` stops improving for over 2 epochs
+            # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
+            # Write TensorBoard logs to `./logs` directory
+            tf.keras.callbacks.TensorBoard(log_dir='./result/log'),
+            tf.keras.callbacks.ModelCheckpoint(filepath1, verbose=1),
+            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', cooldown=0, min_lr=0)
+        ]
+        print('开启训练')
+        model.fit(trainDataset, steps_per_epoch=68, epochs=5000, validation_data=valDataset, validation_steps=387, callbacks=callbacks)
+        print('train finished!')
+
     if mode == '4':
 
         model = m.buildVgg11Model()
@@ -286,11 +365,11 @@ if __name__ == '__main__':
             # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
             # Write TensorBoard logs to `./logs` directory
             tf.keras.callbacks.TensorBoard(log_dir='./result/log'),
-            tf.keras.callbacks.ModelCheckpoint(filepath1, monitor='val_acc', verbose=1, save_best_only=True, mode='max'),
-            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', cooldown=0, min_lr=0)
+            tf.keras.callbacks.ModelCheckpoint(filepath1, verbose=1),
+            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=20, verbose=0, mode='auto', cooldown=0, min_lr=0)
         ]
         print('开启训练')
-        model.fit(trainDataset, steps_per_epoch=34, epochs=10000, validation_data=valDataset, validation_steps=774, callbacks=callbacks)
+        model.fit(trainDataset, steps_per_epoch=34, epochs=10000, validation_data=valDataset, validation_steps=387, callbacks=callbacks)
         print('train finished!')
     if mode == '3':
         arr = np.load('D:/Desktop/DF/result.npy')
@@ -303,7 +382,7 @@ if __name__ == '__main__':
         print(arr.shape, arr[:3], r[:3])
         df = pd.read_csv('D:/Desktop/DF/test.csv')
         df['ret'] = r[:4027]
-        df.to_csv('D:/Desktop/DF/test_predict6.csv', index=False)
+        df.to_csv('D:/Desktop/DF/test_predict8.csv', index=False)
     if mode == '2':
         """
         预测
@@ -340,11 +419,11 @@ if __name__ == '__main__':
             # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
             # Write TensorBoard logs to `./logs` directory
             tf.keras.callbacks.TensorBoard(log_dir='./result/log'),
-            tf.keras.callbacks.ModelCheckpoint(filepath1, monitor='val_acc', verbose=1, save_best_only=True, mode='max'),
-            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=0, mode='auto', cooldown=0, min_lr=0)
+            tf.keras.callbacks.ModelCheckpoint(filepath1, verbose=1),
+            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=20, verbose=0, mode='auto', cooldown=0, min_lr=0)
         ]
         print('开启训练')
-        model.fit(trainDataset, steps_per_epoch=68, epochs=5000, validation_data=valDataset, validation_steps=774, callbacks=callbacks)
+        model.fit(trainDataset, steps_per_epoch=34, epochs=10000, validation_data=valDataset, validation_steps=387, callbacks=callbacks)
         print('train finished!')
     if mode == '0':
         """
