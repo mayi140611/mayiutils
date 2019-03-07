@@ -26,6 +26,7 @@ class DataPrepare:
         self.imagesize = imageSize
 
     def _parse_function(self, filenames, label):
+        print('filenames:', filenames)
         imageshape = (self.imagesize, self.imagesize)
         count = 0
         img = list()
@@ -40,7 +41,14 @@ class DataPrepare:
             else:
                 img = tf.concat([img, tf.reshape(image_resized, (-1, imageshape[0], imageshape[1], 1))], 0)
 
-        return img / 255.0, tf.cast(label, tf.float32)
+        # return img / 255.0, tf.cast(label, tf.float32)
+        # print(tf.reshape(label, shape=(-1, 1)))
+        # label = tf.reshape(label, ())
+        # print(label)
+        # label1 = tf.keras.utils.to_categorical(tf.reshape(label, shape=(-1, 1))[0], num_classes=2)
+        label1 = tf.one_hot(label[0], 2)
+        print(label1)
+        return img / 255.0, tf.cast(label1, tf.float32)
 
     def change_img(self, x, y):
         x = tf.image.random_flip_left_right(x)
@@ -83,6 +91,7 @@ class DataPrepare:
                     files.extend([os.path.join(self._baseDir, 'white.jpg')]*(self._maxSliceNum-len(files)))
                 imagePathlist.append(files)
                 labellist.append([line[2]])
+                # labellist.append(line[2])
         print(len(imagePathlist), len(labellist))
         return np.array(imagePathlist), np.array(labellist)
 
@@ -121,6 +130,7 @@ class DataPrepare:
         :param ratio:
         :return:
         """
+        print(labelarr[:5])
         dataset1 = Dataset.from_tensor_slices((imagePatharr[:self._trainsetNum], labelarr[:self._trainsetNum]))
         # dataset2 = dataset1.map(_parse_function).shuffle(buffer_size=20).repeat(100).map(change_img).batch(2)
         dataset2 = dataset1.map(self._parse_function).shuffle(buffer_size=20).map(self.change_img).repeat(100).batch(2)
@@ -140,8 +150,11 @@ class DataPrepare:
         return dataset2
 
 if __name__ == '__main__':
-    dp = DataPrepare()
-    # dp.prepareTrainandValImagePath()
-    dp.prepareTestImagePath()
+    dp = DataPrepare(baseDir='D:/Desktop/DF')
+    # # dp.prepareTrainandValImagePath()
+    # dp.prepareTestImagePath()
+    imagePatharr, labelarr = dp.prepareTrainandValImagePath()
+    trainDataset = dp.prepareTrainDataSet(imagePatharr, labelarr)
+
 
 
