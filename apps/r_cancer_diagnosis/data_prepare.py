@@ -46,9 +46,9 @@ class DataPrepare:
         # label = tf.reshape(label, ())
         # print(label)
         # label1 = tf.keras.utils.to_categorical(tf.reshape(label, shape=(-1, 1))[0], num_classes=2)
-        label1 = tf.one_hot(label[0], 2)
-        print(label1)
-        return img / 255.0, tf.cast(label1, tf.float32)
+        # label1 = tf.one_hot(label[0], 2)
+        # print(label1)
+        return img / 255.0, tf.cast(label, tf.float32)
 
     def change_img(self, x, y):
         x = tf.image.random_flip_left_right(x)
@@ -93,7 +93,7 @@ class DataPrepare:
                 labellist.append([line[2]])
                 # labellist.append(line[2])
         print(len(imagePathlist), len(labellist))
-        return np.array(imagePathlist), np.array(labellist)
+        return np.array(imagePathlist), tf.keras.utils.to_categorical(np.array(labellist), 2)
 
     def prepareTestImagePath(self):
         """
@@ -150,11 +150,12 @@ class DataPrepare:
         return dataset2
 
 if __name__ == '__main__':
-    dp = DataPrepare(baseDir='D:/Desktop/DF')
-    # # dp.prepareTrainandValImagePath()
-    # dp.prepareTestImagePath()
-    imagePatharr, labelarr = dp.prepareTrainandValImagePath()
-    trainDataset = dp.prepareTrainDataSet(imagePatharr, labelarr)
+    # dp = DataPrepare(baseDir='D:/Desktop/DF')
+    # # # dp.prepareTrainandValImagePath()
+    # # dp.prepareTestImagePath()
+    # imagePatharr, labelarr = dp.prepareTrainandValImagePath()
+    # trainDataset = dp.prepareTrainDataSet(imagePatharr, labelarr)
+    print(tf.keras.utils.to_categorical([[1],[0]], 2))
 
 
 
