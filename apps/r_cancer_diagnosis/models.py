@@ -65,7 +65,7 @@ class Models:
         """
         pass
 
-    def buildInceptionModel(self, kernel_size=3, strides=2):
+    def buildInceptionModel(self):
         """
         目标，尝试使用函数式的方法来搭建模型
         使用函数式 API 构建的模型具有以下特征：
@@ -76,12 +76,12 @@ class Models:
         """
         imagesize = self.imageSize
         inputs = tf.keras.Input(shape=(self._maxSliceNum, imagesize, imagesize, 1))  # Returns a placeholder tensor
-        tower_1 = Conv3D(64, kernel_size=1, strides=1, padding='same', activation='relu')(inputs)
-        tower_1 = Conv3D(64, kernel_size=3, strides=2, padding='same', activation='relu')(tower_1)
-        tower_2 = Conv3D(64, kernel_size=1, strides=1, padding='same', activation='relu')(inputs)
-        tower_2 = Conv3D(64, kernel_size=5, strides=2, padding='same', activation='relu')(tower_2)
+        tower_1 = Conv3D(32, kernel_size=1, strides=1, padding='same', activation='relu')(inputs)
+        tower_1 = Conv3D(32, kernel_size=3, strides=2, padding='same', activation='relu')(tower_1)
+        tower_2 = Conv3D(32, kernel_size=1, strides=1, padding='same', activation='relu')(inputs)
+        tower_2 = Conv3D(32, kernel_size=3, strides=2, padding='same', activation='relu')(tower_2)
         tower_3 = MaxPooling3D(pool_size=2, strides=2, padding='same')(inputs)
-        tower_3 = Conv3D(64, kernel_size=1, strides=1, padding='same', activation='relu')(tower_3)
+        tower_3 = Conv3D(32, kernel_size=1, strides=1, padding='same', activation='relu')(tower_3)
         # inceptionmodule1 = tf.keras.layers.concatenate([tower_1, tower_2, tower_3], axis=1)
         # tower_1 = Conv3D(64, kernel_size=1, strides=1, padding='same', activation='relu')(inceptionmodule1)
         # tower_1 = Conv3D(64, kernel_size=3, strides=2, padding='same', activation='relu')(tower_1)
@@ -93,11 +93,10 @@ class Models:
         f = Flatten()(inceptionmodule2)
         dense = Dense(512, activation='relu')(f)
         dense = Dense(256, activation='relu')(dense)
-        dense = Dense(256, activation='relu')(dense)
-        output = Dense(1, activation='sigmoid')(dense)
+        output = Dense(2, activation='softmax')(dense)
         model = tf.keras.Model(inputs=inputs, outputs=output)
         optimizer = Adam(lr=1e-4)
-        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+        model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
         print(model.summary())
         return model
 

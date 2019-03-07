@@ -41,8 +41,6 @@ class DataPrepare:
             else:
                 img = tf.concat([img, tf.reshape(image_resized, (-1, imageshape[0], imageshape[1], 1))], 0)
 
-        # return img / 255.0, tf.cast(label, tf.float32)
-        # print(tf.reshape(label, shape=(-1, 1)))
         # label = tf.reshape(label, ())
         # print(label)
         # label1 = tf.keras.utils.to_categorical(tf.reshape(label, shape=(-1, 1))[0], num_classes=2)
