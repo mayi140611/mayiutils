@@ -11,6 +11,7 @@
 """
 import os
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Conv3D, MaxPooling3D, AveragePooling3D, Flatten, Dense, Dropout
 from tensorflow.keras.optimizers import Adam, RMSprop
@@ -133,12 +134,14 @@ class Models:
         result = model.predict(testDataset, steps=806)
         print('预测完成')
         print(result.shape)
-        r = list()
-        for a in result:
-            if a < 0.5:
-                r.append(0)
-            else:
-                r.append(1)
+        r = np.argmax(result, axis=1)
+        print(r[:5])
+        # r = list()
+        # for a in result:
+        #     if a < 0.5:
+        #         r.append(0)
+        #     else:
+        #         r.append(1)
         df = pd.read_csv(os.path.join(self._baseDir, 'test.csv'))
         df['ret'] = r
         df.to_csv(resultFileName, index=False)

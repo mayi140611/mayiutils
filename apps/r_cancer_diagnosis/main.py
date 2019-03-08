@@ -7,10 +7,10 @@
 @file: main.py
 @time: 2019/3/6 11:02
 """
-from apps.r_cancer_diagnosis.models import Models
-from apps.r_cancer_diagnosis.data_prepare import DataPrepare
-# from models import Models
-# from data_prepare import DataPrepare
+# from apps.r_cancer_diagnosis.models import Models
+# from apps.r_cancer_diagnosis.data_prepare import DataPrepare
+from models import Models
+from data_prepare import DataPrepare
 import tensorflow as tf
 import sys
 

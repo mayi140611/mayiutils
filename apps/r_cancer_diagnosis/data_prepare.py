@@ -15,6 +15,7 @@ import os
 import matplotlib.pyplot as plt
 from tensorflow.data import Dataset
 import tensorflow as tf
+import random
 
 class DataPrepare:
 
@@ -49,11 +50,15 @@ class DataPrepare:
         return img / 255.0, tf.cast(label, tf.float32)
 
     def change_img(self, x, y):
-        x = tf.image.random_flip_left_right(x)
-        x = tf.image.random_flip_up_down(x)
-        x = tf.image.random_crop(x, [self._maxSliceNum, int(self.imagesize*0.9), int(self.imagesize*0.9), 1])  # 注意用法
+        x = tf.image.random_flip_left_right(x)#随机水平翻转
+        x = tf.image.random_flip_up_down(x)#随机上下翻转
+        k = random.randint(1, 4)
+        print('旋转{}*90度'.format(k))
+        x = tf.image.rot90(x, k)
+        scale = int(self.imagesize*0.9)
+        x = tf.image.random_crop(x, [self._maxSliceNum, scale, scale, 1])  # 注意用法
         print(x)
-        x = tf.image.pad_to_bounding_box(x, 1, 1, self.imagesize, self.imagesize)#补0 offset_height, offset_width, target_height, target_width
+        x = tf.image.pad_to_bounding_box(x, (self.imagesize-scale)//2, (self.imagesize-scale)//2, self.imagesize, self.imagesize)#补0 offset_height, offset_width, target_height, target_width
         print(x)
         return x, y
 
@@ -142,7 +147,7 @@ class DataPrepare:
         return dataset2
 
     def prepareTestDataset(self, imagePatharr):
-        dataset1 = Dataset.from_tensor_slices((imagePatharr, np.zeros((imagePatharr.shape[0], 1))))
+        dataset1 = Dataset.from_tensor_slices((imagePatharr, np.zeros((imagePatharr.shape[0], 2))))
         dataset2 = dataset1.map(self._parse_function).batch(5)
         dataset2 = dataset2.prefetch(5)
         return dataset2

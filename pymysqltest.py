@@ -51,6 +51,7 @@ if __name__ == '__main__':
 
 
     typedict = pkw.loadFromFile('tmp/typedict.pkl')
+    print(set(typedict.values()))
     # jiebalist = ['{} 3\n'.format(i) for i in list(typedict.keys())]
     # fow.writeList2File(jiebalist, 'tmp/jiebadict.txt')
     # print(jbw.lcut('鼻腔癌该怎么治', HMM=False))
