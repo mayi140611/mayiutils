@@ -68,6 +68,7 @@ if __name__ == '__main__':
         π为初始状态的概率分布{1/3 1/3 1/3}
         """
         A = np.ones(9).reshape([3,3])/3
+        # print(np.array([1, 2, 3])*A)
         B = np.array([[1/6,1/4,1/8],
                     [1/6,1/4,1/8],
                     [1/6,1/4,1/8],
@@ -86,21 +87,20 @@ if __name__ == '__main__':
         for i in O:
             if count == 0:
                 #第一步：初始化。第一个状态为1
-                a[count,] = Pi * B[i-1,]
+                a[count, ] = Pi * B[i-1, ]
             else:
                 #第二步：归纳计算
-                a[count,] = np.dot(a[count-1,],A) * B[i-1,]
+                a[count, ] = np.dot(a[count-1, ], A) * B[i-1, ]
             count += 1
 
         print(a)
-        P = np.sum(a[9,])
-        print('“掷骰子HMM”中出现可观测序列为“1635273524”的概率:', P)
+        P = np.sum(a[9, ])
+        print('“掷骰子HMM”中出现可观测序列为“1635273524”的概率:', P)#1.326632169484636e-09
     elif mode == 2:
         """
         在上周作业的基础上，体验HMM第二个基本问题的维特比算法，
         计算上周幻灯片第34页“掷骰子HMM”中可观测序列为“1635273524”，
         反求出最大可能的隐藏状态序列，可使用任何编程语言或手工计算    
-        
         """
         A = np.ones(9).reshape([3, 3]) / 3
         B = np.array([[1 / 6, 1 / 4, 1 / 8],
@@ -116,22 +116,23 @@ if __name__ == '__main__':
         O = [1, 6, 3, 5, 2, 7, 3, 5, 2, 4]
         Q = np.zeros(len(O), dtype=int)  # 最大可能的隐藏状态序列
         δ = np.zeros([len(O), 3])  # 维特比变量
-        ψ = np.zeros([len(O), 3], dtype=int)
+        ψ = np.zeros([len(O), 3], dtype=int)#ψ[i]记录该路径上状态Si的前一个状态
         count = 0
         for i in O:
             if count == 0:
                 # 第一步：初始化。第一个状态为1
-                δ[count,] = Pi * B[i - 1,]
+                δ[count, ] = Pi * B[i - 1, ]
             else:
                 # 第二步：归纳计算
-                δ[count,] = np.max(δ[count - 1,] * A, 1) * B[i - 1,]
+                δ[count, ] = np.max(δ[count - 1, ] * (A.T), 1) * B[i - 1, ]
+                # print(δ[count, ])
                 # ψ[count,] = np.argmax(δ[count-1,]* A,1) * B[i-1,]
-                ψ[count,] = np.argmax(δ[count - 1,] * A, 1)
-                count += 1
+                ψ[count, ] = np.argmax(δ[count - 1, ] * (A.T), 1)#
+            count += 1
 
         # 终结
-        QT = np.argmax(δ[len(O) - 1,])
-        PQT = np.max(δ[len(O) - 1,])
+        QT = np.argmax(δ[len(O) - 1, ])
+        PQT = np.max(δ[len(O) - 1, ])
         count = 0
         for i in range(len(Q)):
             if i == 0:
@@ -140,5 +141,5 @@ if __name__ == '__main__':
                 Q[i] = ψ[len(O) - i, Q[i - 1]]
             count += 1
         print(δ, ψ)
-        print("最大可能的隐藏状态序列", Q[::-1])
+        print("最大可能的隐藏状态序列", Q[::-1])#[1 0 1 0 1 2 1 0 1 1]
         # 正方体0，四面体1，八面体2

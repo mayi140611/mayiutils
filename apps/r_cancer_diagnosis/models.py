@@ -42,6 +42,10 @@ class Models:
         elif pooltype == 'average':
             model.add(AveragePooling3D(pool_size=2, strides=2, padding='same'))
         model.add(Conv3D(64, kernel_size, strides=strides, padding='valid', activation='relu'))
+        if pooltype == 'max':
+            model.add(MaxPooling3D(pool_size=2, strides=2, padding='same'))
+        elif pooltype == 'average':
+            model.add(AveragePooling3D(pool_size=2, strides=2, padding='same'))
         model.add(Flatten())
         if dropout:
             model.add(Dropout(0.9))
@@ -101,8 +105,7 @@ class Models:
         print(model.summary())
         return model
 
-
-    def fit(self, model, trainDataset, valDataset, steps_per_epoch=1700, epochs=400):
+    def fit(self, model, trainDataset, valDataset, steps_per_epoch=3400, epochs=1000):
         filepath1 = self._resultDir+"/models/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
         logdir = '{}/log'.format(self._resultDir)
         if not os.path.exists(logdir):
@@ -119,8 +122,8 @@ class Models:
             # Write TensorBoard logs to `./logs` directory
             tf.keras.callbacks.TensorBoard(log_dir='{}/log'.format(self._resultDir)),
             tf.keras.callbacks.ModelCheckpoint(filepath1, verbose=1),
-            tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=20, verbose=0, mode='auto',
-                                                 cooldown=0, min_lr=0)
+            # tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=20, verbose=0, mode='auto',
+            #                                      cooldown=0, min_lr=0)
         ]
         print('开启训练')
         model.fit(trainDataset, steps_per_epoch=steps_per_epoch, epochs=epochs, validation_data=valDataset, validation_steps=387,

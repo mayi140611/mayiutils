@@ -136,7 +136,7 @@ class DataPrepare:
         print(labelarr[:5])
         dataset1 = Dataset.from_tensor_slices((imagePatharr[:self._trainsetNum], labelarr[:self._trainsetNum]))
         # dataset2 = dataset1.map(_parse_function).shuffle(buffer_size=20).repeat(100).map(change_img).batch(2)
-        dataset2 = dataset1.map(self._parse_function).shuffle(buffer_size=20).map(self.change_img).repeat(100).batch(2)
+        dataset2 = dataset1.map(self._parse_function).repeat(1000000).shuffle(buffer_size=20).map(self.change_img).batch(2)
         dataset2 = dataset2.prefetch(2)
         return dataset2
 
