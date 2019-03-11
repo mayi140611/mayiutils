@@ -28,9 +28,11 @@ class StringWrapper:
         return strformat.format(inputs)
 
 
-
-
-
+if __name__ == '__main__':
+    s = '我是中国人'
+    print(s[-1:1])
+    print(s[:2])
+    print( 0 or 2)
 
 
 

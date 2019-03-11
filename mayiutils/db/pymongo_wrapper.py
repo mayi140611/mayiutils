@@ -96,3 +96,9 @@ class PyMongoWrapper(object):
         :fieldslist: 如['f1','f2'...]
         '''
         return collection.update_many(conditions,{ "$unset": {ii:"" for ii in fieldslist}})
+
+if __name__ == '__main__':
+    pmw = PyMongoWrapper('h1')
+    table = pmw.getCollection('jiankang39', 'diseases')
+    for i in pmw.findAll(table, fieldlist=['简介']):
+        print(' '.join(i['简介']))
