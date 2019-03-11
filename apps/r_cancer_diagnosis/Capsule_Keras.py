@@ -14,7 +14,7 @@ from tensorflow.keras.layers import Layer
 
 def squash(x, axis=-1):
     s_squared_norm = K.sum(K.square(x), axis, keepdims=True) + K.epsilon()
-    scale = K.sqrt(s_squared_norm)/ (0.5 + s_squared_norm)
+    scale = K.sqrt(s_squared_norm) / (0.5 + s_squared_norm)
     return scale * x
 
 
@@ -33,6 +33,15 @@ def softmax(x, axis=-1):
 #A Capsule Implement with Pure Keras
 class Capsule(Layer):
     def __init__(self, num_capsule, dim_capsule, routings=3, share_weights=True, activation='squash', **kwargs):
+        """
+
+        :param num_capsule:  胶囊的数量
+        :param dim_capsule:  胶囊的维度
+        :param routings:
+        :param share_weights:
+        :param activation:
+        :param kwargs:
+        """
         super(Capsule, self).__init__(**kwargs)
         self.num_capsule = num_capsule
         self.dim_capsule = dim_capsule
@@ -44,8 +53,12 @@ class Capsule(Layer):
             self.activation = activations.get(activation)
 
     def build(self, input_shape):
+        print(input_shape)
         super(Capsule, self).build(input_shape)
         input_dim_capsule = input_shape[-1]
+        print(input_dim_capsule)
+        print(type(input_dim_capsule))
+        input_dim_capsule = int(input_dim_capsule)
         if self.share_weights:
             self.W = self.add_weight(name='capsule_kernel',
                                      shape=(1, input_dim_capsule,

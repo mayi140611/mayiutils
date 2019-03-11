@@ -22,5 +22,5 @@ class Random:
 
 
 if __name__ == '__main__':
-    r = Random.randomInt(0, 3)#可能的值：0,1,2,3
+    r = Random.randomInt(0, 0)#可能的值：0,1,2,3
     print(r)

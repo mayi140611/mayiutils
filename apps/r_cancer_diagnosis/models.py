@@ -13,10 +13,13 @@ import os
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Conv3D, MaxPooling3D, AveragePooling3D, Flatten, Dense, Dropout
+from tensorflow.keras.layers import Conv3D, MaxPooling3D, AveragePooling3D, Flatten, Dense, Dropout, Reshape, Lambda
 from tensorflow.keras.optimizers import Adam, RMSprop
 from tensorflow.keras.models import load_model
-
+from tensorflow.python.keras import backend as K
+from tensorflow.python.ops import math_ops
+from Capsule_Keras import Capsule
+# from apps.r_cancer_diagnosis.Capsule_Keras import Capsule
 
 class Models:
 
@@ -28,20 +31,31 @@ class Models:
         self.imageSize = imageSize
         self._resultDir = reslutDir
 
-    def buildSimpleModel(self, kernel_size=3, strides=2, dropout=True, pooltype='max'):
+    def swish(self, x):
+        """
+        自定义keras的激活函数 swish
+        https://kexue.fm/archives/4647
+        :return:
+        """
+        return x/(1 + math_ops.exp(-x))
+
+    def buildSimpleModel(self, kernel_size=3, strides=2, dropout=True, pooltype='max', activation='relu'):
         """
         目标，使得训练集快速跑出过拟合
         :return:
         """
         imagesize = self.imageSize
         model = tf.keras.Sequential()
-        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
-        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation='relu'))
+        if activation == 'swish':
+            activation = self.swish
+        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation=activation, input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
+        # model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
+        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation=activation))
         if pooltype == 'max':
             model.add(MaxPooling3D(pool_size=2, strides=2, padding='same'))
         elif pooltype == 'average':
             model.add(AveragePooling3D(pool_size=2, strides=2, padding='same'))
-        model.add(Conv3D(64, kernel_size, strides=strides, padding='valid', activation='relu'))
+        model.add(Conv3D(64, kernel_size, strides=strides, padding='valid', activation=activation))
         if pooltype == 'max':
             model.add(MaxPooling3D(pool_size=2, strides=2, padding='same'))
         elif pooltype == 'average':
@@ -49,9 +63,9 @@ class Models:
         model.add(Flatten())
         if dropout:
             model.add(Dropout(0.9))
-        model.add(Dense(512, activation='relu'))
-        model.add(Dense(256, activation='relu'))
-        model.add(Dense(256, activation='relu'))
+        model.add(Dense(512, activation=activation))
+        model.add(Dense(256, activation=activation))
+        model.add(Dense(256, activation=activation))
         optimizer = Adam(lr=1e-4)
         # optimizer = tf.train.AdamOptimizer(1e-4)
         # optimizer= RMSprop(lr=1e-4)
@@ -63,9 +77,31 @@ class Models:
         print(model.summary())
         return model
 
+    def buildCapsuleModel(self):
+        """
+        CNN + Capsule
+        :return:
+        """
+        imagesize = self.imageSize
+        inputs = tf.keras.Input(shape=(self._maxSliceNum, imagesize, imagesize, 1))
+        cnn = Conv3D(32, kernel_size=3, strides=2, padding='valid', activation='relu')(inputs)
+        cnn = Conv3D(32, kernel_size=3, strides=2, padding='valid', activation='relu')(cnn)
+        pool = AveragePooling3D(pool_size=2, strides=2, padding='same')(cnn)
+        cnn = Conv3D(64, kernel_size=3, strides=2, padding='valid', activation='relu')(pool)
+        cnn = Reshape((-1, 64))(cnn)
+        capsule = Capsule(2, 16, 3, True)(cnn)
+        output = Lambda(lambda x: K.sqrt(K.sum(K.square(x), 2)), output_shape=(2,))(capsule)
+        model = tf.keras.Model(inputs=inputs, outputs=output)
+        model.compile(loss=lambda y_true, y_pred: y_true * K.relu(0.9 - y_pred) ** 2 + 0.25 * (1 - y_true) * K.relu(
+            y_pred - 0.1) ** 2,
+                      optimizer='adam',
+                      metrics=['accuracy'])
+        print(model.summary())
+        return model
+
+
     def buildVgg11Model(self, kernel_size=3, strides=2):
         """
-        目标，使得训练集快速跑出过拟合
         :return:
         """
         pass

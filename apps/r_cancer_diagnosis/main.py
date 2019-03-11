@@ -28,7 +28,8 @@ if __name__ == "__main__":
         # model = m.buildSimpleModel(6, 4)
         m = Models(imageSize=48)
         # model = m.buildSimpleModel(6, 4)
-        model = m.buildInceptionModel()
+        # model = m.buildInceptionModel()
+        model = m.buildCapsuleModel()
     elif mode == 'train':
         print('训练模式')
         imagesize = int(sys.argv[2])
@@ -45,12 +46,25 @@ if __name__ == "__main__":
         print('dropout: ', dropout)
         pooltype = sys.argv[6]
         print('pooltype: ', pooltype)
+        activation = sys.argv[7]
+        print('activation: ', activation)
         dp = DataPrepare(imageSize=imagesize)
         m = Models(imageSize=imagesize)
         imagePatharr, labelarr = dp.prepareTrainandValImagePath()
         trainDataset = dp.prepareTrainDataSet(imagePatharr, labelarr)
         valDataset = dp.prepareValDataset(imagePatharr, labelarr)
-        model = m.buildSimpleModel(kernel_size=kernel_size, strides=strides, dropout=dropout, pooltype=pooltype)
+        model = m.buildSimpleModel(kernel_size=kernel_size, strides=strides, dropout=dropout, pooltype=pooltype, activation=activation)
+        m.fit(model, trainDataset, valDataset)
+    elif mode == 'train_capsule':
+        print('训练模式capsule')
+        imagesize = int(sys.argv[2])
+        print('imagesize:', imagesize)
+        dp = DataPrepare(imageSize=imagesize)
+        m = Models(imageSize=imagesize)
+        imagePatharr, labelarr = dp.prepareTrainandValImagePath()
+        trainDataset = dp.prepareTrainDataSet(imagePatharr, labelarr)
+        valDataset = dp.prepareValDataset(imagePatharr, labelarr)
+        model = m.buildCapsuleModel()
         m.fit(model, trainDataset, valDataset)
     elif mode == 'train_inception':
         print('训练模式inception')

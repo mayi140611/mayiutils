@@ -315,11 +315,14 @@ class NumpyWrapper(object):
         return np.random.shuffle(arr)
 
 if __name__ == '__main__':
-    select = 1
+    mode = 1
     #测试dtype转换
     a = np.array(['我fadffs'], dtype=str)
-    print(a.dtype)
-    if select == 0:
+    print(a.dtype, a.ndim, a)
+    b = np.arange(16).reshape((2,2,2,2))
+    print(b)
+    print(b.ndim)#维度 dimension
+    if mode == 0:
         # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
         # a = NumpyWrapper.linspace(1, 5, num=5)#[1. 2. 3. 4. 5.]
         a = NumpyWrapper.buildEmptyArray([2,3])

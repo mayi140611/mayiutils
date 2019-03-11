@@ -58,7 +58,8 @@ class DataPrepare:
         scale = int(self.imagesize*0.9)
         x = tf.image.random_crop(x, [self._maxSliceNum, scale, scale, 1])  # 注意用法
         print(x)
-        x = tf.image.pad_to_bounding_box(x, (self.imagesize-scale)//2, (self.imagesize-scale)//2, self.imagesize, self.imagesize)#补0 offset_height, offset_width, target_height, target_width
+        offset_height, offset_width = random.randint(0, (self.imagesize-scale)//2), random.randint(0, (self.imagesize-scale)//2)
+        x = tf.image.pad_to_bounding_box(x, offset_height, offset_width, self.imagesize, self.imagesize)#补0 offset_height, offset_width, target_height, target_width
         print(x)
         return x, y
 
