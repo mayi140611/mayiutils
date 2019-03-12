@@ -7,6 +7,7 @@
 from pymongo import MongoClient
 import pandas as pd
 from collections import namedtuple
+from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
 
 class PyMongoWrapper(object):
     def __init__(self, ip='localhost', port=27017):
@@ -98,7 +99,26 @@ class PyMongoWrapper(object):
         '''
         return collection.update_many(conditions,{ "$unset": {ii:"" for ii in fieldslist}})
 
+
 if __name__ == '__main__':
+    mysql = PyMysqlWrapper(host='h1')
+    sqltemplate = """
+        SELECT
+            h.hosOrgCode AS hoscode,
+            h.hospitalAdd AS addr,
+            h.latLng as latLng,
+            d.hosDeptCode AS deptcode,
+            d.topHosDeptCode AS topdeptcode,
+            d.deptType as type,
+            d.hosName as yyname,
+            d.deptName as ksname
+        FROM
+            kh_hospital h,
+            kh_dept d
+        WHERE h.hosOrgCode=d.hosOrgCode and  d.hosName = '{}'
+            AND d.deptName = '{}'
+        """
+
     pmw = PyMongoWrapper('h1')
     table = pmw.getCollection('intelligent-guidance', 'deptmapping')
     # for i in pmw.findAll(table, fieldlist=['简介']):
@@ -135,7 +155,16 @@ if __name__ == '__main__':
     '口腔病防治院(总院)': '口腔科', 
     '曙光医院(西院)': '中医科', 
     '曙光医院(东院)': '中医科',
-     '肿瘤医院': '肿瘤科', '岳阳中西医结合医院(青海路名医特诊部)': '中医科', '上海市第一妇婴保健院(东院)': '妇产科', '上海市第一妇婴保健院(西院)': '妇产科', '肺科医院': '呼吸内科', '肺科医院(徐汇区延庆路门诊部)': '呼吸内科', '妇产科医院(杨浦院区)': '妇产科', '妇产科医院(黄浦院区)': '妇产科', '岳阳中西医结合医院': '中西医结合科', '眼耳鼻喉科医院(含宝庆浦江)': '眼科、耳鼻喉科'}
+     '肿瘤医院': '肿瘤科', 
+     '岳阳中西医结合医院(青海路名医特诊部)': '中医科', 
+     '上海市第一妇婴保健院(东院)': '妇产科', 
+     '上海市第一妇婴保健院(西院)': '妇产科', 
+     '肺科医院': '呼吸内科', 
+     '肺科医院(徐汇区延庆路门诊部)': '呼吸内科', 
+     '妇产科医院(杨浦院区)': '妇产科', 
+     '妇产科医院(黄浦院区)': '妇产科', 
+     '岳阳中西医结合医院': '中西医结合科', 
+     '眼耳鼻喉科医院(含宝庆浦江)': '眼科、耳鼻喉科'}
     """
     # print(df.loc[:, '备注'].unique())
     """
@@ -144,6 +173,7 @@ if __name__ == '__main__':
  '高血压高血脂' '糖尿病护理']
     """
     Item = namedtuple('Item', ['hosname', 'dept', 'aidept', 'age', 'gender', 'other'])
+    list1 = ['hoscode', 'addr', 'latLng', 'deptcode', 'topdeptcode', 'type']
     for line in df[df.loc[:, '医院类型'].isin(['综合医院', '综合医院 '])].itertuples():
         if line[4] and str(line[4]).strip():
             if str(line[6]).strip() not in ['注意', '不可约', '骨质疏松', '鼻炎', '哮喘', '呼吸道感染', '尿失禁', '糖尿病', '肾炎', '高血压',
@@ -160,6 +190,16 @@ if __name__ == '__main__':
                 else:
                     r = Item(line[1], line[2], line[4], [1, 2, 3, 4, 5, 6, 7], [0, 1], [0, 1, 2])
                 print(r)
-                print(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
-                table.insert_one(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
+                # print(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
+                # table.insert_one(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
+                mysql.execute(sqltemplate.format(line[1], line[2]))
+                data = mysql._cursor.fetchone()
+                if data:
+                    dict1 = dict(zip(list1, data))
+                    print(dict1)
+                    dict2 = dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r)))
+                    print(dict2)
+                    dict1.update(dict2)
+                    table.insert_one(dict1)
+                print(data)
                 # break
