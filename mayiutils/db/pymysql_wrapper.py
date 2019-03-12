@@ -70,22 +70,14 @@ class PyMysqlWrapper:
 
 if __name__ == '__main__':
     pmw = PyMysqlWrapper(host='h1')
-    sql = """
-    SELECT
-        h.hosOrgCode AS hoscode,
-        h.hospitalAdd AS addr,
-        h.latLng as latLng,
-        d.hosDeptCode AS deptcode,
-        d.topHosDeptCode AS topdeptcode,
-        d.deptType as type,
-        d.hosName as yyname,
-        d.deptName as ksname
-    FROM
-        kh_hospital h,
-        kh_dept d
-    WHERE h.hosOrgCode=d.hosOrgCode and  d.hosName = '瑞金医院'
-        AND d.deptName = '营养门诊'
+    sqltemplate = """
+    SELECT h.hospitalAdd as addr,
+        h.hosOrgCode as hoscode,
+        h.latLng as latlng,
+        h.hospitalGrade as grade
+    from kh_hospital h
+    where h.hosName='{}'
     """
-    pmw.execute(sql)
+    pmw.execute(sqltemplate)
     data = pmw._cursor.fetchone()
     print(data)
