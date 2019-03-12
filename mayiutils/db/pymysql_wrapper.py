@@ -12,6 +12,7 @@ pip install pymysql
 import pymysql
 
 
+
 class PyMysqlWrapper:
     """
     常用是sql场景：
@@ -66,3 +67,6 @@ class PyMysqlWrapper:
     def close(self):
         self._cursor.close()
         self._conn.close()
+
+if __name__ == '__main__':
+    pass

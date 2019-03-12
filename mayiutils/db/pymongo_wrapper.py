@@ -5,7 +5,8 @@
 #待处理：
 #db.getCollection('symptomsdetail').find({}).sort({'titlepy':1})
 from pymongo import MongoClient
-
+import pandas as pd
+from collections import namedtuple
 
 class PyMongoWrapper(object):
     def __init__(self, ip='localhost', port=27017):
@@ -99,6 +100,66 @@ class PyMongoWrapper(object):
 
 if __name__ == '__main__':
     pmw = PyMongoWrapper('h1')
-    table = pmw.getCollection('jiankang39', 'diseases')
-    for i in pmw.findAll(table, fieldlist=['简介']):
-        print(' '.join(i['简介']))
+    table = pmw.getCollection('intelligent-guidance', 'deptmapping')
+    # for i in pmw.findAll(table, fieldlist=['简介']):
+    #     print(' '.join(i['简介']))
+    df = pd.read_excel('../../tmp/deptmapping.xlsx', '申康可预约科室')
+    # print(df.head())
+    # print(df.loc[:, '医院类型'].unique())#['专科医院' '专科医院 ' '中医医院' '综合医院' '综合医院 ']
+    # print(df.loc[:, '专病'].unique())
+    """
+    ['肝病科、肝胆外科' '儿科' '中医科' nan '口腔科' '皮肤性病科' '眼科' '心胸外科' '精神心理科、精神科、心理咨询科'
+ '肿瘤科' '妇产科' '呼吸内科' '呼吸内科、心胸外科' '皮肤科' '肝胆外科、肝病科' '中西医结合科' '眼科、耳鼻喉科']
+    """
+    dict1 = dict()
+    for line in df[df.loc[:, '医院类型'].isin(['专科医院', '专科医院 ', '中医医院'])].itertuples():
+        if line[1] not in dict1:
+            dict1[line[1]] = line[7]
+    # print(dict1)
+    """
+    {'东方肝胆外科医院(杨浦院区)': '肝病科、肝胆外科', 
+    '儿科医院': '儿科', 
+    '儿童医学中心': '儿科', 
+    '儿童医院(北京西路院区)': '儿科', 
+    '龙华医院': '中医科', 
+    '儿童医院(泸定路院区)': '儿科', 
+    '上海市中医医院': '中医科', 
+    '上海市中医医院(石门路门诊部)': '中医科', 
+    '同济口腔医院': '口腔科', 
+    '皮肤病医院(武夷路院区)': '皮肤性病科', 
+    '眼病防治中心': '眼科', 
+    '口腔病防治院(分院)': '眼科', 
+    '胸科医院': '心胸外科', 
+    '皮肤病医院(保德路院区)': '皮肤性病科', 
+    '精神卫生中心': '精神心理科、精神科、心理咨询科', 
+    '口腔病防治院(总院)': '口腔科', 
+    '曙光医院(西院)': '中医科', 
+    '曙光医院(东院)': '中医科',
+     '肿瘤医院': '肿瘤科', '岳阳中西医结合医院(青海路名医特诊部)': '中医科', '上海市第一妇婴保健院(东院)': '妇产科', '上海市第一妇婴保健院(西院)': '妇产科', '肺科医院': '呼吸内科', '肺科医院(徐汇区延庆路门诊部)': '呼吸内科', '妇产科医院(杨浦院区)': '妇产科', '妇产科医院(黄浦院区)': '妇产科', '岳阳中西医结合医院': '中西医结合科', '眼耳鼻喉科医院(含宝庆浦江)': '眼科、耳鼻喉科'}
+    """
+    # print(df.loc[:, '备注'].unique())
+    """
+    [nan '0-14岁' '0-1岁' '女' '15岁及以上' '0-15岁' '0-16岁' '产褥期' '孕期' '注意' '不可约'
+ '骨质疏松' '鼻炎' '哮喘' '呼吸道感染' '尿失禁' '糖尿病' '肾炎' '高血压' '糖尿病神经病变' '糖尿病肾病' '孕妇'
+ '高血压高血脂' '糖尿病护理']
+    """
+    Item = namedtuple('Item', ['hosname', 'dept', 'aidept', 'age', 'gender', 'other'])
+    for line in df[df.loc[:, '医院类型'].isin(['综合医院', '综合医院 '])].itertuples():
+        if line[4] and str(line[4]).strip():
+            if str(line[6]).strip() not in ['注意', '不可约', '骨质疏松', '鼻炎', '哮喘', '呼吸道感染', '尿失禁', '糖尿病', '肾炎', '高血压',
+                                            '糖尿病神经病变', '糖尿病肾病', '高血压高血脂', '糖尿病护理']:
+                # print(line[1], line[2], line[4], line[6])
+                if str(line[6]).strip() in ['0-14岁', '0-15岁', '0-16岁']:
+                    r = Item(line[1], line[2], line[4], [2, 3, 4], [0, 1], [0, 1, 2])
+                elif str(line[6]).strip() == '女':
+                    r = Item(line[1], line[2], line[4], [1, 2, 3, 4, 5, 6, 7], [1], [0, 1, 2])
+                elif str(line[6]).strip() == '产褥期':
+                    r = Item(line[1], line[2], line[4], [1, 2, 3, 4, 5, 6, 7], [0, 1], [2])
+                elif str(line[6]).strip() in ['孕期', '孕妇']:
+                    r = Item(line[1], line[2], line[4], [2, 3, 4], [0, 1], [1])
+                else:
+                    r = Item(line[1], line[2], line[4], [1, 2, 3, 4, 5, 6, 7], [0, 1], [0, 1, 2])
+                print(r)
+                print(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
+                table.insert_one(dict(zip(['hosname', 'dept', 'aidept', 'age', 'gender', 'other'], list(r))))
+                # break
