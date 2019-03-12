@@ -13,7 +13,8 @@ import os
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Conv3D, MaxPooling3D, AveragePooling3D, Flatten, Dense, Dropout, Reshape, Lambda
+from tensorflow.keras.layers import Conv3D, MaxPooling3D, AveragePooling3D, Flatten, Dense, Dropout, Reshape, Lambda, BatchNormalization,\
+Activation
 from tensorflow.keras.optimizers import Adam, RMSprop
 from tensorflow.keras.models import load_model
 from tensorflow.python.keras import backend as K
@@ -39,7 +40,7 @@ class Models:
         """
         return x/(1 + math_ops.exp(-x))
 
-    def buildSimpleModel(self, kernel_size=3, strides=2, dropout=True, pooltype='max', activation='relu'):
+    def buildSimpleModel(self, kernel_size=3, strides=2, dropout=True, pooltype='max', activation='relu', bn=True):
         """
         目标，使得训练集快速跑出过拟合
         :return:
@@ -48,14 +49,22 @@ class Models:
         model = tf.keras.Sequential()
         if activation == 'swish':
             activation = self.swish
-        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation=activation, input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
-        # model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation='relu', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
-        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', activation=activation))
+        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid', input_shape=(self._maxSliceNum, imagesize, imagesize, 1)))
+        if bn:
+            model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Conv3D(32, kernel_size, strides=strides, padding='valid'))
+        if bn:
+            model.add(BatchNormalization())
+        model.add(Activation('relu'))
         if pooltype == 'max':
             model.add(MaxPooling3D(pool_size=2, strides=2, padding='same'))
         elif pooltype == 'average':
             model.add(AveragePooling3D(pool_size=2, strides=2, padding='same'))
-        model.add(Conv3D(64, kernel_size, strides=strides, padding='valid', activation=activation))
+        model.add(Conv3D(64, kernel_size, strides=strides, padding='valid'))
+        if bn:
+            model.add(BatchNormalization())
+        model.add(Activation('relu'))
         if pooltype == 'max':
             model.add(MaxPooling3D(pool_size=2, strides=2, padding='same'))
         elif pooltype == 'average':
