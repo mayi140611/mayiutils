@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # encoding: utf-8
 import pandas as pd
+import numpy as np
+
 
 class DataframeWrapper(object):
     def __init__(self):
@@ -193,3 +195,46 @@ class DataframeWrapper(object):
         :return:
         """
         return df.loc[df.loc[:, field].isin(rowlist)]
+
+
+if __name__ == '__main__':
+    mode = 2
+    if mode == 2:
+        """
+        apply
+        Apply a function along an axis of the DataFrame.
+        如果 axis=None，则应用函数在每个元素上，等同于applymap
+        axis = 0，给每列的元素应用函数
+        axis = 1，给每行的元素应用函数
+        applymap函数：
+        让函数作用在dataframe的每一个元素上
+        """
+        df = pd.DataFrame([[4, 9], ] * 3, columns=['A', 'B'])
+        print(df)
+        """
+           A  B
+        0  4  9
+        1  4  9
+        2  4  9
+        """
+        print(df.apply(np.sqrt))
+        """
+             A    B
+        0  2.0  3.0
+        1  2.0  3.0
+        2  2.0  3.0
+        """
+        print(df.apply(np.sum, axis=0))
+        """
+        A    12
+        B    27       
+        """
+        print(df.applymap(np.sqrt))
+    if mode == 1:
+        df =  pd.read_excel("疾病列表190126.xlsx")
+        #获取满足要求的样本
+        df1 = DataframeWrapper.isIn(df, '疾病名称（39）', ['嗜睡症', '脑萎缩'])
+        print(df1)
+
+
+

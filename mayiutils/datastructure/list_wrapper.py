@@ -78,8 +78,8 @@ if __name__ == '__main__':
             return False
         print(filter(test, list1))#<filter object at 0x000001AF0F44DB00>
         print(list(filter(test, list1)))#[2, 3, 4]
-        print(map(str,list1))#<map object at 0x000001C08985DB00>
-        print(list(map(str,list1)))#['0', '1', '2', '3', '4', '-1', '-5', '-3', '-4']
+        print(map(str, list1))#<map object at 0x000001C08985DB00>
+        print(list(map(str, list1)))#['0', '1', '2', '3', '4', '-1', '-5', '-3', '-4']
 
         # map接收多个参数
         def test(x1, x2):

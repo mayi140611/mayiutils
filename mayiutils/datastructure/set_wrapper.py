@@ -123,3 +123,9 @@ class SetWrapper(object):
         :return:
         """
         return set1.issuperset(set2)
+
+
+if __name__ == '__main__':
+    print(set(['失眠', '乏力', '多梦', '疲劳']) == set(['失眠', '多梦', '疲劳', '乏力']))
+    print(set(['失眠', '乏力', '多梦', '疲劳']) == ['失眠', '多梦', '疲劳', '乏力'])
+    print(set(['失眠', '多梦', '疲劳', '乏力']).intersection(set(['失眠', '多梦', '疲劳','发热'])))

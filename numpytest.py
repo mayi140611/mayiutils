@@ -7,7 +7,7 @@
 @file: numpytest.py
 @time: 2019/2/20 11:01
 """
-from mayiutils.numpy_wrapper import NumpyWrapper as npw
+from mayiutils.datastructure.numpy_wrapper import NumpyWrapper as npw
 import numpy as np
 
 if __name__ == "__main__":

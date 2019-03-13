@@ -57,11 +57,23 @@ class series_wrapper(object):
         '''
         return series.iloc[series.nonzero()[0]]
 
+
 if __name__ == '__main__':
-    s = pd.Series([1,2,3,4,5,4,2,1,2,1])
-    s.sort_index()
-    # print(s.value_counts())
-    print(s.value_counts().sort_values(ascending=False))
-    plt.figure()
-    s.hist()
-    plt.show()
+    mode = 2
+    if mode == 2:
+        tag = pd.Series({'s': 0, 'b': 1, 'm': 2, 'e': 3, 'x': 4})
+        print(tag)
+        #注意赋值技巧
+        tag[:] = range(5, len(tag)+5)
+        print(tag)
+        # 可以按照给定的索引列表给值，很有用！
+        print(tag[['b', 'e']])
+        print(type(tag['m']), tag['m'], tag['m'].reshape(-1, 1))
+    if mode == 1:
+        s = pd.Series([1,2,3,4,5,4,2,1,2,1])
+        print(s)
+        print(s.sort_index())
+        print(s.value_counts().sort_values(ascending=False))
+        plt.figure()
+        s.hist()
+        plt.show()

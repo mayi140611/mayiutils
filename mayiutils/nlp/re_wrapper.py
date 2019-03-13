@@ -104,6 +104,7 @@ class ReWrapper(object):
             ['1', '2', '2', '3', '4']
         re.split(r' ', '1 2 2 3 4', maxsplit=2)
             ['1', '2', '2 3 4']
+        re.split(r'[，。！？、]/[bems]', s)
         :param pattern:
         :param string:
         :param maxsplit:

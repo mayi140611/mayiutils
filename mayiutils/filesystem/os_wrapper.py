@@ -123,3 +123,4 @@ if __name__=='__main__':
     os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
     os.makedirs('reslut/log')#创建多级目录
             # break
+    # os.path.expanduser()#On Unix and Windows, return the argument with an initial component of ~ or ~user replaced by that user’s home directory.

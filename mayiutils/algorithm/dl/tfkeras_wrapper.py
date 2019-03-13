@@ -20,20 +20,42 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    print(tf.VERSION)
-    print(tf.keras.__version__)
-    model = tf.keras.Sequential()
-    model.add(Conv3D(32, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-    model.add(Conv3D(32, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-    model.add(Conv3D(64, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-    model.add(Conv3D(64, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
-    model.add(Flatten())
-    model.add(Dense(2, activation='softmax'))
-    adam = Adam(lr=1e-4)
-    model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
-    print(model.summary())
+    mode = 2
+    if mode == 2:
+        print(tf.keras.utils.to_categorical(1, 5))#[0. 1. 0. 0. 0.]
+        print(tf.keras.utils.to_categorical([1], 5))#[[0. 1. 0. 0. 0.]]
+        print(tf.keras.utils.to_categorical([1, 2], 5))
+        """
+        [[0. 1. 0. 0. 0.]
+        [0. 0. 1. 0. 0.]]
+        """
+        print(tf.keras.utils.to_categorical([[1]], 5))#[[0. 1. 0. 0. 0.]]
+        print(tf.keras.utils.to_categorical([[1, 2]], 5))
+        """
+        [[[0. 1. 0. 0. 0.]
+        [0. 0. 1. 0. 0.]]]
+        """
+        print(tf.keras.utils.to_categorical([[1], [2]], 5))
+        """
+        和tf.keras.utils.to_categorical([1, 2], 5)效果相同
+        [[0. 1. 0. 0. 0.]
+        [0. 0. 1. 0. 0.]]
+        """
+    if mode == 1:
+        print(tf.VERSION)
+        print(tf.keras.__version__)
+        model = tf.keras.Sequential()
+        model.add(Conv3D(32, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Conv3D(32, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Conv3D(64, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Conv3D(64, 5, strides=1, padding='same', activation='relu', input_shape=(384, 96, 96, 1)))
+        model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=2, padding='same'))
+        model.add(Flatten())
+        model.add(Dense(2, activation='softmax'))
+        adam = Adam(lr=1e-4)
+        model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
+        print(model.summary())
 
