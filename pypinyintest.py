@@ -5,6 +5,7 @@ from mayiutils.nlp.pypinyin_wrapper import PyPinyinWrapper
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 
 if __name__ == "__main__":
+
     ppw = PyPinyinWrapper()
     # print(ppw.initialsOfWord("下雨天"))
     # print(ppw.initialsOfWord("四价HPV疫苗"))

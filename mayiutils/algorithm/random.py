@@ -8,6 +8,9 @@
 @time: 2019/3/4 15:27
 """
 import random
+import numpy as np
+
+
 class Random:
 
     @classmethod
@@ -24,3 +27,4 @@ class Random:
 if __name__ == '__main__':
     r = Random.randomInt(0, 0)#可能的值：0,1,2,3
     print(r)
+    print(np.random.randint(0, 100, (5, )))

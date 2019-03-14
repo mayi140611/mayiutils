@@ -14,6 +14,7 @@ from data_prepare import DataPrepare
 import tensorflow as tf
 import sys
 
+
 if __name__ == "__main__":
     # tf.enable_eager_execution()
     # print(tf.executing_eagerly())
