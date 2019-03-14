@@ -314,14 +314,16 @@ class NumpyWrapper(object):
         """
         return np.random.shuffle(arr)
 
+
 if __name__ == '__main__':
     mode = 1
+    print(np.ones([2, ]))
     #测试dtype转换
     a = np.array(['我fadffs'], dtype=str)
-    print(a.dtype, a.ndim, a)
-    b = np.arange(16).reshape((2,2,2,2))
+    print(a.dtype, a.ndim, a)#<U7 1 ['我fadffs']
+    b = np.arange(16).reshape((-1, 2, 2, 2))
     print(b)
-    print(b.ndim)#维度 dimension
+    print(b.ndim)#4 维度 dimension
     if mode == 0:
         # a = NumpyWrapper.arange(1, 5)#[1 2 3 4]
         # a = NumpyWrapper.linspace(1, 5, num=5)#[1. 2. 3. 4. 5.]

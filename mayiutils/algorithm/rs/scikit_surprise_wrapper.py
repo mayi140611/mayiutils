@@ -8,6 +8,7 @@
 @time: 2019/3/13 12:22
 
 https://pypi.org/project/scikit-surprise/#description
+https://surprise.readthedocs.io/en/stable/getting_started.html
 pip install scikit-surprise
 scikit-surprise-1.0.6
 """

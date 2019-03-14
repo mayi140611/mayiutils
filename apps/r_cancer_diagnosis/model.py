@@ -4,7 +4,7 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: model.py
+@file: tfmodel.py
 @time: 2019/2/22 17:25
 """
 import tensorflow as tf
