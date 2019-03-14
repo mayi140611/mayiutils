@@ -10,7 +10,7 @@ PyMySQL==0.9.2
 pip install pymysql
 """
 import pymysql
-
+import pandas as pd
 
 
 class PyMysqlWrapper:
@@ -70,14 +70,25 @@ class PyMysqlWrapper:
 
 if __name__ == '__main__':
     pmw = PyMysqlWrapper(host='h1')
-    sqltemplate = """
-    SELECT h.hospitalAdd as addr,
-        h.hosOrgCode as hoscode,
-        h.latLng as latlng,
-        h.hospitalGrade as grade
-    from kh_hospital h
-    where h.hosName='{}'
-    """
-    pmw.execute(sqltemplate)
-    data = pmw._cursor.fetchone()
-    print(data)
+    mode = 2
+    if mode == 2:
+        sqltemplate = """
+        INSERT INTO synonyms SET source = "{}", target = "{}"
+        """
+        df = pd.read_excel('../../tmp/syn.xlsx')
+        # print(df.head())
+        for line in df.itertuples():
+            print(sqltemplate.format(line[1], line[2]))
+            pmw.executeAndCommit(sqltemplate.format(line[1], line[2]))
+    if mode == 1:
+        sqltemplate = """
+        SELECT h.hospitalAdd as addr,
+            h.hosOrgCode as hoscode,
+            h.latLng as latlng,
+            h.hospitalGrade as grade
+        from kh_hospital h
+        where h.hosName='{}'
+        """
+        pmw.execute(sqltemplate)
+        data = pmw._cursor.fetchone()
+        print(data)
