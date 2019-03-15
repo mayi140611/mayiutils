@@ -14,13 +14,31 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Conv3D, MaxPooling3D, Flatten, Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import backend as K
 import numpy as np
 
 # class TfModel:
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    if mode == 3:
+        """
+        Batchwise dot product. 
+        x.dot(y.T)
+        """
+        x = K.constant([[1, 2], [3, 4]])
+        y = K.constant([[5, 6], [7, 8]])
+        xy = tf.keras.backend.batch_dot(x, y, axes=1)
+        print(xy)
+        with tf.Session() as sess:
+            r = sess.run(xy)
+            print(r)
+            """
+             [[17.]
+             [53.]]           
+            """
+
     if mode == 2:
         print(tf.keras.utils.to_categorical(1, 5))#[0. 1. 0. 0. 0.]
         print(tf.keras.utils.to_categorical([1], 5))#[[0. 1. 0. 0. 0.]]
