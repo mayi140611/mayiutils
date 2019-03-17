@@ -12,6 +12,18 @@ python 基础类型
 import math
 
 
+class BasicTypeWrapper:
+    @classmethod
+    def round(cls, number, ndigits=0):
+        """
+        把number四舍五入为指定的小数位数
+        :param number:
+        :param ndigits:
+        :return:
+        """
+        return round(number, ndigits)
+
+
 
 
 #类型转换Type conversion
