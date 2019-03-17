@@ -38,7 +38,7 @@ class Solution(object):
             for ii in range(arr.shape[0] - 1):
                 sub += int(np.min([arr[ii + 1, i], arr[ii, i]]) * 2)
 
-        # 减去y方向的重叠面
+        # 减去x方向的重叠面
         for i in range(arr.shape[0]):
             for ii in range(arr.shape[1] - 1):
                 sub += int(np.min([arr[i, ii + 1], arr[i, ii]]) * 2)

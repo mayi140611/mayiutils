@@ -316,7 +316,8 @@ class NumpyWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+
     if mode == 2:
         """
         遍历numpy中的每一个元素
