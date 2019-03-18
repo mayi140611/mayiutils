@@ -26,6 +26,7 @@ class NumpyWrapper(object):
         '''
         生成1D ndarray
         Return evenly spaced numbers over a specified interval.
+        print(np.linspace(0, 5, 6))#[0. 1. 2. 3. 4. 5.]
         '''
         return np.linspace(start, stop, num, endpoint, retstep, dtype)
 
@@ -316,7 +317,19 @@ class NumpyWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    if mode == 4:
+        """
+        扁平化
+        """
+        # np.meshgrid()
+        x = y = np.arange(0, 10, 0.1)
+        xx, yy = np.meshgrid(x, y)
+        print(xx.shape)#(100, 100)
+        print(xx.ravel())# [0.  0.1 0.2 ... 9.7 9.8 9.9]
+        print(xx.ravel().shape)#(10000,)
+        # np.c_ 两两配对
+        print(np.c_[xx.ravel(), yy.ravel()].shape)# (10000, 2)
     if mode == 3:
         """
         扩展维度

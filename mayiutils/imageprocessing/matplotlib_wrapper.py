@@ -82,16 +82,48 @@ class MatplotlibWrapper(object):
         return n, bins, patches
 
 
+
+def f(x, y):
+    return (1 - x / 2 + x ** 5 + y ** 3) * np.exp(-x ** 2, -y ** 2)
 if __name__ == '__main__':
-    mu, sigma = 100, 15
-    x = mu + sigma * np.random.randn(10000)
-    n, bins, patches = MatplotlibWrapper.hist(x, 50, density=1, color='g', alpha=0.75)
-    print(n, bins, patches)
-    print(n.shape, bins.shape)
-    plt.xlabel('Smarts')
-    plt.ylabel('Probability')
-    plt.title('Histogram of IQ')
-    plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    plt.axis([40, 160, 0, 0.03])
-    plt.grid(True)
-    plt.show()
+    mode = 2
+    if mode == 2:
+        """
+        等高线图
+        https://www.cnblogs.com/huanggen/p/7533088.html
+        """
+        n = 256
+        x = np.linspace(-3, 3, n)
+        # print(x)
+        y = np.linspace(-3, 3, n)
+        X, Y = np.meshgrid(x, y)
+        # print(X)
+        """
+        接下来我们进行颜色填充。使用函数plt.contourf把颜色加进去，位置参数分别为:X，Y，f(X,Y)。透明度0.75，
+        并将f(X,Y)的值对应到color map的暖色组中寻找对应颜色。
+        """
+        plt.contourf(X, Y, f(X, Y), 8, alpha=0.75, cmap=plt.cm.hot)
+        # 把等高线描出来
+        C = plt.contour(X, Y, f(X, Y), 8, colors='black')
+        # 加入Label,inline控制是否在Label画在线里面，字体大小为10.：
+        plt.clabel(C, inline=True, fontsize=10)
+        # 并将坐标轴隐藏
+        plt.xticks(())
+        plt.yticks(())
+        plt.show()
+    if mode == 1:
+        """
+        画频率直方图
+        """
+        mu, sigma = 100, 15
+        x = mu + sigma * np.random.randn(10000)
+        n, bins, patches = MatplotlibWrapper.hist(x, 50, density=1, color='g', alpha=0.75)
+        print(n, bins, patches)
+        print(n.shape, bins.shape)
+        plt.xlabel('Smarts')
+        plt.ylabel('Probability')
+        plt.title('Histogram of IQ')
+        plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+        plt.axis([40, 160, 0, 0.03])
+        plt.grid(True)
+        plt.show()
