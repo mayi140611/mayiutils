@@ -317,6 +317,43 @@ class NumpyWrapper(object):
 
 if __name__ == '__main__':
     mode = 3
+    if mode == 3:
+        """
+        扩展维度
+        """
+        arr = np.arange(4).reshape((2, 2))
+        print(arr)
+        """
+        [[0 1]
+        [2 3]]
+        """
+        print(np.expand_dims(arr, axis=0))
+        """
+         [[[0 1]
+          [2 3]]]       
+        """
+        print(np.expand_dims(arr, axis=1))
+        """
+         [[[0 1]]
+        
+         [[2 3]]]       
+        """
+        print(np.expand_dims(arr, axis=-1))# 添加一维在数组的最后一维后面
+        """
+          [[[0]
+          [1]]
+        
+         [[2]
+          [3]]]
+        """
+        print(np.expand_dims(arr, axis=2))
+        """
+          [[[0]
+          [1]]
+        
+         [[2]
+          [3]]]
+        """
 
     if mode == 2:
         """

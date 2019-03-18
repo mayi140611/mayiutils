@@ -18,8 +18,16 @@ Apriori算法是一个寻找关联规则的算法，也就是从一大批数据�
 import pandas as pd
 import time
 
-# 自定义连接函数，用于实现L_{k-1}到C_k的连接
+
 def connect_string(x, ms):
+    """
+    # 自定义连接函数，用于实现L_{k-1}到C_k的连接
+    :param x: 带连接的list，如['a', 'b', 'c', 'd', 'e']
+    :param ms: 连接符，如'-'
+    :return:
+        [['a', 'b'], ['a', 'c'], ['a', 'd'], ['a', 'e'], ['b', 'c'],
+        ['b', 'd'], ['b', 'e'], ['c', 'd'], ['c', 'e'], ['d', 'e']]
+    """
     x = list(map(lambda i: sorted(i.split(ms)), x))
     l = len(x[0])
     r = []
@@ -29,25 +37,34 @@ def connect_string(x, ms):
                 r.append(x[i][:l - 1] + sorted([x[j][l - 1], x[i][l - 1]]))
     return r
 
-# 寻找关联规则的函数
+
 def find_rule(d, support, confidence):
+    """
+    # 寻找关联规则的函数
+    :param d:
+    :param support:
+    :param confidence:
+    :return:
+    """
     start = time.clock()
     result = pd.DataFrame(index=['support', 'confidence'])  # 定义输出结果
 
-    support_series = 1.0 * d.sum() / len(d)  # 支持度序列
+    # support_series = 1.0 * d.sum() / len(d)  # 支持度序列
+    support_series = 1.0 * d.sum(axis=0) / d.shape[0]  # 支持度序列
     column = list(support_series[support_series > support].index)  # 初步根据支持度筛选
+    print('数目：%s...' % len(column))
     k = 0
 
     while len(column) > 1:
         k = k + 1
-        print(u'\n正在进行第%s次搜索...' % k)
+        print('\n正在进行第%s次搜索...' % k)
         column = connect_string(column, ms)
-        print(u'数目：%s...' % len(column))
+        print('数目：%s...' % len(column))
         sf = lambda i: d[i].prod(axis=1, numeric_only=True)  # 新一批支持度的计算函数
 
         # 创建连接数据，这一步耗时、耗内存最严重。当数据集较大时，可以考虑并行运算优化。
         d_2 = pd.DataFrame(list(map(sf, column)), index=[ms.join(i) for i in column]).T
-
+        print(d_2.head())
         support_series_2 = 1.0 * d_2[[ms.join(i) for i in column]].sum() / len(d)  # 计算连接后的支持度
         column = list(support_series_2[support_series_2 > support].index)  # 新一轮支持度筛选
         support_series = support_series.append(support_series_2)
@@ -78,13 +95,15 @@ def find_rule(d, support, confidence):
 
 
 if __name__ == '__main__':
-    d = pd.read_csv('apriori.txt', header=None, dtype=object)
+    # print(connect_string(['a', 'b', 'c', 'd', 'e'], '-'))
+    d = pd.read_csv('apriori.txt', header=None)
+    print(d.head())
 
     print('\n转换原始数据至0-1矩阵...')
 
     start = time.clock()
     ct = lambda x: pd.Series(1, index=x)
-    b = map(ct, d.as_matrix())
+    b = map(ct, d.values)
     d = pd.DataFrame(list(b)).fillna(0)
     d = (d == 1)
     end = time.clock()

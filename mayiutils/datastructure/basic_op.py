@@ -4,15 +4,16 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: basic_type.py
+@file: basic_op.py
 @time: 2019/3/7 9:55
 
-python 基础类型
+python 基础函数操作
 """
 import math
+import numpy as np
 
 
-class BasicTypeWrapper:
+class BasicOpWrapper:
     @classmethod
     def round(cls, number, ndigits=0):
         """
@@ -24,11 +25,23 @@ class BasicTypeWrapper:
         return round(number, ndigits)
 
 
-
-
-#类型转换Type conversion
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    if mode == 3:
+        """
+        map func
+        """
+        arr = np.arange(8).reshape((2, 4))
+        print(arr)
+        """
+        [[0 1 2 3]
+        [4 5 6 7]]
+        """
+        b = map(lambda x: sum(x), arr)#按照第一个维度（行）展开，每一行是一个元素
+        print(list(b))
+        """
+        [6, 22]
+        """
     if mode == 2:
         """
         取整

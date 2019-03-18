@@ -5,6 +5,10 @@ import numpy as np
 
 
 class DataframeWrapper(object):
+    """
+    http://pandas.pydata.org/pandas-docs/stable/reference/frame.html
+
+    """
     def __init__(self):
         pass
     
@@ -198,7 +202,67 @@ class DataframeWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 4
+    if mode == 4:
+        d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
+        print(d == 1)#判断d中每一个元素是否为1
+        """
+               0      1
+        0  False  False
+        1  False   True
+        2   True   True
+        """
+        d = (d == 1)
+        print(len(d))#3 等价于df.shape[0]
+        print(d.sum())# 按列求和，等价于d.sum(axis=0)
+    if mode == 3:
+        """
+        DataFrame生成 
+        可以通过Series, arrays, constants, or list-like objects生成df
+        """
+        # list
+        df = pd.DataFrame([[4, 9], ] * 3, columns=['A', 'B'])
+        # array
+        df = pd.DataFrame(np.array([[4, 9], ] * 3), columns=['A', 'B'])
+        print(df)
+        """
+           A  B
+        0  4  9
+        1  4  9
+        2  4  9
+        """
+        # dict
+        data = {'state': ['Ohio', 'Ohio', 'Ohio', 'Nevada', 'Nevada'],
+                'year': [2000, 2001, 2002, 2001, 2002],
+                'pop': [1.5, 1.7, 3.6, 2.4, 2.9]}
+        df = pd.DataFrame(data)
+        print(df)
+        # series
+        s1 = pd.Series(5, index=['a', 'b', 'c', 'd', 'e'])
+        print(pd.DataFrame(s1))
+        """
+           0
+        a  5
+        b  5
+        c  5
+        d  5
+        e  5
+        """
+        s2 = pd.Series(range(6), index=['b', 'c', 'd', 'e', 'f', 'g'])
+        print(pd.DataFrame([s1, s2]))
+        """
+             a    b    c    d    e    f    g
+        0  5.0  5.0  5.0  5.0  5.0  NaN  NaN
+        1  NaN  0.0  1.0  2.0  3.0  4.0  5.0
+        """
+        print(pd.DataFrame([s1, s2]).fillna(''))
+        """
+           a    b    c    d    e  f  g
+        0  5  5.0  5.0  5.0  5.0      
+        1     0.0  1.0  2.0  3.0  4  5
+        """
+        # data 为 None
+        print(pd.DataFrame(index=['support', 'confidence']))
     if mode == 2:
         """
         apply
