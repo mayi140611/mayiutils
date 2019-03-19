@@ -18,7 +18,7 @@ import itertools
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 1
     baseDir = 'D:/Desktop/DF/portrait'
     df = pd.read_csv(os.path.join(baseDir, 'train_dataset.csv'))
     testdf = pd.read_csv(os.path.join(baseDir, 'test_dataset.csv'))
@@ -73,6 +73,8 @@ if __name__ == '__main__':
         """
         使用默认参数跑一遍
         3.8991447407174022 0.7816595120180412
+        预处理以后的
+        3.901933646505774 0.7810767268689831
         """
         skf = StratifiedKFold(n_splits=5)
         skf.get_n_splits(X, y)
