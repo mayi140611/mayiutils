@@ -18,7 +18,6 @@ class TextPrepareWrapper:
     def calEditDistance(self, s1, s2, mode=1):
         '''
         通过编辑距离计算字符串相似度，可以是任意字符串word，sentence，text
-
         :mode: 计算相似的算法选择
         '''
         if mode == 1:
@@ -37,7 +36,17 @@ class TextPrepareWrapper:
 
 
 if __name__ == '__main__':
-    print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 1))#1
-    print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 2))#1
-    print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 1))#3
-    print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 2))#3
+    mode = 2
+    if mode == 2:
+        """
+        提取文档特征
+        """
+        pass
+    if mode == 1:
+        """
+        编辑距离
+        """
+        print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 1))#1
+        print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 2))#1
+        print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 1))#3
+        print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 2))#3

@@ -48,7 +48,22 @@ class FileOperationWrapper:
             f.writelines(list)
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    if mode == 4:
+        """
+        把文件按行读取为list
+        """
+        f = open('../nlp/jieba_userdict.txt', encoding='utf8')
+        # s = f.readlines()
+        # print(s)
+        """
+        ['云计算 5\n', '李小福 2 nr\n', '我爱李小 3\n', '创新办 3 i\n', 'easy_install 3 eng\n', '好用 300\n', '韩玉赏鉴 3 nz\n', '八一双鹿 3 nz\n', '台中\n']
+        """
+        print([i.strip() for i in f.readlines()])
+        """
+        ['云计算 5', '李小福 2 nr', '我爱李小 3', '创新办 3 i', 'easy_install 3 eng', '好用 300', '韩玉赏鉴 3 nz', '八一双鹿 3 nz', '台中']
+        """
+        f.close()
     if mode == 3:
         # 打开一个文件
         fo = open("foo.txt", "r+")

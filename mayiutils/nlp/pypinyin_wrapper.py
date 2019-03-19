@@ -6,6 +6,8 @@
 @contact:yongguiluo@hotmail.com
 @file: pypinyin_wrapper.py
 @time: 2019/1/21 10:59
+
+https://pypi.org/project/pypinyin/
 """
 from pypinyin import Style, pinyin, lazy_pinyin
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper as pmw
