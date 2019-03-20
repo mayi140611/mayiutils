@@ -317,7 +317,62 @@ class NumpyWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 7
+    if mode == 7:
+        """
+        * 
+        np.greater
+        """
+        a = np.arange(8).reshape((2, 4))
+        b = np.arange(2).reshape((2, 1))
+        print(a, b)
+        """
+        [[0 1 2 3]
+         [4 5 6 7]] 
+         [[0]
+         [1]]
+        """
+        print(b * a)
+        """
+        [[0 0 0 0]
+        [4 5 6 7]]
+        """
+        print(a * b)
+        """
+        [[0 0 0 0]
+        [4 5 6 7]]
+        """
+        print(np.greater(a, 0))
+        """
+        [[False  True  True  True]
+        [ True  True  True  True]]
+        """
+    if mode == 6:
+        """
+        keepdims
+        """
+        a = np.arange(15).reshape((3, 5))
+
+        print(np.sum(a, 1))#[10 35 60]
+        print(np.sum(a, 1, keepdims=True))
+        """
+        [[10]
+         [35]
+         [60]]
+        """
+    if mode == 5:
+        """
+        利用numpy生成one-hot数组
+        """
+        test_labels = [1, 2, 3, 4, 5, 6, 7]
+        adata = np.array(test_labels)
+
+        # print(adata[:, None])#相当于给最后增加一维
+        def make_one_hot(data1):
+            return (np.arange(10) == data1[:, None]).astype(np.integer)
+
+        my_one_hot = make_one_hot(adata)
+        print(my_one_hot)
     if mode == 4:
         """
         扁平化

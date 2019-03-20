@@ -8,7 +8,8 @@
 @time: 2019/3/19 10:56
 """
 import nltk
-from nltk.book import *
+# from nltk.book import *
+from nltk.corpus import reuters
 from nltk.util import trigrams
 from nltk.util import bigrams
 
@@ -37,3 +38,9 @@ class NltkWrapper:
     sents转raw
     sents转text
     """
+    def __init__(self):
+        pass
+
+
+if __name__ == '__main__':
+    print(reuters.fileids())

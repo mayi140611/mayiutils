@@ -100,7 +100,7 @@ class DictWrapper:
 
 if __name__ == '__main__':
 
-    mode = 3
+    mode = 1
     if mode == 3:
         d = {i: 0 for i in 'sbme'}#字典生成式
         print(d)
@@ -122,7 +122,13 @@ if __name__ == '__main__':
             print(key, '=>', value)
         for value in D.values():  # 方法四
             print(value)
-
+        for i, v in enumerate(D):
+            print(i, v)
+        """
+        0 x
+        1 y
+        2 z
+        """
     if mode == 0:
         keylist = ['a', 'b', 'c']
         valuelist = list(range(3))
