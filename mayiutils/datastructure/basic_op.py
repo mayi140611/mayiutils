@@ -26,7 +26,9 @@ class BasicOpWrapper:
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    print(4 % 2)
+    print(5 % 2)
     if mode == 3:
         """
         map func

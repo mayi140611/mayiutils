@@ -47,7 +47,7 @@ class ListWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 7
+    mode = 4
     if mode == 1:
         # 生成有多个重复值的list
         l1 = ['我头疼'] * 5
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         list1 = [0, 1, 2, 3, 4, -1, -5, -3, -4]
         print(sorted(list1))
         # 按照绝对值从小到大排列
-        print(sorted(list1,key=abs))
+        print(sorted(list1, key=abs))
         # 逆序列表中的元素
         print(list(reversed(list1)))
         """
