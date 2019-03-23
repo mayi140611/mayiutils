@@ -9,6 +9,7 @@
 """
 import gensim
 from gensim.models import Word2Vec
+from gensim.models import FastText
 
 class GensimWrapper:
     @classmethod
@@ -43,8 +44,21 @@ class GensimWrapper:
 
 
 if __name__ == '__main__':
-    # gensim.models.Word2Vec()
+    mode = 2
     sentences = [["cat", "say", "meow"], ["dog", "say", "woof"]]
-    model = Word2Vec(sentences, min_count=1)
-    r = model.wv.most_similar('cat')
-    print(r)
+    if mode == 2:
+        """
+        fasttext
+        """
+        sentences = [["你", "是", "谁"], ["我", "是", "中国人"]]
+        model = FastText(sentences)
+        print(model['你'])# 词向量获得的方式
+        print(model.wv['你'])# 词向量获得的方式
+        print(model.wv.most_similar('你'))
+    if mode == 1:
+        """
+        word2vec
+        """
+        model = Word2Vec(sentences, min_count=1)
+        r = model.wv.most_similar('cat')
+        print(r)

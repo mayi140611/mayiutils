@@ -33,6 +33,9 @@ if __name__ == '__main__':
     print(s[-1:1])
     print(s[:2])
     print( 0 or 2)
+    #把一个int型数值按位展开，转换为整数数组
+    n = 8657
+    print(list(map(int, str(n))))#[8, 6, 5, 7]
 
 
 
