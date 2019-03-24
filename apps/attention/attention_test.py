@@ -69,11 +69,11 @@ if __name__ == "__main__":
     __________________________________________________________________________________________________
     None
     """
-    print('Train...')
-    model.fit(x_train, y_train,
-              batch_size=batch_size,
-              epochs=5,
-              validation_data=(x_test, y_test))
+    # print('Train...')
+    # model.fit(x_train, y_train,
+    #           batch_size=batch_size,
+    #           epochs=5,
+    #           validation_data=(x_test, y_test))
     """
     24896/25000 [============================>.] - ETA: 0s - loss: 0.0835 - acc: 0.9696
     24928/25000 [============================>.] - ETA: 0s - loss: 0.0835 - acc: 0.9696

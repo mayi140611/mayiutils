@@ -32,3 +32,5 @@ if __name__ == "__main__":
     """
     print(K.expand_dims(x, 2))#Tensor("ExpandDims:0", shape=(2, 4, 1), dtype=int32)
     print(K.one_hot(x, 10))#Tensor("one_hot:0", shape=(2, 4, 10), dtype=float32)
+    # Permutes(交换) axes in a tensor.
+    print(K.permute_dimensions(x, (1, 0)))#Tensor("transpose:0", shape=(4, 2), dtype=int32)

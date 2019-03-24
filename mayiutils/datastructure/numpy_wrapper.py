@@ -317,7 +317,40 @@ class NumpyWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 7
+    mode = 8
+    if mode == 8:
+        a = np.arange(8).reshape((2, 2, 2))
+        print(a)
+        """
+        [[[0 1]
+          [2 3]]
+        
+         [[4 5]
+          [6 7]]]
+        """
+        print(np.dot(a, a))
+        """
+        If both a and b are 1-D arrays, it is inner product of vectors (without complex conjugation).
+        If both a and b are 2-D arrays, it is matrix multiplication, but using matmul or a @ b is preferred.
+        If either a or b is 0-D (scalar), it is equivalent to multiply and using numpy.multiply(a, b) or a * b is preferred.
+        If a is an N-D array and b is a 1-D array, it is a sum product over the last axis of a and b.
+        If a is an N-D array and b is an M-D array (where M>=2), 
+            it is a sum product over the last axis of a and the second-to-last(倒数第二个) axis of b
+            也就是说点积发生在a,b矩阵最后两个维度上
+        [[[[ 2  3]
+           [ 6  7]]
+        
+          [[ 6 11]
+           [26 31]]]
+        
+        
+         [[[10 19]
+           [46 55]]
+        
+          [[14 27]
+           [66 79]]]]
+        """
+        print(a[:, :, 1])
     if mode == 7:
         """
         * 

@@ -28,6 +28,8 @@ class Solution(object):
     """
     def numDupDigitsAtMostN(self, N):
         """
+        执行用时 : 32 ms, 在Numbers With Repeated Digits的Python提交中击败了100.00% 的用户
+        内存消耗 : 11.9 MB, 在Numbers With Repeated Digits的Python提交中击败了100.00% 的用户
         https://leetcode.com/problems/numbers-with-repeated-digits/discuss/256725/JavaPython-Count-the-Number-Without-Repeated-Digit
         :type N: int
         :rtype: int

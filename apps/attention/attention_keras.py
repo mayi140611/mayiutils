@@ -54,6 +54,7 @@ class Attention(Layer):
 
     def build(self, input_shape):
         print(type(input_shape[0][-1]), input_shape[0][-1])
+        print(input_shape[1])#(?, ?, 128)
         print(input_shape[1][-1])
         print(input_shape[2][-1])
         self.WQ = self.add_weight(name='WQ',
@@ -93,8 +94,11 @@ class Attention(Layer):
             Q_seq, K_seq, V_seq, Q_len, V_len = x
         # 对Q、K、V做线性变换
         Q_seq = K.dot(Q_seq, self.WQ)
+        print(Q_seq)#Tensor("attention/Reshape_2:0", shape=(?, ?, 128), dtype=float32)
         Q_seq = K.reshape(Q_seq, (-1, K.shape(Q_seq)[1], self.nb_head, self.size_per_head))
+        print(Q_seq)#Tensor("attention/Reshape_3:0", shape=(?, ?, 8, 16), dtype=float32)
         Q_seq = K.permute_dimensions(Q_seq, (0, 2, 1, 3))#置换axis的顺序
+        print(Q_seq)#Tensor("attention/transpose_1:0", shape=(?, 8, ?, 16), dtype=float32)
         K_seq = K.dot(K_seq, self.WK)
         K_seq = K.reshape(K_seq, (-1, K.shape(K_seq)[1], self.nb_head, self.size_per_head))
         K_seq = K.permute_dimensions(K_seq, (0, 2, 1, 3))
@@ -103,16 +107,24 @@ class Attention(Layer):
         V_seq = K.permute_dimensions(V_seq, (0, 2, 1, 3))
         # 计算内积，然后mask，然后softmax
         A = K.batch_dot(Q_seq, K_seq, axes=[3, 3]) / self.size_per_head ** 0.5
-        print(Q_seq, K_seq, A)
+        print(A)#Tensor("attention/truediv:0", shape=(?, 8, ?, ?), dtype=float32)
         A = K.permute_dimensions(A, (0, 3, 2, 1))
+        print(A)#Tensor("attention/transpose_6:0", shape=(?, ?, ?, 8), dtype=float32)
         A = self.Mask(A, V_len, 'add')
+        print(A)#Tensor("attention/transpose_6:0", shape=(?, ?, ?, 8), dtype=float32)
         A = K.permute_dimensions(A, (0, 3, 2, 1))
+        print(A)#Tensor("attention/Softmax:0", shape=(?, 8, ?, ?), dtype=float32)
         A = K.softmax(A)
+        print(A)#Tensor("attention/Softmax:0", shape=(?, 8, ?, ?), dtype=float32)
         # 输出并mask
         O_seq = K.batch_dot(A, V_seq, axes=[3, 2])#分批点积
+        print(O_seq)#Tensor("attention/MatMul_4:0", shape=(?, 8, ?, 16), dtype=float32)
         O_seq = K.permute_dimensions(O_seq, (0, 2, 1, 3))
+        print(O_seq)#Tensor("attention/transpose_8:0", shape=(?, ?, 8, 16), dtype=float32)
         O_seq = K.reshape(O_seq, (-1, K.shape(O_seq)[1], self.output_dim))
+        print(O_seq)#Tensor("attention/Reshape_12:0", shape=(?, ?, 128), dtype=float32)
         O_seq = self.Mask(O_seq, Q_len, 'mul')
+        print(O_seq)#Tensor("attention/Reshape_12:0", shape=(?, ?, 128), dtype=float32)
         return O_seq
 
     def compute_output_shape(self, input_shape):
