@@ -4,7 +4,8 @@
 import random
 from matplotlib.cbook import flatten
 
-class ListWrapper(object):
+
+class ListWrapper:
     """
     #主要是对python中的list的相关操作的封装
     """
@@ -72,19 +73,19 @@ if __name__ == '__main__':
         注意：map时只是返回一个map对象，只是一个生成器，需要list才能得到实际列表
         """
         list1 = [0, 1, 2, 3, 4, -1, -5, -3, -4]
-        def test(x):
+        def test1(x):
             if x > 1:
                 return True
             return False
-        print(filter(test, list1))#<filter object at 0x000001AF0F44DB00>
-        print(list(filter(test, list1)))#[2, 3, 4]
+        print(filter(test1, list1))#<filter object at 0x000001AF0F44DB00>
+        print(list(filter(test1, list1)))#[2, 3, 4]
         print(map(str, list1))#<map object at 0x000001C08985DB00>
         print(list(map(str, list1)))#['0', '1', '2', '3', '4', '-1', '-5', '-3', '-4']
 
         # map接收多个参数
-        def test(x1, x2):
+        def test2(x1, x2):
             return x1+x2
-        print(list(map(test, list1, list1)))
+        print(list(map(test2, list1, list1)))
     if mode == 4:
         """
         列表排序
@@ -94,7 +95,11 @@ if __name__ == '__main__':
         # 按照绝对值从小到大排列
         print(sorted(list1, key=abs))
         # 逆序列表中的元素
-        print(list(reversed(list1)))
+        print(reversed(list1))#<list_reverseiterator object at 0x000002379E493438>
+        print(list(reversed(list1)))#[-4, -3, -5, -1, 4, 3, 2, 1, 0]
+        print(list(reversed('我是中国人')))#['人', '国', '中', '是', '我']
+        print(list1[::-1])#[-4, -3, -5, -1, 4, 3, 2, 1, 0]
+
         """
         以tuple作为list的元素
         在默认情况下sort和sorted函数接收的参数是元组时，它将会先按元组的第一个元素进行排序再按第二个元素进行排序，

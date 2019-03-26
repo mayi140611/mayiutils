@@ -178,17 +178,20 @@ class DataframeWrapper(object):
             * "many_to_many" or "m:m": allowed, but does not result in checks.
         '''
         return pd.merge(left, right, how=how, on=on, left_on=left_on, right_on=right_on, left_index=left_index, right_index=right_index, sort=sort, suffixes=suffixes, copy=copy, indicator=indicator, validate=validate)
+
     def join(left, other, on=None, how='left', lsuffix='', rsuffix='', sort=False):
         '''
         和merge函数类似，只不过调用的主体是left_df
         '''
         return left.join(other, on=None, how='left', lsuffix='', rsuffix='', sort=False)
+
     def concat(objs, axis=0, join='outer', join_axes=None, ignore_index=False, keys=None, levels=None, names=None, verify_integrity=False, sort=None, copy=True):
         '''
         如果axis=0，按照相同的column名进行列方向的叠加
         如果axis=1，按照相同的index名进行行方向的叠加
         '''
         return None
+
     @classmethod
     def isIn(cls, df, field, rowlist):
         """
