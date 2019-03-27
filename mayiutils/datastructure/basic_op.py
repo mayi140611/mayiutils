@@ -26,7 +26,7 @@ class BasicOpWrapper:
 
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 1
     print(4 % 2)
     print(5 % 2)
     if mode == 3:
@@ -58,6 +58,8 @@ if __name__ == '__main__':
         """
         强制类型转换
         """
+        print(2 ** 31-1)
+        print(int('-5'))#-5
         print(bool('True'))#True
         print(bool('False'))#True
         print(bool('true'))#True

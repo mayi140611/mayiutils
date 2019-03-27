@@ -112,3 +112,45 @@ class ReWrapper(object):
         :return:
         """
         return re.split(pattern, string, maxsplit, flags=flags)
+
+
+if __name__ == '__main__':
+    mode = 3
+    if mode == 3:
+        """
+        findall
+        """
+        print(re.findall('([a-zA-Z]+)','12fFdsDFDS3rtG4'))#['fFdsDFDS', 'rtG']
+        print(re.findall('[a-zA-Z]+','12fFdsDFDS3rtG4'))#['fFdsDFDS', 'rtG']
+        nltk.re_show('[a-zA-Z]+', '12fFdsDFDS3rtG4')#12{fFdsDFDS}3{rtG}4
+        nltk.re_show('[a-zA-Z]*', '12fFdsDFDS3rtG4')#{}1{}2{fFdsDFDS}3{rtG}4{}
+        print(re.subn(r' ','_', '1 2 2 3 4'))#('1_2_2_3_4', 4)
+        print(re.sub(r' ', '_', '1 2 2 3 4'))#1_2_2_3_4
+        print(re.split(r' ', '1 2 2 3 4', maxsplit=2))#['1', '2', '2 3 4']
+    if mode == 2:
+        """
+        同义词替换 match search
+        """
+        fubu = ['肚子', '小腹', '上腹', '下腹', '腹部', '肚', '腹']
+        jinbu = ['脖子', '头颈', '脖颈', '脖梗', '颈部', '颈椎', '颈', '脖']
+        yanhou = ['扁桃体', '嗓子', '喉咙', '咽喉', '食管', '喉结', '声带', '咽', '喉']
+        nanxsz = ['男性生殖', '睾丸', '包皮', '阴茎', '阴囊', '鸡鸡', '龟头', '精']
+        nvxsz = ['女性生殖', '产褥期', '排卵期', '阴道', '白带', '经期', '月经', '闭经', '会阴', '子宫']
+        penqiang = ['尿道', '盆腔', '耻骨', '髋']
+        beibu = ['脊柱', '背脊', '背部', '背']
+        tunbu = ['肛门', '臀部', '屁股', '屁', '臀', '髋']
+        yaobu = ['肾区', '腰部', '腰']
+        daxiaobian = ['大小便', '大便', '小便', '屎', '尿']
+        pattern = re.compile(r'|'.join(fubu))
+        nltk.re_show(r'肚子|小腹|上腹|下腹|腹部|肚|腹', '我肚子疼')#我{肚子}疼
+        nltk.re_show(r'肚子|小腹|上腹|下腹|腹部|肚|腹', '我腹部疼')#我{腹部}疼
+        nltk.re_show(r'肚子|小腹|上腹|下腹|腹部|肚|腹', '我腹疼')#我{腹}疼
+        r = re.search(r'肚子|小腹|上腹|下腹|腹部|肚|腹', '我腹疼啊腹好痛')
+        print(r)#<_sre.SRE_Match object; span=(1, 2), match='腹'>
+        print(r.span())#(1, 2)
+        print(r.group())#腹
+        r = re.match(r'肚子|小腹|上腹|下腹|腹部|肚|腹', '我腹疼啊腹好痛')
+        print(r)#None
+        print(re.match(r'肚子|小腹|上腹|下腹|腹部|肚|腹','腹疼啊腹好痛'))#<_sre.SRE_Match object; span=(0, 1), match='腹'>
+    if mode == 1:
+        nltk.re_show(r'[a-zA-Z]{1,2}', '12fFdsDFDS3rtG4')#12{fF}{ds}{DF}{DS}3{rt}{G}4
