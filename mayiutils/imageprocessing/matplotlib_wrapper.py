@@ -37,6 +37,8 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
 
 class MatplotlibWrapper(object):
     @classmethod
@@ -82,11 +84,23 @@ class MatplotlibWrapper(object):
         return n, bins, patches
 
 
-
 def f(x, y):
     return (1 - x / 2 + x ** 5 + y ** 3) * np.exp(-x ** 2, -y ** 2)
+
+
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    if mode == 3:
+        """
+        条形图
+        """
+        x = ['a', 'b', 'c']
+        y = [1, 2, 3]
+        s = pd.Series(y, index=x)
+        plt.figure()
+        # plt.bar(x, y)
+        plt.bar(s.index, s.values)
+        plt.show()
     if mode == 2:
         """
         等高线图

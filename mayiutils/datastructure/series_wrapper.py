@@ -59,7 +59,22 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    if mode == 3:
+        """
+        获取非零值
+        """
+        s = pd.Series([1, 0, 3, 0, 4])
+        print(s.nonzero())#(array([0, 2, 4], dtype=int64),) Return the indices of the elements that are non-zero
+        print(s[s.nonzero()[0]])
+        s = pd.Series([1, None, 3, None, 4])
+        print(s.isnull())
+        print(s.notnull())
+        """
+        0    1
+        2    3
+        4    4       
+        """
     if mode == 2:
         tag = pd.Series({'s': 0, 'b': 1, 'm': 2, 'e': 3, 'x': 4})
         print(tag)
