@@ -35,9 +35,9 @@ if __name__ == '__main__':
         format
         http://www.runoob.com/python/att-string-format.html
         """
-        print("{:.2e}".format(3.1415926))
-        print("{:.2%}".format(3.1415926))
-        print("{:.2f}".format(3.1415926))
+        print("{:.2e}".format(3.1415926))#3.14e+00
+        print("{:.2%}".format(3.1415926))#314.16%
+        print("{:.2f}".format(3.1415926))#3.14
         print('%-16s-%16s' %('123','456'))#123             -             456
         print('{:<16s}-{:16s}\n{:<16s}-{:16s}'.format('123456789', '123456789', '123456789', '123456789'))
         """
