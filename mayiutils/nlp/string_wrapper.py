@@ -29,7 +29,11 @@ class StringWrapper:
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    s = 'abcdabceabc'
+    print('' == s[:0])
+    print(s.find('abc'))
+    print(s.find('abcf'))#-1
     if mode == 2:
         """
         format

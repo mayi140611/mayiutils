@@ -33,11 +33,12 @@ if __name__ == '__main__':
         c = Counter()
         for ch in 'programming':
             c[ch] = c[ch] + 1
-        print(c)
-        print(Counter('programming'))
-        print(Counter('programming').most_common(3))
-        print(Counter('programming').elements())
-        print(list(Counter('programming').elements()))
+        print(c)#Counter({'r': 2, 'g': 2, 'm': 2, 'p': 1, 'o': 1, 'a': 1, 'i': 1, 'n': 1})
+        print(Counter('programming'))#Counter({'r': 2, 'g': 2, 'm': 2, 'p': 1, 'o': 1, 'a': 1, 'i': 1, 'n': 1})
+        print(dict(Counter('programming')))#{'p': 1, 'r': 2, 'o': 1, 'g': 2, 'a': 1, 'm': 2, 'i': 1, 'n': 1}
+        print(Counter('programming').most_common(3))#[('r', 2), ('g', 2), ('m', 2)]
+        print(Counter('programming').elements())#<itertools.chain object at 0x00000283A45B5780>
+        print(list(Counter('programming').elements()))#['p', 'r', 'r', 'o', 'g', 'g', 'a', 'm', 'm', 'i', 'n']
     if mode == 3:
         """
         OrderedDict的Key会按照插入的顺序排列，不是Key本身排序
