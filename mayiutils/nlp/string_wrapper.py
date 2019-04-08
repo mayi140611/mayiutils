@@ -30,10 +30,14 @@ class StringWrapper:
 
 if __name__ == '__main__':
     mode = 3
-    s = 'abcdabceabc'
-    print('' == s[:0])
-    print(s.find('abc'))
-    print(s.find('abcf'))#-1
+    if mode == 3:
+        """
+        find
+        """
+        s = 'abcdabceabc'
+        print('' == s[:0])#True
+        print(s.find('abc'))#0
+        print(s.find('abcf'))#-1
     if mode == 2:
         """
         format

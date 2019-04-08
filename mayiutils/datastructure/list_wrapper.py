@@ -48,7 +48,16 @@ class ListWrapper:
 
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 8
+    l1 = []
+    l1.append('a')
+    l1[0] = -l1[0]
+    print(l1)
+    if mode == 7:
+        #注意remove只删除第一个匹配的元素
+        l1 = ['皮肤瘙痒', '瘙痒', '头痛', '瘙痒']
+        l1.remove('瘙痒')
+        print(l1)#['皮肤瘙痒', '头痛', '瘙痒']
     if mode == 1:
         # 生成有多个重复值的list
         l1 = ['我头疼'] * 5
@@ -138,10 +147,5 @@ if __name__ == '__main__':
         a = [1, 2, 3, 7, 8]
         b = [4, 5, 6]
         print(list(flatten(zip(a, b))))##[1, 4, 2, 5, 3, 6]
-    if mode == 7:
-        #注意remove只删除第一个匹配的元素
-        l1 = ['皮肤瘙痒', '瘙痒', '头痛', '瘙痒']
-        l1.remove('瘙痒')
-        print(l1)#['皮肤瘙痒', '头痛', '瘙痒']
 
 
