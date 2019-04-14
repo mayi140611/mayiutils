@@ -17,6 +17,16 @@ import numpy as np
 
 if __name__ == "__main__":
     mode = 1
+    if mode == 4:
+        """
+        Diabetes(糖尿病)数据集，可用于做线性回归
+        包含442个样本，每个样本有10个特征：
+            age, sex, body mass index, average blood pressure, and six blood serum（血清） measurements
+        Target: Column 11 is a quantitative（定量） measure of disease progression one year after baseline
+        :return:
+        """
+        data = datasets.load_diabetes()
+
     if mode == 3:
         """
         1、 CIFAR-10 and CIFAR-100 图片10分类或者100分类

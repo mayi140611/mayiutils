@@ -317,7 +317,18 @@ class NumpyWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 8
+    mode = 10
+    a = np.ones((2, 2))
+    print(a - np.arange(2))
+    if mode == 9:
+        """
+        各种数学运算
+        """
+        a = np.arange(4)
+        print(a)
+        print(np.sqrt(a))
+        print(np.square(a))
+
     if mode == 8:
         a = np.arange(8).reshape((2, 2, 2))
         print(a)

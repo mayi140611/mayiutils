@@ -59,7 +59,27 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    if mode == 4:
+        obj1 = pd.Series([1, 2])
+        obj2 = pd.Series([3, 4, 5])
+        print(obj1+obj2)#对应索引的值相加
+        """
+        0    4.0
+        1    6.0
+        2    NaN
+        dtype: float64
+        """
+        print([1, 2]+[3, 4, 5])#[1, 2, 3, 4, 5]
+        print(obj1.append(obj2))
+        """
+        0    1
+        1    2
+        0    3
+        1    4
+        2    5
+        dtype: int64       
+        """
     if mode == 3:
         """
         获取非零值
@@ -92,3 +112,6 @@ if __name__ == '__main__':
         plt.figure()
         s.hist()
         plt.show()
+        s[s < 3] = 0
+        s[s >= 3] = 1
+        print(s)

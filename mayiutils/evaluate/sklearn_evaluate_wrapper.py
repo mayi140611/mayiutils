@@ -32,28 +32,43 @@ sklearn 评价指标
 ‘r2’	metrics.r2_score
 """
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, average_precision_score, precision_recall_curve
 import numpy as np
 
 
 if __name__ == '__main__':
     mode = 2
-    submode = 201
+    submode = 202
     if mode == 2:
+        """
+        分类评价指标
+        """
+        if submode == 202:
+            """
+            二分类
+            """
+            y_true = np.array([0, 0, 1, 1])
+            y_scores = np.array([0.1, 0.4, 0.35, 0.8])
+            print(roc_auc_score(y_true, y_scores))#0.75
+            print(average_precision_score(y_true, y_scores))#0.8333333333333333
+            # print(precision_recall_curve())
         if submode == 201:
+            """
+            多分类
+            """
             y_test = np.array([1, 2, 3, 3, 2, 1, 1, 3, 2, 2])
             prediction = np.array([1, 3, 3, 2, 3, 1, 3, 2, 2, 2])
             print(accuracy_score(y_test, prediction))#0.4
             print(classification_report(y_test, prediction))
             """
-            support表示真实数据中该类的个数
-             precision    recall  f1-score   support
-
-          1       1.00      0.67      0.80         3
-          2       0.50      0.50      0.50         4
-          3       0.25      0.33      0.29         3
-
-avg / total       0.57      0.50      0.53        10
+                support表示真实数据中该类的个数
+                 precision    recall  f1-score   support
+    
+              1       1.00      0.67      0.80         3
+              2       0.50      0.50      0.50         4
+              3       0.25      0.33      0.29         3
+    
+            avg / total       0.57      0.50      0.53        10
             """
     if mode == 1:
         """
@@ -70,3 +85,5 @@ avg / total       0.57      0.50      0.53        10
             """
             y_true, y_pred = [3, -0.5, 2, 7], [2.5, 0.0, 2, 8]
             print(r2_score(y_true, y_pred))#0.9486081370449679
+            #计算均方误差
+            precision_recall_curve(mean_squared_error(y_true, y_pred))
