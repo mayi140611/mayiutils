@@ -52,5 +52,6 @@ if __name__ == '__main__':
                                     filled=True, rounded=True,
                                     special_characters=True)
     graph = graphviz.Source(dot_data)
-    graph.view()
+    graph.save('a.jpg')
+    # graph.view()
 

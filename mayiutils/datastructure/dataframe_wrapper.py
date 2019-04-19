@@ -17,22 +17,7 @@ class DataframeWrapper(object):
     DataFrame索引数据
     #####################################
     '''
-    @classmethod
-    def loc(self,df,rnames, cnames):
-        '''
-        通过索引和列名获取数据
-        rnames: 行名（索引）列表
-        cnames：列名（变量名）列表
-        '''
-        return df.loc[rnames,cnames]
-    @classmethod
-    def iloc(self,df,rnums, cnums):
-        '''
-        通过索引和列名获取数据
-        rnums: 行号列表
-        cnums：列号列表
-        '''
-        return df.iloc[rnums,cnums]
+
     @classmethod
     def get_not_null_df(self,df,cname):
         '''
@@ -205,7 +190,15 @@ class DataframeWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 5
+    # 删除全部为null的列，如果只要出现null就删掉，则how=any
+    # df2 = df1.dropna(axis=1, how='all')
+    if mode == 5:
+        data = {'state': [1, 1, 2, 2, 1, 2, 2], 'pop': ['a', 'b', 'c', 'd', 'b', 'c', 'd']}
+        frame = pd.DataFrame(data)
+        print(frame)
+        a = frame.drop_duplicates(subset=['pop'], keep='first')
+        print(a)
     if mode == 4:
         d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
         print(d == 1)#判断d中每一个元素是否为1
