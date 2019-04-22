@@ -4,7 +4,7 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: random.py
+@file: random_wrapper.py
 @time: 2019/3/4 15:27
 """
 import random

@@ -8,10 +8,26 @@
 """
 import pandas as pd
 from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from feature_selector import FeatureSelector
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    if mode == 4:
+        """
+        feature selector
+        """
+        # df1 = pd.read_excel('data.xlsx').iloc[:, 1:]
+        # print(df1.info())
+        df = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/0/data.xlsx')
+        # print(df.info())# 查看df字段和缺失值信息
+        label = df['理赔结论']
+        df = df.drop(columns=['理赔结论'])
+
+        fs = FeatureSelector(data=df, labels=label)
+        # 缺失值处理
+        fs.identify_missing(missing_threshold=0.6)
+
     if mode == 3:
         """
         合并参保人基本信息

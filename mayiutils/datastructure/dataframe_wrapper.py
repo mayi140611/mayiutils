@@ -2,6 +2,7 @@
 # encoding: utf-8
 import pandas as pd
 import numpy as np
+from feature_selector import FeatureSelector
 
 
 class DataframeWrapper(object):
@@ -9,8 +10,6 @@ class DataframeWrapper(object):
     http://pandas.pydata.org/pandas-docs/stable/reference/frame.html
 
     """
-    def __init__(self):
-        pass
     
     '''
     #####################################
@@ -190,13 +189,20 @@ class DataframeWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 5
+    mode = 0
     # 删除全部为null的列，如果只要出现null就删掉，则how=any
     # df2 = df1.dropna(axis=1, how='all')
     if mode == 5:
         data = {'state': [1, 1, 2, 2, 1, 2, 2], 'pop': ['a', 'b', 'c', 'd', 'b', 'c', 'd']}
         frame = pd.DataFrame(data)
         print(frame)
+        """
+        keep : {'first', 'last', False}, default 'first'
+            - ``first`` : Drop duplicates except for the first occurrence.
+            - ``last`` : Drop duplicates except for the last occurrence.
+            - False : Drop all duplicates.
+        """
+        #保留某一特征中重复值的第一条
         a = frame.drop_duplicates(subset=['pop'], keep='first')
         print(a)
     if mode == 4:
@@ -295,6 +301,8 @@ if __name__ == '__main__':
         #获取满足要求的样本
         df1 = DataframeWrapper.isIn(df, '疾病名称（39）', ['嗜睡症', '脑萎缩'])
         print(df1)
+
+
 
 
 
