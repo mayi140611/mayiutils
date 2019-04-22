@@ -88,6 +88,7 @@ dtypes: datetime64[ns](6), float64(13), int64(14), object(9)
     label = np.array(list(label))
     df = df.drop(columns=['理赔结论'])
 
+    df = df.drop(columns=['Unnamed: 0', '平台流水号', 'Unnamed: 19', '生效日期', '出险日期', '报案时间', '申请日期', '出险前最后一次复效日期', '承保后最小借款日期'])
 
     if mode == 0:
         """
@@ -97,7 +98,6 @@ dtypes: datetime64[ns](6), float64(13), int64(14), object(9)
         # print(df.info())# 查看df字段和缺失值信息
 
 
-        df = df.drop(columns=['平台流水号', 'Unnamed: 19', '生效日期', '出险日期', '报案时间', '申请日期', '出险前最后一次复效日期', '承保后最小借款日期'])
 
         # train_col.remove('平台流水号')
         # train_col.remove('Unnamed: 19')

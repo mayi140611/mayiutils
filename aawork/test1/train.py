@@ -20,10 +20,13 @@ import xgboost
 import os
 import math
 import itertools
+from feature_selector import FeatureSelector
+import lightgbm as lgb
+from sklearn import metrics
 
 
 if __name__ == '__main__':
-    mode = 6
+    mode = 8
     df = picklew.loadFromFile('train_data2.pkl')
     # print(df.info())
     # print(df.head())
@@ -34,6 +37,67 @@ if __name__ == '__main__':
     # y = y[:, np.newaxis]
     # print(list(y))
     y = np.array(list(y))
+
+    if mode == 8:
+        """
+        使用lightgbm, 输出概率
+        """
+        ### 数据转换
+        lgb_train = lgb.Dataset(X, y, free_raw_data=False)
+        lgb_eval = lgb.Dataset(X, y, reference=lgb_train, free_raw_data=False)
+        print('设置参数')
+        params = {
+            'boosting_type': 'gbdt',
+            'boosting': 'dart',
+            'objective': 'binary',
+            'metric': 'binary_logloss',
+            'learning_rate': 0.01,
+            'num_leaves': 25,
+            'max_depth': 3,
+            'max_bin': 10,
+            'min_data_in_leaf': 8,
+            'feature_fraction': 0.6,
+            'bagging_fraction': 1,
+            'bagging_freq': 0,
+            'lambda_l1': 0,
+            'lambda_l2': 0,
+            'min_split_gain': 0
+        }
+        print("开始训练")
+        gbm = lgb.train(params,  # 参数字典
+            lgb_train,  # 训练集
+            num_boost_round = 2000,  # 迭代次数
+            valid_sets = lgb_eval,  # 验证集
+            early_stopping_rounds = 30)  # 早停系数
+        preds_offline = gbm.predict(X, num_iteration=gbm.best_iteration)  # 输出概率
+        print(preds_offline)
+        pd.Series(preds_offline).to_csv('tt.csv')
+    if mode == 7:
+        """
+        使用feature-selector得到特征重要性
+        """
+        fs = FeatureSelector(data=df, labels=y)
+        fs.identify_collinear(correlation_threshold=0.975)
+        correlated_features = fs.ops['collinear']
+        print(correlated_features)
+        # fs.plot_collinear()
+        # fs.plot_collinear(plot_all=True)
+        print(fs.record_collinear)
+        # 4. Zero Importance Features
+        fs.identify_zero_importance(task='classification', eval_metric='auc',
+                                    n_iterations=10, early_stopping=True)
+        one_hot_features = fs.one_hot_features
+        base_features = fs.base_features
+        print('There are %d original features' % len(base_features))
+        print('There are %d one-hot features' % len(one_hot_features))
+        zero_importance_features = fs.ops['zero_importance']
+        print(zero_importance_features[:15])
+        # fs.plot_feature_importances(threshold=0.99, plot_n=12)
+        # print(fs.feature_importances)
+        # fs.feature_importances.to_csv('fs_rs.csv', encoding='gbk')
+        df_removed = fs.remove(methods=['collinear', 'zero_importance'])
+        print(df_removed.shape)
+        picklew.dump2File(df_removed, 'train_fs_removed.pkl')
     if mode == 6:
         """
         rf求特征重要性
