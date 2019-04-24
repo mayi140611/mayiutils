@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 
 
 class series_wrapper(object):
+    """
+    http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html
+    """
     def __init__(self):
         pass
     @classmethod

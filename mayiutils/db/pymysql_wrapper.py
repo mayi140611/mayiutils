@@ -20,7 +20,7 @@ class PyMysqlWrapper:
         select distinct name from user;
         select id,name from user group by name;
     """
-    def __init__(self, user='root', passwd='!Aa123456', db='daozhen', host='127.0.0.1', use_unicode=True, charset='utf8'):
+    def __init__(self, user='root', passwd='123456', db='daozhen', host='127.0.0.1', use_unicode=True, charset='utf8'):
         """
         创建连接、创建游标
         :param user:
@@ -67,6 +67,7 @@ class PyMysqlWrapper:
     def close(self):
         self._cursor.close()
         self._conn.close()
+
 
 if __name__ == '__main__':
     pmw = PyMysqlWrapper(host='h1')
