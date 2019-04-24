@@ -2,12 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-# idea工程文件夹
+# idea proj dir
 .idea/
 # C extensions
 *.so
-#tmp
-tmp/
+
 # Distribution / packaging
 .Python
 build/
