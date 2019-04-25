@@ -10,22 +10,35 @@ import pandas as pd
 import re
 from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
 from mayiutils.pickle_wrapper import PickleWrapper as picklew
+import numpy as np
+import os
+import shutil
+from _datetime import datetime
 
 
 def standardize(s):
     """
     字符串标准化
         去除所有空格
+        去掉末尾最后一个 的
         小写转大写
-        中文字符替换： （），
+        中文字符替换： （），【】：“”’‘；
     :param s:
     :return:
     """
     s = re.sub(r'\s+', '', s)
+    s = re.sub(r'的$', '', s)# 去掉末尾最后一个 的
+    s = re.sub(r',未特指场所$', '', s)
     s = s.upper()
     s = re.sub(r'（', '(', s)
     s = re.sub(r'）', ')', s)
     s = re.sub(r'，', ',', s)
+    s = re.sub(r'：', ':', s)
+    s = re.sub(r'【', '[', s)
+    s = re.sub(r'】', ']', s)
+    s = re.sub(r'“|”|’|‘', '"', s)
+    s = re.sub(r'】', ']', s)
+    s = re.sub(r'；', ';', s)
     return s
 
 
@@ -38,7 +51,7 @@ def calsimilarity(name, threshold):
     name = standardize(name)
     length = len(name)
     size = int(length * (1 - threshold))
-    namelist = list(dis_dict.keys())
+    namelist = list(dis_name_code_dict.keys())
     fnamelist = list(filter(lambda x: length-size <= len(x) <= length+size, namelist))
 
 
@@ -52,18 +65,46 @@ def match(code, name, threshold=0.9):
     """
     name = standardize(name)
     code = standardize(code)
-    if name in dis_dict:
-        if code in dis_dict[name]:
-            return 10, code, name
+    if name in dis_name_code_dict:
+        """
+        如果匹配上的话，返回(状态码, 原始code, 原始name, 匹配的字典code, 匹配的name, 匹配标记)
+        
+        匹配标记
+            0：表示系统匹配成功
+            -1：表示系统未匹配成功，待人工校核
+            1：表示系统未匹配成功，已人工校核
+        """
+        if code in dis_name_code_dict[name]:
+            return 10, code, name, code, name, 0
         else:
-            return 11, dis_dict[name], name
+            return 11, code, name, dis_name_code_dict[name], name, 0
+    else:
+        """
+        如果未能匹配，返回 相同的code对应的name，及达到匹配度的前三个name对应的code
+        [
+            (状态码, 原始code, 原始name, 原始code, 原始code对应的name, -1),
+            (状态码, 原始code, 原始name, 匹配的字典code1, 匹配的name1, -1),
+            (状态码, 原始code, 原始name, 匹配的字典code2, 匹配的name2, -1),
+            (状态码, 原始code, 原始name, 匹配的字典code3, 匹配的name3, -1),
+        ]
+        """
+        rlist = []
+        if code in dis_code_name_dict:
+            rlist.append((2, code, name, code, dis_code_name_dict[code], -1))
+
+        if len(rlist) == 0:
+            rlist.append((2, code, name, -1, -1, -1))
+        return 2, rlist
 
 
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 2
     df = pd.read_csv('/Users/luoyonggui/Documents/work/dataset/1/icd10_leapstack.csv')
-    dis_dict = picklew.loadFromFile('dis_dict.pkl')
+    # 3bitcode
+    df3 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/3bitcode.xls', skiprows=[0])
+    dis_name_code_dict = picklew.loadFromFile('dis_name_code_dict.pkl')
+    dis_code_name_dict = picklew.loadFromFile('dis_code_name_dict.pkl')
     # print(df.shape)#(41058, 2)
     # print(df.head())
     """
@@ -77,15 +118,54 @@ if __name__ == '__main__':
     # 查看 code是否有重复
     # print(df['diag_code'].unique().shape)#(41058,) 说明code没有重复
     # print(df['diag_name'].unique().shape)
+    if mode == 3:
+        """
+        经过人工校核后的处理
+            update dis_code_name_dict
+            update dis_name_code_dict
+        """
+        dft = pd.read_csv('dft.csv', encoding='gbk', index_col=0)
+        dft = dft[dft.iloc[:, -1]==1]
+        # print(dft.head())
+        flag = 0
+        for line in dft.itertuples():
+            if line[3] not in dis_name_code_dict:
+                dis_name_code_dict[line[3]] = [line[4]]
+                print('新增dis_name_code_dict：{}:{}'.format(line[3], [line[4]]))
+                flag = 1
+        if line[4] not in dis_code_name_dict and line[5]:
+            dis_code_name_dict[line[4]] = line[5]
+            print('新增dis_code_name_dict：{}:{}'.format(line[4], line[5]))
+            flag = 1
+        if flag == 1:
+            if not os.path.exists('backups'):
+                os.mkdir('backups')
+            if os.path.exists('dis_name_code_dict.pkl') and os.path.exists('dis_code_name_dict.pkl'):
+                now = datetime.now()
+                nowstr = now.strftime('%Y%m%d%H%M%S')
+                shutil.move('dis_name_code_dict.pkl', 'backups/dis_name_code_dict{}.pkl'.format(nowstr))
+                shutil.move('dis_code_name_dict.pkl', 'backups/dis_code_name_dict{}.pkl'.format(nowstr))
+                print('备份字典：backups/dis_name_code_dict{}.pkl'.format(nowstr))
+                print('备份字典：backups/dis_code_name_dict{}.pkl'.format(nowstr))
+            picklew.dump2File(dis_name_code_dict, 'dis_name_code_dict.pkl')
+            picklew.dump2File(dis_code_name_dict, 'dis_code_name_dict.pkl')
+
     if mode == 2:
         """
-        3位代码： code中不包含 .
+        进行匹配
         """
-        def t(x):
-            return '.' not in x
-        print(df['diag_code'].apply(t).value_counts())
-        df3 = df[df['diag_code'].apply(t)]
-        print(df3.shape)
+        # print(df3.head())
+        rlist = []
+        for line in df3.itertuples():
+            r = match(line[1], line[2])
+            print(r)
+            if r[0] == 2:
+                rlist.extend(r[1])
+            else:
+                rlist.append(r)
+        arr = np.array(rlist)
+        dft = pd.DataFrame(arr, columns=['status', 'code', 'name', 'match_code', 'match_name', 'match_flag'])
+        dft.to_csv('dft.csv', encoding='gbk')
     if mode == 1:
         """
         把df标准化后存入mysql
@@ -96,18 +176,21 @@ if __name__ == '__main__':
         sqltemplate = """
                 INSERT INTO disease_dic SET code = "{}", name = "{}"
                 """
-        dis_dict = dict()
+        dis_name_code_dict = dict()
+        dis_code_name_dict = dict()
         for line in df.itertuples():
             sql = sqltemplate.format(line[3], line[4])
             print(sql)
-            if line[4] in dis_dict:
-                dis_dict[line[4]].append(line[3])
+            dis_code_name_dict[line[3]] = line[4]
+            if line[4] in dis_name_code_dict:
+                dis_name_code_dict[line[4]].append(line[3])
             else:
-                dis_dict[line[4]] = [line[3]]
-            pmw.executeAndCommit(sql)
-        picklew.dump2File(dis_dict, 'dis_dict.pkl')
+                dis_name_code_dict[line[4]] = [line[3]]
+            # pmw.executeAndCommit(sql)
+        picklew.dump2File(dis_name_code_dict, 'dis_name_code_dict.pkl')
+        picklew.dump2File(dis_code_name_dict, 'dis_code_name_dict.pkl')
     if mode == 0:
         """
         测试standardize()
         """
-        print(standardize('  轻  型cD货车 或，篷车，乘客（在）畜碰      撞中 损伤,非a交b通事  '))
+        print(standardize('  轻  型cD货车 或，篷车，【aa】bb：cc“dd”ee’ff‘乘客的（在）畜碰      撞中 损伤,非a交b通事  的的  '))

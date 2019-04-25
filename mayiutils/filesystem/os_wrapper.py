@@ -9,6 +9,7 @@
 #主要是对python中的os的相关操作的封装
 """
 import os
+import shutil
 
 
 class OsWrapper(object):
@@ -120,7 +121,9 @@ class OsWrapper(object):
 
 if __name__=='__main__':
     print(os.path.exists('../filesystem'))
-    os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
-    os.makedirs('reslut/log')#创建多级目录
+    # os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
+    os.makedirs('result/log')#创建多级目录
+    # 移动文件
+    shutil.move('a.txt', 'result/log/a10.txt')
             # break
     # os.path.expanduser()#On Unix and Windows, return the argument with an initial component of ~ or ~user replaced by that user’s home directory.
