@@ -26,6 +26,7 @@ def standardize(s):
     :param s:
     :return:
     """
+
     s = re.sub(r'\s+', '', s)
     s = re.sub(r'的$', '', s)# 去掉末尾最后一个 的
     s = re.sub(r',未特指场所$', '', s)
@@ -56,15 +57,20 @@ def calsimilarity(name, threshold):
 
 
 
-def match(code, name, threshold=0.9):
+def match(code1, name1, threshold=0.9):
     """
 
-    :param code:
-    :param name:
+    :param code1:
+    :param name1:
     :return:
     """
-    name = standardize(name)
-    code = standardize(code)
+    try:
+        name = standardize(name1)
+        code = standardize(code1)
+    except Exception as e:
+        print(code1, name1)
+        print(e)
+        return
     if name in dis_name_code_dict:
         """
         如果匹配上的话，返回(状态码, 原始code, 原始name, 匹配的字典code, 匹配的name, 匹配标记)
@@ -103,6 +109,7 @@ if __name__ == '__main__':
     df = pd.read_csv('/Users/luoyonggui/Documents/work/dataset/1/icd10_leapstack.csv')
     # 3bitcode
     df3 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/3bitcode.xls', skiprows=[0])
+    df4 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/4bitcode.xls', skiprows=[0]).iloc[:, 1:]
     dis_name_code_dict = picklew.loadFromFile('dis_name_code_dict.pkl')
     dis_code_name_dict = picklew.loadFromFile('dis_code_name_dict.pkl')
     # print(df.shape)#(41058, 2)
@@ -154,18 +161,22 @@ if __name__ == '__main__':
         """
         进行匹配
         """
-        # print(df3.head())
+        dft = df4
+        # print(dft.head())
+
         rlist = []
-        for line in df3.itertuples():
+        for line in dft.itertuples():
             r = match(line[1], line[2])
-            print(r)
+            # print(r)
+            if not r:
+                continue
             if r[0] == 2:
                 rlist.extend(r[1])
             else:
                 rlist.append(r)
         arr = np.array(rlist)
         dft = pd.DataFrame(arr, columns=['status', 'code', 'name', 'match_code', 'match_name', 'match_flag'])
-        dft.to_csv('dft.csv', encoding='gbk')
+        dft.to_csv('dft4.csv', encoding='gbk')
     if mode == 1:
         """
         把df标准化后存入mysql
