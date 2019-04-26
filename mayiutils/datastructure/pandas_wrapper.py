@@ -44,4 +44,43 @@ class pandas_wrapper(object):
         把series的index和values互换
         '''
         return pd.Series(series.index,index=series.values)
-    
+
+
+if __name__ == '__main__':
+    mode = 1
+    if mode == 1:
+        """
+        分类变量 pd.Categorical
+            Parameters
+            ----------
+            values : list-like
+                The values of the categorical. If categories are given, values not in
+                categories will be replaced with NaN.
+            categories : Index-like (unique), optional
+                The unique categories for this categorical. If not given, the
+                categories are assumed to be the unique values of `values` (sorted, if
+                possible, otherwise in the order in which they appear).
+            ordered : boolean, (default False)
+                Whether or not this categorical is treated as a ordered categorical.
+                If True, the resulting categorical will be ordered.
+                An ordered categorical respects, when sorted, the order of its
+                `categories` attribute (which in turn is the `categories` argument, if
+                provided).
+        """
+        c = pd.Categorical([1, 2, 3, 1, 2, 3])
+        print(type(c))#<class 'pandas.core.arrays.categorical.Categorical'>
+        print(c)
+        """
+    [1, 2, 3, 1, 2, 3]
+    Categories (3, int64): [1, 2, 3]
+        """
+        print(pd.Categorical([1, 2, 3, 1, 2, 3], categories=[1, 2]))
+        """
+[1, 2, NaN, 1, 2, NaN]
+Categories (2, int64): [1, 2]
+        """
+        print(pd.Categorical(['a','b','c','a','b','c'], ordered=True, categories=['c', 'b', 'a']))
+        """
+    [a, b, c, a, b, c]
+    Categories (3, object): [c < b < a]
+    """

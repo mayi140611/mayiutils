@@ -13,6 +13,7 @@ from keras.datasets import imdb
 from sklearn import datasets
 from keras.datasets import cifar10, cifar100
 import numpy as np
+import pandas as pd
 
 
 if __name__ == "__main__":
@@ -38,13 +39,31 @@ if __name__ == "__main__":
 
     if mode == 1:
         """
-        鸢尾花数据集，三分类
+        鸢尾花数据集，三分类, 150个样本
         """
         iris = datasets.load_iris()
+        # print(iris)
+        """
+        是一个dict，key有：data, target, target_names, DESCR
+        """
+        # print(iris.DESCR)
         data = iris.data
         y = iris.target
         print(data.shape, y.shape)#(150, 4) (150,)
+        y = iris.target[:, np.newaxis]
+        print(y.shape)#(150, 1)
         print(np.unique(y))#[0 1 2]
+        dataset = np.concatenate((iris.data, iris.target[:, np.newaxis]), axis=1)
+        iris_df = pd.DataFrame(dataset, columns=['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class_'])
+        print(iris_df.head())
+        """
+   sepal_length  sepal_width  petal_length  petal_width  class_
+0           5.1          3.5           1.4          0.2     0.0
+1           4.9          3.0           1.4          0.2     0.0
+2           4.7          3.2           1.3          0.2     0.0
+3           4.6          3.1           1.5          0.2     0.0
+4           5.0          3.6           1.4          0.2     0.0
+        """
     if mode == 2:
         """
         IMDB数据集， 情感二分类

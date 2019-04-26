@@ -209,6 +209,13 @@ rate                        2.15  ...                 0.13
         """
         # print(loans.sort_index(ascending=False))#按照索引降序查看
         print(loans.sort_values(by='rate'))#按照rate列升序查看
+        """
+        修改column name
+        整体修改
+            df.columns = ['name1', 'name2'...]
+        修改几个：
+            df.rename
+        """
     if mode == 2:
         """
         行列操作

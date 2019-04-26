@@ -32,7 +32,8 @@ sklearn 评价指标
 ‘r2’	metrics.r2_score
 """
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, average_precision_score, precision_recall_curve
+from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, average_precision_score, precision_recall_curve\
+                            , recall_score, confusion_matrix
 import numpy as np
 
 

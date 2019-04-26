@@ -13,22 +13,6 @@ class NumpyWrapper(object):
     # 生成ndarray对象
     # ---------------------------------------------------------------------------------
     # '''
-    @classmethod
-    def arange(self, start, stop, step=1, dtype=None):
-        '''
-        生成1D ndarray
-        Return evenly spaced values within a given interval.
-        '''
-        return np.arange(start, stop, step, dtype)
-
-    @classmethod
-    def linspace(self, start, stop, num=50, endpoint=True, retstep=False, dtype=None):
-        '''
-        生成1D ndarray
-        Return evenly spaced numbers over a specified interval.
-        print(np.linspace(0, 5, 6))#[0. 1. 2. 3. 4. 5.]
-        '''
-        return np.linspace(start, stop, num, endpoint, retstep, dtype)
 
     @classmethod
     def buildArrayFromArrayList(cls, arraylist, dtype=np.int32):
@@ -75,17 +59,6 @@ class NumpyWrapper(object):
         """
         return np.empty(shape, dtype, order)
 
-    @classmethod
-    def buildEye(cls, N, M=None, k=0, dtype=float, order='C'):
-        """
-        单位矩阵
-        Return a 2-D array with ones on the diagonal and zeros elsewhere.
-        :param shape:
-        :param dtype:
-        :param order:
-        :return:
-        """
-        return np.fromfunction().eye(N, M, k, dtype, order)
 
     @classmethod
     def buildFromFunction(cls, function, shape, **kwargs):
@@ -318,7 +291,63 @@ class NumpyWrapper(object):
 
 if __name__ == '__main__':
     mode = 10
+    """
+    ndarray creation
+    """
+    # 生成1D ndarray
+    # np.arange(start, stop, step, dtype)
+    # print(np.arange(1, 9, 2, dtype=np.float))#[[1. 3. 5. 7.]
+    # print(np.arange(1, 9, 2))#[1 3 5 7]
+    arr1d = np.arange(9)
+    print(arr1d)# [0 1 2 3 4 5 6 7 8]
+
+    #np.linspace(start, stop, num, endpoint, retstep, dtype)
+    # print(np.linspace(1, 9, 5))# [1. 3. 5. 7. 9.]
+
+    # Return a 2-D array with ones on the diagonal and zeros elsewhere.
+    eye = np.eye(3)
+    print(eye)
+    """
+[[1. 0. 0.]
+ [0. 1. 0.]
+ [0. 0. 1.]]
+    """
+
+    """
+    selection
+    """
+    # 随机从arr1d中采样
+    a = np.random.choice(arr1d, 2)
+    print(a)# [8 3]
+    """
+    a : 1-D array-like or int
+                If an ndarray, a random sample is generated from its elements.
+                If an int, the random sample is generated as if a were np.arange(a)
+    """
+
+    
+    """
+    合并
+    """
+    a = np.array([[1, 2], [3, 4]])
+    b = np.array([[5, 6]])
+    print(np.concatenate((a, b), axis=0))
+    """
+[[1 2]
+ [3 4]
+ [5 6]]
+    """
+    print(np.concatenate((a, b.T), axis=1))
+    """
+[[1 2 5]
+ [3 4 6]]
+    """
+    print(np.concatenate((a, b), axis=None))
+    """
+[1 2 3 4 5 6]  
+    """
     a = np.ones((2, 2))
+
     print(a - np.arange(2))
     if mode == 9:
         """

@@ -25,6 +25,9 @@ if __name__ == '__main__':
     if mode == 2:
         """
         K折交叉验证
+        K-Folds cross-validator
+            Provides train/test indices to split data in train/test sets. Split dataset into k consecutive folds (without shuffling by default).
+             Each fold is then used once as a validation while the k - 1 remaining folds form the training set.
         Stratified（分层的） K-Folds cross-validator
             Provides train/test indices to split data in train/test sets.
             This cross-validation object is a variation of KFold that returns stratified folds. 
