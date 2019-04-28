@@ -62,7 +62,55 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 2
+    # series creation
+    s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 1])
+    s1 = pd.Series([1, None, 3, None, 4, 0])
+    if mode == 1:
+        """
+        view
+        """
+        print(s.sort_index())
+        print(s.value_counts().sort_values(ascending=False))
+    if mode == 2:
+        """
+        selection
+        """
+        print(s[s < 3])
+        s[s < 3] = 0
+        s[s >= 3] = 1
+        print(s)
+        # print(s1.nonzero())#(array([0, 1, 2, 3, 4]),)
+        """
+FutureWarning: Series.nonzero() is deprecated and will be removed in a future version.
+Use Series.to_numpy().nonzero() instead
+        """
+        print(s1.to_numpy())#[ 1. nan  3. nan  4.  0.]
+        print(s1.to_numpy().nonzero())#(array([0, 1, 2, 3, 4]),)
+        #获取非零值
+        print(s1[s1.to_numpy().nonzero()[0]])
+        print(s1.isnull())
+        """
+0    False
+1     True
+2    False
+3     True
+4    False
+5    False
+dtype: bool
+        """
+        print(s1.notnull())
+        """
+0     True
+1    False
+2     True
+3    False
+4     True
+5     True
+dtype: bool
+        """
+        # 获取非空值
+        print(s1[s1.notnull()])
     if mode == 4:
         obj1 = pd.Series([1, 2])
         obj2 = pd.Series([3, 4, 5])
@@ -83,22 +131,9 @@ if __name__ == '__main__':
         2    5
         dtype: int64       
         """
-    if mode == 3:
-        """
-        获取非零值
-        """
-        s = pd.Series([1, 0, 3, 0, 4])
-        print(s.nonzero())#(array([0, 2, 4], dtype=int64),) Return the indices of the elements that are non-zero
-        print(s[s.nonzero()[0]])
-        s = pd.Series([1, None, 3, None, 4])
-        print(s.isnull())
-        print(s.notnull())
-        """
-        0    1
-        2    3
-        4    4       
-        """
-    if mode == 2:
+
+
+    if mode == 2111:
         tag = pd.Series({'s': 0, 'b': 1, 'm': 2, 'e': 3, 'x': 4})
         print(tag)
         #注意赋值技巧
@@ -107,18 +142,11 @@ if __name__ == '__main__':
         # 可以按照给定的索引列表给值，很有用！
         print(tag[['b', 'e']])
         print(type(tag['m']), tag['m'], tag['m'].reshape(-1, 1))
-    if mode == 1:
-        s = pd.Series([1,2,3,4,5,4,2,1,2,1])
-        print(s)
-        s1 = s[s>6]
-        print(s1)
-        if s1.empty:#如果s1为空
+    if mode == 5:
+
+
+        if s.empty:#如果s1为空
             print('ppp')
-        print(s.sort_index())
-        print(s.value_counts().sort_values(ascending=False))
         plt.figure()
         s.hist()
         plt.show()
-        s[s < 3] = 0
-        s[s >= 3] = 1
-        print(s)
