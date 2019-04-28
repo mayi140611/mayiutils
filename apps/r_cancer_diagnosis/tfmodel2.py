@@ -390,7 +390,7 @@ if __name__ == '__main__':
         print('加载模型{}'.format(modelname))
         model = m.loadModel(modelname)
         # model = m.loadModel('weights-improvement-06-0.71.hdf5')
-        # model.evaluate(testDataset, steps=806)
+        # model.evaluate_metrics(testDataset, steps=806)
         print('开始预测')
         result = model.predict(testDataset, steps=806)
         print('预测完成')

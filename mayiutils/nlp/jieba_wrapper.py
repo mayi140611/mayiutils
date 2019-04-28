@@ -24,15 +24,6 @@ class JieBaWrapper(object):
         return jieba.cut(sentence, cut_all=cut_all, HMM=HMM)
 
     @classmethod
-    def lcut(cls,sentence, cut_all=False, HMM=True):
-        '''
-        The main function that segments an entire sentence that contains
-        Chinese characters into seperated words.
-        :return: list
-        '''
-        return jieba.lcut(sentence, cut_all=cut_all, HMM=HMM)
-
-    @classmethod
     def cut_for_search(cls,sentence, HMM=True):
         '''
         Finer segmentation for search engines.
@@ -100,3 +91,14 @@ class JieBaWrapper(object):
         set HMM=False.
         '''
         return jieba.suggest_freq(segment, tune)
+
+
+if __name__ == '__main__':
+    print(jieba.lcut('轻型货车或篷车乘员在轻型货车或篷车与行人或牲畜碰撞中的损伤', cut_all=False, HMM=True))
+    """
+    ['轻型', '货车', '或', '篷车', '乘员', '在', '轻型', '货车', '或', '篷车', '与', '行人', '或', '牲畜', '碰撞', '中', '的', '损伤']
+    """
+    print(' '.join(jieba.lcut('轻型货车或篷车乘员在轻型货车或篷车与行人或牲畜碰撞中的损伤', cut_all=False, HMM=True)))
+    """
+    轻型 货车 或 篷车 乘员 在 轻型 货车 或 篷车 与 行人 或 牲畜 碰撞 中 的 损伤
+    """

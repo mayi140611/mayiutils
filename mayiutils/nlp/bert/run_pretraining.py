@@ -369,7 +369,7 @@ def input_fn_builder(input_files,
       d = d.shuffle(buffer_size=100)
     else:
       d = tf.data.TFRecordDataset(input_files)
-      # Since we evaluate for a fixed number of steps we don't want to encounter
+      # Since we evaluate_metrics for a fixed number of steps we don't want to encounter
       # out-of-range exceptions.
       d = d.repeat()
 

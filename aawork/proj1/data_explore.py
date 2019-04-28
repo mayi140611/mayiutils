@@ -10,10 +10,13 @@ import pandas as pd
 import re
 from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
 from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import os
 import shutil
-from _datetime import datetime
+import jieba
+from datetime import datetime
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 def standardize(s):
@@ -43,7 +46,19 @@ def standardize(s):
     return s
 
 
-def calsimilarity(name, threshold):
+def cal_similarity_by_tfidf(name, threshold=0.9):
+    """
+    tfidf + cosine distance
+    :param name:
+    :param threshold:
+    :return:
+    """
+    t = tfidf.transform([tokenizer(name)])
+    r = cosine_similarity(t, tfidf_features)
+    r = pd.Series(r[0]).sort_values(ascending=False)
+    return r
+
+def cal_similarity_by_editdistance(name, threshold):
     """
     计算name的相似度
     :param name:
@@ -84,6 +99,13 @@ def match(code1, name1, threshold=0.9):
             return 10, code, name, code, name, 0
         else:
             return 11, code, name, dis_name_code_dict[name], name, 0
+    r = cal_similarity_by_tfidf(name)
+    r1 = r[r > threshold]
+    rlist = []
+    if not r1.empty:
+        for i, v in r1.items():
+            print(i, v)
+            rlist.append((12, code, name, df.iloc[i, 0], df.iloc[i, 1], -1))
     else:
         """
         如果未能匹配，返回 相同的code对应的name，及达到匹配度的前三个name对应的code
@@ -94,14 +116,27 @@ def match(code1, name1, threshold=0.9):
             (状态码, 原始code, 原始name, 匹配的字典code3, 匹配的name3, -1),
         ]
         """
-        rlist = []
         if code in dis_code_name_dict:
             rlist.append((2, code, name, code, dis_code_name_dict[code], -1))
 
+        r1 = r[:5]
+        for i, v in r1.items():
+            print(i, v)
+            rlist.append((2, code, name, df.iloc[i, 0], df.iloc[i, 1], -1))
         if len(rlist) == 0:
             rlist.append((2, code, name, -1, -1, -1))
-        return 2, rlist
+    return 2, rlist
 
+
+def tokenizer(x):
+    """
+    分词
+    :param x:
+    :return:
+    """
+    x = re.sub(r'[a-zA-Zαβγδ]+', 'alphabet', x)
+    x = re.sub(r'[0-9]+', 'num', x)  # 把数字替换为num
+    return ' '.join(jieba.lcut(x))
 
 
 if __name__ == '__main__':
@@ -112,6 +147,23 @@ if __name__ == '__main__':
     df4 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/4bitcode.xls', skiprows=[0]).iloc[:, 1:]
     dis_name_code_dict = picklew.loadFromFile('dis_name_code_dict.pkl')
     dis_code_name_dict = picklew.loadFromFile('dis_code_name_dict.pkl')
+
+
+
+
+
+    df['diag_name_'] = df['diag_name'].apply(tokenizer)
+    # df['diag_name_'] = df['diag_name'].apply(lambda x: ' '.join(jieba.lcut(x)))
+    x_test = df['diag_name_']
+    print('load stopwords')
+    with open('../../mayiutils/nlp/stopwords_zh.dic', encoding='utf8') as f:
+        stopwords = [s.strip() for s in f.readlines()]
+    print('building tfidf array')
+    tfidf = TfidfVectorizer(stop_words=stopwords, token_pattern=r"(?u)\b\w+\b")
+    tfidf.fit(x_test)
+    tfidf_features = tfidf.transform(x_test).toarray()
+    print('building tfidf array completed')
+
     # print(df.shape)#(41058, 2)
     # print(df.head())
     """
@@ -161,7 +213,7 @@ if __name__ == '__main__':
         """
         进行匹配
         """
-        dft = df4
+        dft = df3
         # print(dft.head())
 
         rlist = []
@@ -176,7 +228,7 @@ if __name__ == '__main__':
                 rlist.append(r)
         arr = np.array(rlist)
         dft = pd.DataFrame(arr, columns=['status', 'code', 'name', 'match_code', 'match_name', 'match_flag'])
-        dft.to_csv('dft4.csv', encoding='gbk')
+        dft.to_csv('dfttt.csv', encoding='gbk')
     if mode == 1:
         """
         把df标准化后存入mysql

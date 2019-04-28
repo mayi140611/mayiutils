@@ -62,7 +62,7 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 1
     if mode == 4:
         obj1 = pd.Series([1, 2])
         obj2 = pd.Series([3, 4, 5])
@@ -110,6 +110,10 @@ if __name__ == '__main__':
     if mode == 1:
         s = pd.Series([1,2,3,4,5,4,2,1,2,1])
         print(s)
+        s1 = s[s>6]
+        print(s1)
+        if s1.empty:#如果s1为空
+            print('ppp')
         print(s.sort_index())
         print(s.value_counts().sort_values(ascending=False))
         plt.figure()

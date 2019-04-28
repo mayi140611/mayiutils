@@ -115,11 +115,15 @@ class ReWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 1
     if mode == 3:
         """
         findall
         """
+
+        print(re.findall('([ⅰ]+)','ⅰ ⅱ'))#['f', 's', 'r']
+        print(re.findall('([s|rf]+)','12fFdsDFDS3rtG4'))#['f', 's', 'r']
+        print(re.findall('([srf]+)','12fFdsDFDS3rtG4'))#['f', 's', 'r']
         print(re.findall('([a-zA-Z]+)','12fFdsDFDS3rtG4'))#['fFdsDFDS', 'rtG']
         print(re.findall('[a-zA-Z]+','12fFdsDFDS3rtG4'))#['fFdsDFDS', 'rtG']
         nltk.re_show('[a-zA-Z]+', '12fFdsDFDS3rtG4')#12{fFdsDFDS}3{rtG}4
@@ -153,4 +157,11 @@ if __name__ == '__main__':
         print(r)#None
         print(re.match(r'肚子|小腹|上腹|下腹|腹部|肚|腹','腹疼啊腹好痛'))#<_sre.SRE_Match object; span=(0, 1), match='腹'>
     if mode == 1:
+        """
+        https://www.runoob.com/python/python-reg-expressions.html
+        \w	匹配字母数字及下划线
+            注意：中文的标的符号也不会被匹配
+        """
         nltk.re_show(r'[a-zA-Z]{1,2}', '12fFdsDFDS3rtG4')#12{fF}{ds}{DF}{DS}3{rt}{G}4
+        nltk.re_show(r'\w+', '12fFdsD.FDS3rtG4')#{12fFdsD}.{FDS3rtG4}
+        nltk.re_show(r'\w+', 'ian说：你好，我（ian）是ian_luo。hi, nice to meet u!')#{ian说}：{你好}，{我}（{ian}）{是ian_luo}。{hi}, {nice} {to} {meet} {u}!

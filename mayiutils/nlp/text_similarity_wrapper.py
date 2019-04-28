@@ -4,16 +4,16 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: text_prepare_wrapper.py
+@file: text_similarity_wrapper.py
 @time: 2019/3/17 20:01
-
-文本处理相关封装
 """
 import distance
 
 
-class TextPrepareWrapper:
-
+class TextSimilarityWrapper:
+    """
+    文本相似度/距离计算
+    """
     @classmethod
     def calEditDistance(self, s1, s2, mode=1):
         '''
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         """
         编辑距离
         """
-        print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 1))#1
-        print(TextPrepareWrapper.calEditDistance('我头疼', '我头很疼', 2))#1
-        print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 1))#3
-        print(TextPrepareWrapper.calEditDistance('我头疼', '我头痛欲裂', 2))#3
+        print(TextSimilarityWrapper.calEditDistance('我头疼', '我头很疼', 1))#1
+        print(TextSimilarityWrapper.calEditDistance('我头疼', '我头很疼', 2))#1
+        print(TextSimilarityWrapper.calEditDistance('我头疼', '我头痛欲裂', 1))#3
+        print(TextSimilarityWrapper.calEditDistance('我头疼', '我头痛欲裂', 2))#3

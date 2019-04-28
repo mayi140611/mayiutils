@@ -4,7 +4,7 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: sklearn_evaluate_wrapper.py
+@file: sklearn_metrics_wrapper.py
 @time: 2019/3/18 17:12
 
 
@@ -35,11 +35,30 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, average_precision_score, precision_recall_curve\
                             , recall_score, confusion_matrix
 import numpy as np
+from sklearn.metrics.pairwise import pairwise_distances, cosine_distances, cosine_similarity, paired_cosine_distances
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
     submode = 202
+    if mode == 3:
+        """
+        距离计算
+        """
+        a = np.array([[1, 0, 1], [1, 1, 1]])
+        b = np.array([[1, 1, 1],
+                      [1, 0, 1],
+                      [1, 0, 0]])
+        print(cosine_similarity(a, a))
+        """
+[[1.         0.81649658]
+ [0.81649658 1.        ]]
+        """
+        print(cosine_similarity(a, b))
+        """
+[[0.81649658 1.         0.70710678]
+ [1.         0.81649658 0.57735027]]
+        """
     if mode == 2:
         """
         分类评价指标
