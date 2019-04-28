@@ -3,7 +3,7 @@
 
 """
 @author: Ian
-@file: data_explore.py
+@file: abnormal_detection_gaussian.py
 @time: 2019-04-24 16:39
 """
 import pandas as pd

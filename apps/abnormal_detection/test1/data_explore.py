@@ -4,7 +4,7 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: data_explore.py
+@file: abnormal_detection_gaussian.py
 @time: 2019/3/27 15:36
 """
 import pandas as pd
