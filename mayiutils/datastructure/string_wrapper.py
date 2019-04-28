@@ -44,7 +44,7 @@ if __name__ == '__main__':
         http://www.runoob.com/python/att-string-format.html
         """
         a = 2.33
-        print(f'a is {a}')  #a is 2.33
+        print(f'a is {a}')  # a is 2.33
         print("{:.2e}".format(3.1415926))#3.14e+00
         print("{:.2%}".format(3.1415926))#314.16%
         print("{:.2f}".format(3.1415926))#3.14
