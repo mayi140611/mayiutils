@@ -10,4 +10,6 @@ pip install --upgrade pyod
 Python Outlier Detection
 
 https://github.com/mayi140611/pyod
+https://pyod.readthedocs.io/en/latest/
+https://www.zhihu.com/question/280696035
 """

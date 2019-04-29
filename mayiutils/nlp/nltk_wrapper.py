@@ -12,6 +12,7 @@ import nltk
 from nltk.corpus import reuters
 from nltk.util import trigrams
 from nltk.util import bigrams
+from nltk.text import TextCollection
 
 
 class NltkWrapper:
@@ -43,4 +44,19 @@ class NltkWrapper:
 
 
 if __name__ == '__main__':
-    print(reuters.fileids())
+    mode = 1
+    # nltk.download()
+    # print(reuters.fileids())
+    if mode == 1:
+        """
+        nltk实现tfidf 有问题！！！
+        """
+        corpus = TextCollection(['this is sent one',
+                                 'this is sent two',
+                                 'this is sent three',
+                                 ])
+        print(corpus.vocab())
+        print(list(corpus.vocab()))
+        #直接就能算出tfidf
+        print(corpus.tf_idf('this', 'this is sent four'))
+        print(corpus.tf_idf('s', 'this is sent four'))

@@ -39,8 +39,8 @@ from sklearn.metrics.pairwise import pairwise_distances, cosine_distances, cosin
 
 
 if __name__ == '__main__':
-    mode = 3
-    submode = 202
+    mode = 2
+    submode = 201
     if mode == 3:
         """
         距离计算
@@ -89,6 +89,12 @@ if __name__ == '__main__':
               3       0.25      0.33      0.29         3
     
             avg / total       0.57      0.50      0.53        10
+            """
+            print(confusion_matrix(y_test, prediction))
+            """
+[[2 0 1]
+ [0 2 2]
+ [0 2 1]]
             """
     if mode == 1:
         """

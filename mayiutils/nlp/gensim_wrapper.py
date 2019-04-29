@@ -6,12 +6,24 @@
 @contact:yongguiluo@hotmail.com
 @file: gensim_wrapper.py
 @time: 2019/3/14 21:37
+
+gensim – Topic Modelling in Python
+pip install -U gensim
+https://radimrehurek.com/gensim/tutorial.html
+https://github.com/RaRe-Technologies/gensim
 """
 import gensim
 from gensim.models import Word2Vec
 from gensim.models import FastText
+from gensim.similarities import WmdSimilarity
+
+import logging
+
 
 class GensimWrapper:
+    """
+
+    """
     @classmethod
     def trainWord2vec(cls, sentences=None, size=100, alpha=0.025, window=5, min_count=5,
                  max_vocab_size=None, sample=1e-3, seed=1, workers=3):
@@ -44,7 +56,8 @@ class GensimWrapper:
 
 
 if __name__ == '__main__':
-    mode = 2
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    mode = 1
     sentences = [["cat", "say", "meow"], ["dog", "say", "woof"]]
     if mode == 2:
         """
@@ -58,6 +71,9 @@ if __name__ == '__main__':
     if mode == 1:
         """
         word2vec
+        存在的问题：
+            没有利用全局信息
+            由于使用了唯一的词向量，对多义词无法很好的表示和处理
         """
         model = Word2Vec(sentences, min_count=1)
         r = model.wv.most_similar('cat')

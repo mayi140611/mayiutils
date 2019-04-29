@@ -29,7 +29,7 @@ class StringWrapper:
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 1
     if mode == 3:
         """
         find
@@ -69,9 +69,9 @@ if __name__ == '__main__':
         切片 slice  reverse
         """
         s = '我是中国人'
-        print(s[-1:1])
-        print(s[:2])
-        print( 0 or 2)
+        s1 = s[-1:1]
+        print(len(s1))#0
+        print(s[:2])#我是
         #把一个int型数值按位展开，转换为整数数组
         n = 8657
         print(list(map(int, str(n))))#[8, 6, 5, 7]
