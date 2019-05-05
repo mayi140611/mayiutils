@@ -16,7 +16,9 @@ import gensim
 from gensim.models import Word2Vec
 from gensim.models import FastText
 from gensim.similarities import WmdSimilarity
-
+from collections import defaultdict
+from gensim import corpora
+from gensim import models
 import logging
 
 
@@ -70,11 +72,52 @@ if __name__ == '__main__':
         print(model.wv.most_similar('你'))
     if mode == 1:
         """
-        word2vec
-        存在的问题：
-            没有利用全局信息
-            由于使用了唯一的词向量，对多义词无法很好的表示和处理
+        https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/gensim Quick Start.ipynb
+        
+        原始语料经过分词，去除停用词，字典编号，
+        这样原始语料就可以转化为vector
+        使用作为model的输入
         """
-        model = Word2Vec(sentences, min_count=1)
-        r = model.wv.most_similar('cat')
-        print(r)
+        raw_corpus = ["Human machine interface for lab abc computer applications",
+                      "A survey of user opinion of computer system response time",
+                      "The EPS user interface management system",
+                      "System and human system engineering testing of EPS",
+                      "Relation of user perceived response time to error measurement",
+                      "The generation of random binary unordered trees",
+                      "The intersection graph of paths in trees",
+                      "Graph minors IV Widths of trees and well quasi ordering",
+                      "Graph minors A survey"]
+        # Create a set of frequent words
+        stoplist = set('for a of the and to in'.split(' '))
+        # Lowercase each document, split it by white space and filter out stopwords
+        texts = [[word for word in document.lower().split() if word not in stoplist]
+                 for document in raw_corpus]
+        # Count word frequencies
+        frequency = defaultdict(int)
+        for text in texts:
+            for token in text:
+                frequency[token] += 1
+
+        # Only keep words that appear more than once
+        processed_corpus = [[token for token in text if frequency[token] > 1] for text in texts]
+        print(processed_corpus)
+        dictionary = corpora.Dictionary(processed_corpus)
+        print(dictionary)#Dictionary(12 unique tokens: ['computer', 'human', 'interface', 'response', 'survey']...)
+        print(dictionary.token2id)
+        """
+        {'computer': 0, 'human': 1, 'interface': 2, 'response': 3, 'survey': 4, 'system': 5, 'time': 6, 'user': 7, 'eps': 8, 'trees': 9, 'graph': 10, 'minors': 11}
+        """
+        new_doc = "Human computer interaction"
+        new_vec = dictionary.doc2bow(new_doc.lower().split())
+        print(new_vec)#[(0, 1), (1, 1)]
+        """
+        The first entry in each tuple corresponds to the ID of the token in the dictionary, the second corresponds to the count of this token.
+Note that "interaction" did not occur in the original corpus and so it was not included in the vectorization. 
+        """
+        bow_corpus = [dictionary.doc2bow(text) for text in processed_corpus]
+        print(bow_corpus)
+        # train the model
+        tfidf = models.TfidfModel(bow_corpus)
+        # transform the "system minors" string
+        print(tfidf[dictionary.doc2bow("system minors".lower().split())])#[(5, 0.5898341626740045), (11, 0.8075244024440723)]
+
