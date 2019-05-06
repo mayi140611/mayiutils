@@ -6,7 +6,7 @@
 @file: seaborn_wrapper.py
 @time: 2019-04-26 10:17
 """
-import seaborn as sb
+import seaborn as sns
 from sklearn.datasets import load_iris
 import pandas as pd
 import numpy as np
@@ -25,5 +25,5 @@ if __name__ == '__main__':
         dataset = np.concatenate((iris.data, iris.target[:, np.newaxis]), axis=1)
         iris_df = pd.DataFrame(dataset, columns=['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class_'])
         plt.figure()
-        sb.pairplot(iris_df.dropna(), hue='class_', vars=list(iris_df.columns)[:-1])
+        sns.pairplot(iris_df.dropna(), hue='class_', vars=list(iris_df.columns)[:-1])
         plt.show()

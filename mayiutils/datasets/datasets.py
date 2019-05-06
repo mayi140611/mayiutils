@@ -14,6 +14,7 @@ from sklearn import datasets
 from keras.datasets import cifar10, cifar100
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 if __name__ == "__main__":
@@ -37,9 +38,23 @@ if __name__ == "__main__":
         print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
         #((50000, 32, 32, 3), (50000, 1), (10000, 32, 32, 3), (10000, 1))
 
+    if mode == 2:
+        """
+        IMDB数据集， 情感二分类
+
+        IMDB数据集有5万条来自网络电影数据库的评论；
+        其中2万5千条用来训练，2万5千条用来测试，每个部分正负评论各占50%.
+        """
+        max_features = 2000
+        # num_words: max number of words to include
+        (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
     if mode == 1:
         """
         鸢尾花数据集，三分类, 150个样本
+        有两种方式：
+            通过sklearn载入
+            通过seaborn载入，直接为df类型
+                iris = sns.load_dataset("iris")
         """
         iris = datasets.load_iris()
         # print(iris)
@@ -64,14 +79,4 @@ if __name__ == "__main__":
 3           4.6          3.1           1.5          0.2     0.0
 4           5.0          3.6           1.4          0.2     0.0
         """
-    if mode == 2:
-        """
-        IMDB数据集， 情感二分类
-    
-        IMDB数据集有5万条来自网络电影数据库的评论；
-        其中2万5千条用来训练，2万5千条用来测试，每个部分正负评论各占50%.
-        """
-        max_features = 2000
-        #num_words: max number of words to include
-        (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
 

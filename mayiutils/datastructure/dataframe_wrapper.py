@@ -121,7 +121,7 @@ if __name__ == '__main__':
     """
     http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html
     """
-    mode = 4
+    mode = 6
     """
     DF Creation
     """
@@ -194,6 +194,15 @@ min    25707.000000    559.000000    0.000000  10009.000000    0.010000
 50%    39505.000000   8320.000000    1.000000  11033.000000    2.780000
 75%    46109.000000  11739.000000    1.000000  11526.000000    4.750000
 max    49624.000000  14971.000000    1.000000  11991.000000   12.620000
+        
+        Generate descriptive statistics that summarize the central tendency,
+        dispersion and shape of a dataset's distribution, excluding
+        ``NaN`` values.
+
+        Analyzes both numeric and object series, as well
+        as ``DataFrame`` column sets of mixed data types. The output
+        will vary depending on what is provided. Refer to the notes
+        below for more detail.
         """
         # print(loans.T)
         """
@@ -276,6 +285,9 @@ client_id                                    ...
     # df2 = df1.dropna(axis=1, how='all')
 
     if mode == 5:
+        """
+        删除重复数据
+        """
         data = {'state': [1, 1, 2, 2, 1, 2, 2], 'pop': ['a', 'b', 'c', 'd', 'b', 'c', 'd']}
         frame = pd.DataFrame(data)
         print(frame)
@@ -288,6 +300,27 @@ client_id                                    ...
         #保留某一特征中重复值的第一条
         a = frame.drop_duplicates(subset=['pop'], keep='first')
         print(a)
+    if mode == 6:
+        """
+        求相关系数
+        df.corr()  # pearson相关系数
+        df.corr('kendall') # Kendall Tau相关系数
+        df.corr('spearman') # spearman秩相关
+        热力图表示
+        sns.heatmap(df.corr())
+        plt.show()
+        """
+        print(loans.corr())
+        """
+             client_id  loan_amount    repaid   loan_id      rate
+client_id     1.000000     0.046507  0.085547 -0.025350  0.058672
+loan_amount   0.046507     1.000000  0.012506  0.074782 -0.033340
+repaid        0.085547     0.012506  1.000000 -0.076472 -0.016172
+loan_id      -0.025350     0.074782 -0.076472  1.000000  0.010918
+rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
+        """
+        # 热力图表示
+
     if mode == 4444:
         d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
         print(d == 1)#判断d中每一个元素是否为1
