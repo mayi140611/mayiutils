@@ -8,6 +8,7 @@
 @time: 2019/3/2 7:12
 """
 import numpy as np
+from sklearn.preprocessing import normalize
 
 
 class DataPrepare:
@@ -42,6 +43,8 @@ class DataPrepare:
             异常值处理
             归一化？
                 由于现在基本上就用GBDT等tree模型了，所以不用做特征归一化！！！
+                如果不是用tree，则需要归一化
+                    https://blog.csdn.net/lyhope9/article/details/82778459
     2、features-engineering
         features衍生
             用feature tools

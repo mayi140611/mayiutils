@@ -7,6 +7,7 @@
 @time: 2019-05-06 17:22
 """
 import pandas as pd
+import math
 import featuretools as ft
 from feature_selector import FeatureSelector
 
@@ -39,7 +40,19 @@ if __name__ == '__main__':
         dfzy['医保支付金额占比'] = dfzy['医保支付金额'] / dfzy['费用金额']
         # 平均每次事件费用金额
         dfzy['费用金额mean'] = dfzy['费用金额'] / dfzy['event_count']
-
+        # log
+        def tlog(x):
+            if x < 1:
+                x = 0
+            if x != 0:
+                x = math.log(x)
+            return x
+        dfzy['费用金额log'] = dfzy['费用金额'].apply(tlog)
+        dfzy['自费金额log'] = dfzy['自费金额'].apply(tlog)
+        dfzy['部分自付金额log'] = dfzy['部分自付金额'].apply(tlog)
+        dfzy['医保支付金额log'] = dfzy['医保支付金额'].apply(tlog)
+        dfzy['自费总金额log'] = dfzy['自费总金额'].apply(tlog)
+        dfzy['费用金额meanlog'] = dfzy['费用金额mean'].apply(tlog)
         # 构建one-hot特征
 
         def build_one_hot_features(df, cols):
