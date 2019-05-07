@@ -14,7 +14,11 @@ from datetime import datetime, timedelta
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 4
+    t = datetime.strptime('20100101', '%Y%m%d')
+    t2 = datetime.strptime('20100105', '%Y%m%d')
+    print(t2-t)
+    print((t2-t).days)
     if mode == 3:
         # 获取当前时间
         print(datetime.now())#2019-03-17 10:25:09.004459

@@ -121,10 +121,11 @@ if __name__ == '__main__':
     """
     http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html
     """
-    mode = 6
+    mode = 3
     """
     DF Creation
     """
+    d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
     # 创建时间序列索引
     # dates = pd.date_range('20130101', periods=6)
     # print(dates)
@@ -228,15 +229,22 @@ rate                        2.15  ...                 0.13
     if mode == 2:
         """
         行列操作
+        # 删除全部为null的列
+        df2 = df1.dropna(axis=1, how='all')
+        #删除某列
+        del frame2['eastern']
         """
         pass
     if mode == 3:
         """
         合并
         merge
+        concat
         """
         # 以clients的'client_id'和stats的索引进行left_join
         # clients.merge(stats, left_on = 'client_id', right_index=True, how = 'left')
+        print(d)
+        print(pd.concat([d, d], axis=0))#列方向合并
     if mode == 4:
         """
         groupby
@@ -322,7 +330,7 @@ rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
         # 热力图表示
 
     if mode == 4444:
-        d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
+
         print(d == 1)#判断d中每一个元素是否为1
         """
                0      1
@@ -333,7 +341,7 @@ rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
         d = (d == 1)
         print(len(d))#3 等价于df.shape[0]
         print(d.sum())# 按列求和，等价于d.sum(axis=0)
-    if mode == 3:
+    if mode == 3333:
         """
         DataFrame生成 
         可以通过Series, arrays, constants, or list-like objects生成df

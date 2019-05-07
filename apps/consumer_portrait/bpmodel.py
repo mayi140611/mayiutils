@@ -91,7 +91,7 @@ if __name__ == '__main__':
     print(r[:5]+422)#[237 209 221 120 232]
     df = pd.read_csv(os.path.join(m._baseDir, 'submit_example.csv'))
     df['score'] = r+422
-    df.to_csv(os.path.join(m._baseDir, 'test1.csv'), index=False)
+    df.to_csv(os.path.join(m._baseDir, 'proj0.csv'), index=False)
 
     if mode == '1':
         model = m.buildModel()
