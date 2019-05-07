@@ -12,7 +12,7 @@
 import jieba,copy,re,codecs
 from collections import Counter
 
-from apps.auto_title.text import title, text
+from apps.nlp.gen_title import title, text
 from pyhanlp import HanLP
 
 
