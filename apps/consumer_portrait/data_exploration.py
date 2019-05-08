@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-from mayiutils.datasets.data_prepare import DataPrepare as dp
+from mayiutils.datasets.data_preprocessing import DataPrepare as dp
 if __name__ == '__main__':
     mode = 2
     traindf = pd.read_csv('D:/Desktop/DF/portrait/train_dataset.csv')

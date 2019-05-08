@@ -13,7 +13,7 @@ from feature_selector import FeatureSelector
 
 
 if __name__ == '__main__':
-    mode = 7
+    mode = 21
     if mode == 7:
         """
         放弃利用featuretools扩充特征，自己构建特征
@@ -212,6 +212,21 @@ if __name__ == '__main__':
         del dfzy2['费用合计']
 
         dfzy2.to_csv('zy_all_featured_receipt.csv', encoding='gbk', index=False)
+    if mode == 21:
+        """
+        利用feature selector把2再做一遍
+        """
+        zydf = pd.read_csv('../data/zy_all.csv', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期', '入院时间', '出院时间'])
+
+        fs = FeatureSelector(data=zydf)
+        fs.identify_missing(missing_threshold=0.6)
+        print(fs.record_missing)
+        fs.identify_single_unique()
+        print(fs.record_single_unique)
+        fs.identify_collinear(correlation_threshold=0.975)
+        print(fs.record_collinear)
+        train_removed= fs.remove(methods=['missing', 'single_unique', 'collinear'])
+        train_removed.info()
     if mode == 2:
         """
         住院数据特征explore

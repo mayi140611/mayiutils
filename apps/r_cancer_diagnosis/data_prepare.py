@@ -4,7 +4,7 @@
 """
 @author: Ian
 @contact:yongguiluo@hotmail.com
-@file: data_prepare.py
+@file: data_preprocessing.py
 @time: 2019/3/6 12:47
 
 准备训练集、验证集和测试集
