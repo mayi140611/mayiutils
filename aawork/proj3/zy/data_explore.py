@@ -216,8 +216,7 @@ if __name__ == '__main__':
         """
         利用feature selector把2再做一遍
         """
-        zydf = pd.read_csv('../data/zy_all.csv', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期', '入院时间', '出院时间'])
-
+        zydf = pd.read_csv('/Users/luoyonggui/PycharmProjects/mayiutils/aawork/proj3/data/zy_all.csv', encoding='utf8').iloc[:, 3:]
         fs = FeatureSelector(data=zydf)
         fs.identify_missing(missing_threshold=0.6)
         print(fs.record_missing)
@@ -225,7 +224,7 @@ if __name__ == '__main__':
         print(fs.record_single_unique)
         fs.identify_collinear(correlation_threshold=0.975)
         print(fs.record_collinear)
-        train_removed= fs.remove(methods=['missing', 'single_unique', 'collinear'])
+        train_removed = fs.remove(methods=['missing', 'single_unique', 'collinear'])
         train_removed.info()
     if mode == 2:
         """

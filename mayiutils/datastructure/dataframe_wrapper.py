@@ -121,7 +121,7 @@ if __name__ == '__main__':
     """
     http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html
     """
-    mode = 3
+    mode = 4
     """
     DF Creation
     """
@@ -253,6 +253,7 @@ rate                        2.15  ...                 0.13
             mean()
             max()
             min()
+            count()
             quantile(0.9)#求每个分组的0.9分位数
         """
         # 同时使用多个聚合函数
@@ -260,6 +261,7 @@ rate                        2.15  ...                 0.13
         t = loans.groupby('client_id')
         # print(t)#<pandas.core.groupby.generic.DataFrameGroupBy object at 0x1a200fbbe0>
         stats.columns = ['mean_loan_amount', 'max_loan_amount', 'min_loan_amount']
+
         # print(type(stats))#<class 'pandas.core.frame.DataFrame'>
         # print(stats.head())
         """
@@ -289,7 +291,32 @@ client_id                                    ...
 26945       15.0   7125.933333  4543.621769  ...   8337.0   9289.00  14593.0
 
         """
+        tt = pd.DataFrame({'a':[1, 1, 2, 2, 2], 'b': [1, 1, 1, 1, 1]})
+        print(tt.groupby('a')['b'].count())#
+        """
+a
+1    2
+2    3
+Name: b, dtype: int64
 
+可以看出，count只是单纯的计数，而不会管是否有重复值
+        """
+        print(tt.groupby('a')['b'].value_counts())#
+        """
+a  b
+1  1    2
+2  1    3        
+        """
+        # 统计去不同医院的数量
+        def t(arr):
+            return arr.unique().shape[0]
+        print(tt.groupby('a')['b'].agg(t))
+        """
+ a
+1    1
+2    1
+Name: b, dtype: int64       
+        """
     if mode == 5:
         """
         删除重复数据
