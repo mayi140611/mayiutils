@@ -16,7 +16,7 @@ if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 5
+    mode = 21
     if mode == 4:
         """
         发现从赔案的层面的意义不大
@@ -270,6 +270,20 @@ Removed 9 features.
 
         """
         mzdf.to_csv('../data/mz_all_event2.csv', encoding='gbk', index=True)
+    if mode == 21:
+
+        mzdf = pd.read_csv('../data/mz_all.csv', index_col=0, encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
+        mzdf1 = pd.read_csv('../data/mz_all(1).csv', encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
+        mzdf['费用项目名称1'] = mzdf1['费用项目名称']
+        print( mzdf['费用项目名称1'].unique())
+        print( mzdf['费用项目名称'].unique())
+        # print(mzdf)
+        # print(mzdf1)
+        # del mzdf1
+        # def t(x):
+        #     return ' '.join(set(x.tolist()))
+        # print(mzdf.groupby('费用项目名称')['费用项目名称1'].agg(t))
+
     if mode == 2:
         """
         明细压成收据
@@ -277,44 +291,25 @@ Removed 9 features.
         mzdf = pd.read_csv('../data/mz_all.csv', index_col=0, encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
         mzdf1 = pd.read_csv('../data/mz_all(1).csv', encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
         mzdf['费用项目名称'] = mzdf1['费用项目名称']
-        del mzdf1
-        # del mzdf['ROWNUM']
-        # # 删除名称 因为有代码
-        # del mzdf['主被保险人']
-        # del mzdf['出险人姓名']
-        # del mzdf['险种名称']
-        # del mzdf['医院名称']
-        # del mzdf['费用项目代码']
-        # del mzdf['疾病名称']
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科医疗'] = '牙科治疗'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙齿护理'] = '牙科治疗'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科护理'] = '牙科治疗'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科保健'] = '牙科治疗'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='紧急牙科治疗'] = '牙科治疗'
-        #
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='普通生育门诊'] = '生育'
-        #
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊疾病就诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹门诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='一般门诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='其他约定1门诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊疾病就诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊意外就诊'] = '门诊就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊意外首次就诊'] = '门诊就诊'
-        #
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='住院'] = '住院就诊'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹住院'] = '住院就诊'
-        #
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='其他约定1'] = '其他约定'
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹约定'] = '其他约定'
-        #
-        # mzdf['就诊类型名称'][mzdf['就诊类型名称']=='中医药'] = '药房购药'
-        # print(mzdf['就诊类型名称'].value_counts())
 
-        # mzdf = de.build_one_hot_features(mzdf, ['保单号', '生效日期', '人员属性', '证件类型', '性别', '出险原因', '险种代码', '就诊类型名称'])
+        del mzdf1
         mzdf.info()
 
         mzdf['费用项目名称'][mzdf['费用项目名称']=='中成药'] = '中成药费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='B超费'] = '检查费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='CT费'] = '检查费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='MRI/CT费'] = '检查费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='专家挂号费'] = '挂号费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='体检费'] = '检查费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='卫材费'] = '材料费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='取暖费'] = '其他费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='合计金额'] = '其他费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='心电费'] = '检查费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='急救费'] = '治疗费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='空调费'] = '其他费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='膳食费'] = '材料费'
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='输氧费'] = ''
+        # mzdf['费用项目名称'][mzdf['费用项目名称']=='空调费'] = ''
         print(mzdf['费用项目名称'].value_counts())
 
         flist = [
