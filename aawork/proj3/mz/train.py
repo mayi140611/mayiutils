@@ -15,10 +15,12 @@ from pyod.models.iforest import IForest
 
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 3
     train_set1 = pd.read_csv('../data/mz_train_data.csv', encoding='gbk', index_col=0)
+    train_set_all = pd.read_csv('../data/mz_all.csv', encoding='gbk', index_col=0)
     train_set = normalize(train_set1.values, axis=0, norm='max')
-
+    if mode == 3:
+        print(train_set1.loc['2017222008477_2017222008477001'])
     # print(train_set.head())
     if mode == 2:
         """
@@ -39,8 +41,12 @@ if __name__ == '__main__':
         plt.figure()
         plt.boxplot(y_train_scores)
         plt.show()
-        s1 = pd.Series(y_train_scores).sort_values(ascending=False)
-        print(s1[:100].sort_index())
+        s = pd.Series(y_train_scores, index=train_set1.index).sort_values(ascending=False)
+        # print(s1[:100].sort_index())
+        s = s.apply(lambda x: (x-s.min()))
+        print(s.min(), s.max())
+        s.to_csv('mz_pred_iforest.csv', encoding='gbk')
+
     if mode == 1:
         """
         Multivariate Gaussian algorithm
@@ -67,8 +73,12 @@ if __name__ == '__main__':
         plt.figure()
         plt.boxplot(pp_list)
         plt.show()
-        s = pd.Series(pp_list)
-        print(s[s<0.01].index.shape)
+        s = pd.Series(pp_list, index=train_set1.index).sort_values()
+
+        # s = s.apply(lambda x: 0.9-(x+1)/(s.max()/0.9))
+        # print(s.min(), s.max())
+        s.to_csv('mz_pred_guassian.csv', encoding='gbk')
+        # print(s[s<0.01].index.shape)
         # # print(s[s>1].shape)
         # s[s<0.01].to_csv('aa.csv', encoding='gbk')
         # s1 = pd.Series(train_set1.index)

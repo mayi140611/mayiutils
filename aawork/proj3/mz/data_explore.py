@@ -21,7 +21,6 @@ if __name__ == '__main__':
         mzdf = pd.read_csv('../data/mz_all_claim.csv', encoding='gbk', index_col=0,
                            parse_dates=['出生日期', '就诊结帐费用发生日期'])
         mzdf['出生月'] = mzdf['出生日期'].dt.month
-        mzdf['出生月'] = mzdf['出生日期'].dt.weekday
         mzdf['就诊结帐费用发生月'] = mzdf['就诊结帐费用发生日期'].dt.month
         mzdf['就诊结帐费用发生月'] = mzdf['就诊结帐费用发生日期'].dt.weekday
         del mzdf['主被保险人客户号']
@@ -32,6 +31,7 @@ if __name__ == '__main__':
         del mzdf['就诊结帐费用发生日期']
         del mzdf['费用合计']
         del mzdf['疾病代码']
+        mzdf.index = mzdf['总案号_分案号']
         del mzdf['总案号_分案号']
         del mzdf['费用金额']
         del mzdf['自费金额']
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         """
         train_removed = fs.remove(methods=['missing', 'single_unique', 'collinear'])
         train_removed.info()
-        train_removed.to_csv('../data/mz_train_data.csv', encoding='gbk', index=True)
+        # train_removed.to_csv('../data/mz_train_data.csv', encoding='gbk', index=True)
 
     if mode == 4:
         """
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             if x < 1:
                 x = 0
             if x != 0:
-                x = math.log(x)
+                x = math.log10(x)
             return x
         mzdf['费用金额log'] = mzdf['费用金额'].apply(tlog)
         mzdf['自费金额log'] = mzdf['自费金额'].apply(tlog)
@@ -241,6 +241,7 @@ memory usage: 87.2+ MB
         """
         mzdf = pd.read_csv('../data/mz_all.csv', index_col=0, encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
         mzdf1 = pd.read_csv('../data/mz_all(1).csv', encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
+        print(mzdf1['就诊类型名称'].unique())
         mzdf['费用项目名称'] = mzdf1['费用项目名称']
         del mzdf1
         del mzdf['ROWNUM']
@@ -258,18 +259,29 @@ memory usage: 87.2+ MB
         # print(mzdf['性别'].value_counts())
         # print(mzdf['出险原因'].value_counts())
         # print(mzdf['险种代码'].value_counts())
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊疾病就诊'] = '门诊就诊'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科医疗'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙齿护理'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科护理'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科保健'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='紧急牙科治疗'] = '牙科治疗'
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='生育'] = '普通生育门诊'
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='其他约定1门诊'] = '其他约定'
+
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='普通生育门诊'] = '生育'
+
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊疾病就诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹门诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='一般门诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='其他约定1门诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊疾病就诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊意外就诊'] = '门诊就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊意外首次就诊'] = '门诊就诊'
+
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='住院'] = '住院就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹住院'] = '住院就诊'
+
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='其他约定1'] = '其他约定'
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹约定'] = '统筹门诊'
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='住院'] = '统筹门诊'
-        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='门诊意外首次就诊'] = '门诊意外就诊'
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='统筹约定'] = '其他约定'
+
+        mzdf['就诊类型名称'][mzdf['就诊类型名称']=='中医药'] = '药房购药'
         print(mzdf['就诊类型名称'].value_counts())
         # mzdf['费用项目名称'][mzdf['费用项目名称']=='诊疗费'] = '治疗费'
         # mzdf['费用项目名称'][mzdf['费用项目名称']=='门诊手术费'] = '手术费'
