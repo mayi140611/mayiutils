@@ -241,7 +241,6 @@ memory usage: 87.2+ MB
         """
         mzdf = pd.read_csv('../data/mz_all.csv', index_col=0, encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
         mzdf1 = pd.read_csv('../data/mz_all(1).csv', encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
-        print(mzdf1['就诊类型名称'].unique())
         mzdf['费用项目名称'] = mzdf1['费用项目名称']
         del mzdf1
         del mzdf['ROWNUM']
@@ -252,13 +251,6 @@ memory usage: 87.2+ MB
         del mzdf['医院名称']
         del mzdf['费用项目代码']
         del mzdf['疾病名称']
-        # print(mzdf['保单号'].value_counts())
-        # print(mzdf['生效日期'].value_counts())
-        # print(mzdf['人员属性'].value_counts())
-        # print(mzdf['证件类型'].value_counts())
-        # print(mzdf['性别'].value_counts())
-        # print(mzdf['出险原因'].value_counts())
-        # print(mzdf['险种代码'].value_counts())
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科医疗'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙齿护理'] = '牙科治疗'
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='牙科护理'] = '牙科治疗'
@@ -283,17 +275,8 @@ memory usage: 87.2+ MB
 
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='中医药'] = '药房购药'
         print(mzdf['就诊类型名称'].value_counts())
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='诊疗费'] = '治疗费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='门诊手术费'] = '手术费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='CT费'] = 'MRI/CT费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='核磁费'] = 'MRI/CT费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='放射费'] = 'MRI/CT费'
         mzdf['费用项目名称'][mzdf['费用项目名称']=='中成药'] = '中成药费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='专家挂号费'] = '挂号费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='合计金额'] = '其他费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='氧气费'] = '输氧费'
         print(mzdf['费用项目名称'].value_counts())
-        # print(mzdf['疾病代码'].value_counts())
 
         mzdf = de.build_one_hot_features(mzdf, ['保单号', '生效日期', '人员属性', '证件类型', '性别', '出险原因', '险种代码', '就诊类型名称', '费用项目名称'])
         mzdf.info()

@@ -15,12 +15,10 @@ from pyod.models.iforest import IForest
 
 
 if __name__ == '__main__':
-    mode = 3
-    train_set1 = pd.read_csv('../data/mz_train_data.csv', encoding='gbk', index_col=0)
-    train_set_all = pd.read_csv('../data/mz_all.csv', encoding='gbk', index_col=0)
+    mode = 2
+    train_set1 = pd.read_csv('../data/mz_train_data2.csv', encoding='gbk')
+    df = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0)
     train_set = normalize(train_set1.values, axis=0, norm='max')
-    if mode == 3:
-        print(train_set1.loc['2017222008477_2017222008477001'])
     # print(train_set.head())
     if mode == 2:
         """
@@ -38,14 +36,17 @@ if __name__ == '__main__':
         print(type(y_train_pred))
         s = pd.Series(y_train_pred)
         print(s.value_counts())
-        plt.figure()
-        plt.boxplot(y_train_scores)
-        plt.show()
-        s = pd.Series(y_train_scores, index=train_set1.index).sort_values(ascending=False)
-        # print(s1[:100].sort_index())
-        s = s.apply(lambda x: (x-s.min()))
+        s = pd.Series(y_train_scores)
+        print(s.min(), s.max())# -0.11407251728323714 0.10897492649984808
+        s = s.apply(lambda x: (x-s.min())*3)
         print(s.min(), s.max())
-        s.to_csv('mz_pred_iforest.csv', encoding='gbk')
+        df['scores'] = s
+        df.sort_values(by='scores', ascending=False).to_csv('mz_pred_iforest2.csv', encoding='gbk')
+        # plt.figure()
+        # plt.boxplot(y_train_scores)
+        # plt.show()
+        # s = s.apply(lambda x: (x-s.min()))
+        # s.to_csv('mz_pred_iforest2.csv', encoding='gbk')
 
     if mode == 1:
         """
@@ -77,7 +78,7 @@ if __name__ == '__main__':
 
         # s = s.apply(lambda x: 0.9-(x+1)/(s.max()/0.9))
         # print(s.min(), s.max())
-        s.to_csv('mz_pred_guassian.csv', encoding='gbk')
+        s.to_csv('mz_pred_guassian2.csv', encoding='gbk')
         # print(s[s<0.01].index.shape)
         # # print(s[s>1].shape)
         # s[s<0.01].to_csv('aa.csv', encoding='gbk')

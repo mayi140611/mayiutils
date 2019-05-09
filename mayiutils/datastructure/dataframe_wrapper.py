@@ -121,7 +121,7 @@ if __name__ == '__main__':
     """
     http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html
     """
-    mode = 4
+    mode = 7
     """
     DF Creation
     """
@@ -353,7 +353,31 @@ loan_id      -0.025350     0.074782 -0.076472  1.000000  0.010918
 rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
         """
         # 热力图表示
+    if mode == 7:
+        df = pd.DataFrame({'收据号': [1, 1, 2, 3, 3, 3],
+                           '项目名称': ['挂号费', '药费', '挂号费', '挂号费', '治疗费', '床位费'],
+                           '费用': [1, 2, 3, 4, 5, 6],
+                           'claim': [4, 4, 4, 5, 5, 5]})
 
+        print(df.head(6))
+        """
+   收据号 项目名称  费用
+0    1  挂号费   1
+1    1   药费   2
+2    2  挂号费   3
+3    3  挂号费   4
+4    3  治疗费   5
+5    3  床位费   6
+        """
+        print(df.pivot(index=['claim', '收据号'], columns='项目名称', values='费用'))
+        """
+项目名称  床位费  挂号费  治疗费   药费
+收据号                     
+1     NaN  1.0  NaN  2.0
+2     NaN  3.0  NaN  NaN
+3     6.0  4.0  5.0  NaN
+        """
+        print(df.pivot(index='收据号', columns='项目名称', values='费用').fillna(0))
     if mode == 4444:
 
         print(d == 1)#判断d中每一个元素是否为1
@@ -366,6 +390,7 @@ rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
         d = (d == 1)
         print(len(d))#3 等价于df.shape[0]
         print(d.sum())# 按列求和，等价于d.sum(axis=0)
+
     if mode == 3333:
         """
         DataFrame生成 
