@@ -16,8 +16,14 @@ from pyod.models.iforest import IForest
 
 if __name__ == '__main__':
     mode = 2
-    train_set1 = pd.read_csv('../data/mz_train_data2.csv', encoding='gbk')
-    df = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0)
+    train_set1 = pd.read_csv('../data/mz_risk_taker_train_data.csv', encoding='gbk', index_col=0)
+    df = pd.read_csv('../data/mz_risk_taker_df.csv', encoding='gbk', index_col=0)
+    k = 2
+    # train_set1 = pd.read_csv('../data/mz_rm_tooth_train_data2.csv', encoding='gbk', index_col=0)
+    # df = pd.read_csv('../data/mz_rm_tooth_event2.csv', encoding='gbk', index_col=0)
+    # k=3
+    print(train_set1.shape)
+    print(df.shape)
     train_set = normalize(train_set1.values, axis=0, norm='max')
     # print(train_set.head())
     if mode == 2:
@@ -38,10 +44,11 @@ if __name__ == '__main__':
         print(s.value_counts())
         s = pd.Series(y_train_scores)
         print(s.min(), s.max())# -0.11407251728323714 0.10897492649984808
-        s = s.apply(lambda x: (x-s.min())*3)
+        s = s.apply(lambda x: (x-s.min())*k)
         print(s.min(), s.max())
-        df['scores'] = s
-        df.sort_values(by='scores', ascending=False).to_csv('mz_pred_iforest2.csv', encoding='gbk')
+        df['scores'] = list(s)
+        # df.sort_values(by='scores', ascending=False).to_csv('../data/mz_rm_tooth_pred_iforest2.csv', encoding='gbk')
+        df.sort_values(by='scores', ascending=False).to_csv('../data/mz_risk_taker_pred_iforest2.csv', encoding='gbk')
         # plt.figure()
         # plt.boxplot(y_train_scores)
         # plt.show()

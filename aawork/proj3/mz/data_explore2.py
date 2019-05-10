@@ -12,11 +12,19 @@ from mayiutils.datasets.data_preprocessing import DataExplore as de
 import math
 
 
+
+
 if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 21
+    mode = 6
+    if mode == 6:
+        # mzdf1 = pd.read_csv('../data/mz_rm_tooth_pred_iforest2.csv', encoding='gbk', index_col=0)
+        # del mzdf1['收据号']
+        # mzdf1.head(10).to_excel('../data/mz_rm_tooth_pred_iforest2_pre10.xlsx', index=True)
+        mzdf1 = pd.read_csv('../data/mz_risk_taker_pred_iforest2.csv', encoding='gbk', index_col=0)
+        mzdf1.head(10).to_excel('../data/mz_risk_taker_pred_iforest2_pre10.xlsx', index=True)
     if mode == 4:
         """
         发现从赔案的层面的意义不大
@@ -126,7 +134,8 @@ if __name__ == '__main__':
         """
         feature engineering
         """
-        mzdf = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0, parse_dates=['出生日期', '就诊结帐费用发生日期'])
+        mzdf1 = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0, parse_dates=['出生日期', '就诊结帐费用发生日期'])
+        mzdf = mzdf1.copy()
         mzdf['出生月'] = mzdf['出生日期'].dt.month
         mzdf['就诊结帐费用发生月'] = mzdf['就诊结帐费用发生日期'].dt.month
         mzdf['就诊结帐费用发生weekday'] = mzdf['就诊结帐费用发生日期'].dt.weekday
@@ -146,7 +155,14 @@ if __name__ == '__main__':
         del mzdf['疾病代码']
         del mzdf['主被保险人客户号']
         del mzdf['出险人客户号']
-
+        flist = [
+            '中成药费', '中草药', '其他费', '化验费',
+            '床位费', '手术费', '护理费', '挂号费',
+            '材料费', '检查费', '治疗费', '西药费',
+            '诊疗费'
+        ]
+        for i in flist:
+            del mzdf[i]
         # log
         def tlog(x):
             if x < 1:
@@ -186,6 +202,13 @@ if __name__ == '__main__':
         mzdf['就诊类型名称'][mzdf['就诊类型名称']=='中医药'] = '药房购药'
         # print(mzdf['就诊类型名称'].value_counts())
 
+        mzdf = mzdf[mzdf['就诊类型名称'] != '牙科治疗']
+        mzdf = mzdf[mzdf['就诊类型名称'] != '生育']
+        print(mzdf.shape)
+        mzdf1 = mzdf1.loc[mzdf.index]
+        print(mzdf1.shape)
+        mzdf1.to_csv('../data/mz_rm_tooth_event2.csv', encoding='gbk', index=True)
+        del mzdf1
         mzdf = de.build_one_hot_features(mzdf, ['保单号', '生效日期', '人员属性', '证件类型', '性别', '出险原因', '险种代码', '就诊类型名称'])
 
         fs = FeatureSelector(data=mzdf)
@@ -214,7 +237,50 @@ Removed 9 features.
         """
         train_removed = fs.remove(methods=['missing', 'single_unique', 'collinear'])
         train_removed.info()
-        train_removed.to_csv('../data/mz_train_data2.csv', encoding='gbk', index=False)
+        """
+Int64Index: 267303 entries, 0 to 267302
+Data columns (total 38 columns):
+年龄                 267303 non-null int64
+医院等级               267303 non-null int64
+自费总金额占比            267303 non-null float64
+医保支付金额占比           267303 non-null float64
+药费占比               267303 non-null float64
+检查费占比              267303 non-null float64
+床位费占比              267303 non-null float64
+手术费占比              267303 non-null float64
+护理费占比              267303 non-null float64
+治疗费占比              267303 non-null float64
+诊疗费占比              267303 non-null float64
+化验费占比              267303 non-null float64
+出生月                267303 non-null int64
+就诊结帐费用发生月          267303 non-null int64
+就诊结帐费用发生weekday    267303 non-null int64
+费用金额log            267303 non-null float64
+自费金额log            267303 non-null float64
+部分自付金额log          267303 non-null float64
+医保支付金额log          267303 non-null float64
+保单号_82200946504    267303 non-null uint8
+保单号_82200946505    267303 non-null uint8
+保单号_82200946506    267303 non-null uint8
+人员属性_主被保险人         267303 non-null uint8
+证件类型_0             267303 non-null uint8
+证件类型_1             267303 non-null uint8
+性别_女               267303 non-null uint8
+出险原因_意外            267303 non-null uint8
+险种代码_MIK01         267303 non-null uint8
+险种代码_NIK11         267303 non-null uint8
+就诊类型名称_住院就诊        267303 non-null uint8
+就诊类型名称_其他约定        267303 non-null uint8
+就诊类型名称_接种疫苗        267303 non-null uint8
+就诊类型名称_牙科治疗        267303 non-null uint8
+就诊类型名称_生育          267303 non-null uint8
+就诊类型名称_精神疾病门诊      267303 non-null uint8
+就诊类型名称_药房购药        267303 non-null uint8
+就诊类型名称_门诊就诊        267303 non-null uint8
+就诊类型名称_预防性检查       267303 non-null uint8
+dtypes: float64(14), int64(5), uint8(19)
+        """
+        train_removed.to_csv('../data/mz_rm_tooth_train_data2.csv', encoding='gbk', index=True)
 
     if mode == 3:
         """
@@ -261,14 +327,15 @@ Removed 9 features.
         mzdf['治疗费占比'] = (mzdf['治疗费']) / mzdf['费用金额']
         mzdf['诊疗费占比'] = (mzdf['诊疗费']) / mzdf['费用金额']
         mzdf['化验费占比'] = (mzdf['化验费']) / mzdf['费用金额']
-        for i in flist:
-            del mzdf[i]
 
         print(mzdf.shape)  # (267303, 39)
         mzdf.info()
         """
 
         """
+        mzdf['event_id'] = range(mzdf.shape[0])
+        mzdf.index = mzdf['event_id']
+        del mzdf['event_id']
         mzdf.to_csv('../data/mz_all_event2.csv', encoding='gbk', index=True)
     if mode == 21:
 
@@ -289,50 +356,126 @@ Removed 9 features.
         明细压成收据
         """
         mzdf = pd.read_csv('../data/mz_all.csv', index_col=0, encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
-        mzdf1 = pd.read_csv('../data/mz_all(1).csv', encoding='gbk', parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期'])
-        mzdf['费用项目名称'] = mzdf1['费用项目名称']
-
-        del mzdf1
-        mzdf.info()
 
         mzdf['费用项目名称'][mzdf['费用项目名称']=='中成药'] = '中成药费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='B超费'] = '检查费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='CT费'] = '检查费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='MRI/CT费'] = '检查费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='专家挂号费'] = '挂号费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='体检费'] = '检查费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='卫材费'] = '材料费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='取暖费'] = '其他费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='合计金额'] = '其他费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='心电费'] = '检查费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='急救费'] = '治疗费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='空调费'] = '其他费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='膳食费'] = '材料费'
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='输氧费'] = ''
-        # mzdf['费用项目名称'][mzdf['费用项目名称']=='空调费'] = ''
-        print(mzdf['费用项目名称'].value_counts())
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='麻醉费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='留观费'] = '诊疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='MRI/CT费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='CT费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='B超费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='合计金额'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='急救费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='专家挂号费'] = '挂号费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='心电费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='体检费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='取暖费'] = '其他费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='放射费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='注射费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='服务项目-洗牙'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='门诊手术费'] = '手术费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='卫材费'] = '材料费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='核磁费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='空调费'] = '其他费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='病理费'] = '检查费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='氧气费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='输氧费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='膳食费'] = '其他费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='理疗费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='输血费'] = '治疗费'
+        mzdf['费用项目名称'][mzdf['费用项目名称']=='接种疫苗费用'] = '治疗费'
+        # print(mzdf['费用项目名称'].value_counts())
 
         flist = [
             '费用金额', '自费金额', '部分自付金额', '医保支付金额'
             ]
-        train_removedg = mzdf.groupby(['总案号_分案号', '收据号'])[flist].sum()
+        lg1 = ['总案号_分案号', '收据号']
+        train_removedg = mzdf.groupby(lg1)[flist].sum()
         mzdf['总案号_分案号_收据号'] = mzdf['总案号_分案号'].apply(lambda x: x+'_') + mzdf['收据号']
         df = mzdf.groupby(['总案号_分案号_收据号', '费用项目名称'])['费用金额'].sum()
         del mzdf['费用金额']
         mzdf = mzdf.drop_duplicates(subset=['总案号_分案号_收据号', '费用项目名称'], keep='first')
         mzdf = pd.merge(mzdf, df, left_on=['总案号_分案号_收据号', '费用项目名称'], right_index=True)
+        # mzdf.to_csv('../data/mz_ttt.csv', encoding='gbk', index=True)
         df = mzdf.pivot(index='总案号_分案号_收据号', columns='费用项目名称', values='费用金额').fillna(0)
+        # df.to_csv('../data/mz_ttt1.csv', encoding='gbk', index=True)
         del mzdf['费用项目名称']
-        mzdf = mzdf.drop_duplicates(subset=['总案号_分案号', '收据号'], keep='first')
+        mzdf = mzdf.drop_duplicates(subset=lg1, keep='first')
         mzdf = pd.merge(mzdf, df, how='left', left_on='总案号_分案号_收据号', right_index=True)
+        mzdf.to_csv('../data/mz_ttt2.csv', encoding='gbk', index=True)
         del mzdf['总案号_分案号_收据号']
         del df
-        print(mzdf.shape)#(657371, 60)
+        print(mzdf.shape)#(657371, 43)
         for i in flist:
             del mzdf[i]
-        mzdf = pd.merge(mzdf, train_removedg, how='left', left_on=['总案号_分案号', '收据号'], right_index=True)
-        print(mzdf[mzdf['费用合计']-mzdf['费用金额'] > 0.001])
-        mzdf.info()
+        mzdf = pd.merge(mzdf, train_removedg, how='left', left_on=lg1, right_index=True)
+        # print(mzdf[abs(mzdf['费用合计']-mzdf['费用金额']) > 0.001][['费用合计', '费用金额']])
+        """
+           费用合计      费用金额
+5081     126.00    297.30
+12919    552.50    852.50
+22890    200.00    732.00
+23552   1826.70   2381.90
+23616     18.60   4312.63
+23644    168.02    472.66
+23950    420.00   1548.70
+24497    159.40    325.64
+24540    300.00   2510.00
+24787   1176.00  12060.00
+24797   1176.00  12060.00
+24828    779.00   8090.00
+24838    779.00   8090.00
+28061      8.70    117.40
+29094      5.00   2556.23
+29443    386.80    394.80
+39655    144.10    147.10
+42561    189.10   1552.40
+48577      1.00      6.00
+53232    858.53   1717.06
+54836    605.80   1211.60
+54921     52.80     72.60
+61450      5.00    171.92
+66372    204.80    409.60
+72074    114.80    230.79
+73372    859.98   2238.17
+73862     66.00    246.30
+90733    118.80    283.80
+92308    137.60    144.60
+92448    449.00   1032.65
+...         ...       ...
+231056   346.72    357.74
+235005     3.00      4.00
+237330   171.31    179.31
+237858   278.86    385.76
+238168    14.40     30.80
+243758   208.36    347.44
+243905    16.00     40.00
+243910     8.00     32.00
+244081   461.35    641.85
+246621   470.11    480.71
+254348   229.44    260.13
+261590    25.44     49.09
+262004   337.10    345.10
+263051   381.42    389.42
+266497     2.00     12.00
+268076   213.92    221.92
+268081   122.56    267.16
+274258    20.00     36.00
+274908    84.57     99.97
+275282   407.85    415.85
+277200   374.00   1496.00
+279888    16.71     77.21
+286152    25.30    331.62
+287785    10.00     20.00
+289581    12.00     23.00
+290657     8.78     19.38
+293802   259.90    299.90
+296579    44.00    818.80
+297799   668.12    885.00
+301146   292.35    348.35
+
+[339 rows x 2 columns]
+        """
+        # mzdf.info()
         """
 Int64Index: 657371 entries, 0 to 301576
 Data columns (total 43 columns):
@@ -470,4 +613,4 @@ ROWNUM        996271 non-null int64
 dtypes: float64(5), int64(7), object(19)      
         """
         train_removed.to_csv('../data/mz_all.csv', encoding='gbk', index=True)
-        train_removed.iloc[:10000].to_csv('../data/mz_all1.csv', encoding='gbk', index=True)
+        # train_removed.iloc[:10000].to_csv('../data/mz_all1.csv', encoding='gbk', index=True)
