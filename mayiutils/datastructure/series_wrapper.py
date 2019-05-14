@@ -66,6 +66,7 @@ if __name__ == '__main__':
     # series creation
     s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 1])
     s1 = pd.Series([1, None, 3, None, 4, 0])
+
     if mode == 1:
         """
         view

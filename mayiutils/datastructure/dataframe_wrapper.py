@@ -20,10 +20,33 @@ class DataframeWrapper(object):
     @classmethod
     def get_not_null_df(self,df,cname):
         '''
-        获取df中某列不为空的全部数据
+        获取df中某列不为空的全部样本
         cname: string
         '''
         return df[pd.notnull(df[cname])]
+
+    @classmethod
+    def isIn(cls, df, field, rowlist):
+        """
+        获取满足条件的样本。场景就是把df中某个字段满足要求的一些行取出来
+        :param df:
+        :param field:
+        :param rowlist:
+        :return:
+        """
+        return df.loc[df.loc[:, field].isin(rowlist)]
+
+    @classmethod
+    def isNotIn(cls, df, field, rowlist):
+        """
+        获取满足条件的样本。场景就是把df中某个字段满足要求的一些行取出来
+        :param df:
+        :param field:
+        :param rowlist:
+        :return:
+        """
+        return df.loc[df.loc[:, field].isin(rowlist)==False]
+
     @classmethod
     def rename(df, index=None, columns=None, copy=True, inplace=False, level=None):
         '''
@@ -105,16 +128,7 @@ class DataframeWrapper(object):
         '''
         return None
 
-    @classmethod
-    def isIn(cls, df, field, rowlist):
-        """
-        获取满足条件的样本。场景就是把df中某个字段满足要求的一些行取出来
-        :param df:
-        :param field:
-        :param rowlist:
-        :return:
-        """
-        return df.loc[df.loc[:, field].isin(rowlist)]
+
 
 
 if __name__ == '__main__':
