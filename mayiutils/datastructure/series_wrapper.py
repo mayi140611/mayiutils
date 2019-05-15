@@ -62,19 +62,21 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2222
+    mode = 1
     # series creation
     s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 221])
     s1 = pd.Series([1, None, 3, None, 4, 0])
-    print(s)
-    print(9 in s)#True
-    print(221 in s)
+    # print(s)
+    # print(9 in s)#True 指 9 是否在s的index中
     if mode == 1:
         """
         view
         """
-        print(s.sort_index())
-        print(s.value_counts().sort_values(ascending=False))
+        # print(s.sort_index())
+        # print(s.sort_values())
+        # print(s.value_counts().sort_values(ascending=False))
+        print(s1.nunique())  # 4 唯一值的数量
+        print(s1.nunique(dropna=False))  # 5 唯一值的数量, 把None也算作一个值
     if mode == 2:
         """
         selection

@@ -2,7 +2,7 @@
 # encoding: utf-8
 import pandas as pd
 import numpy as np
-from feature_selector import FeatureSelector
+# from feature_selector import FeatureSelector
 
 
 class DataframeWrapper(object):
@@ -139,7 +139,10 @@ if __name__ == '__main__':
     """
     DF Creation
     """
+    # 通过list生成df
     d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
+    print(d.dtypes)  # 每一列的类型
+    print(d.mode(axis=0))  # 求每行的众数
     # 创建时间序列索引
     # dates = pd.date_range('20130101', periods=6)
     # print(dates)

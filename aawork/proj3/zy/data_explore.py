@@ -9,11 +9,11 @@
 import pandas as pd
 import math
 import featuretools as ft
-from feature_selector import FeatureSelector
+# from feature_selector import FeatureSelector
 
 
 if __name__ == '__main__':
-    mode = 21
+    mode = 0
     if mode == 7:
         """
         放弃利用featuretools扩充特征，自己构建特征
@@ -316,6 +316,9 @@ memory usage: 3.6+ MB
         # print(dfzy['住院天数'])
         # dfzy.info()
         dfzy.to_csv('zy_all_featured.csv', encoding='gbk', index=False)
+    if mode == 0:
+        df6 = pd.read_excel('/Users/luoyonggui/Documents/datasets/work/3/82200946506.xlsx')
+        df6.info()
     if mode == 1:
         """
         可以看到，zy数据比mz数据少很多，先拿住院数据进行分析

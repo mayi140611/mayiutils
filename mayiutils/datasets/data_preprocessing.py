@@ -49,10 +49,78 @@
 """
 import numpy as np
 import pandas as pd
-# from sklearn.preprocessing import normalize
+from sklearn.preprocessing import normalize
 
 
 class DataExplore:
+    @classmethod
+    def describe(cls, df):
+        """
+        描述df的
+            data types
+            percent missing
+            unique values
+            mode 众数
+            count mode 众数计数
+            % mode 众数占所有数据的百分比
+            distribution stats  分布数据 分位数
+        :param df:
+        :return:
+        """
+        # data types
+        dqr_data_types = pd.DataFrame(df.dtypes, columns=['Data Type'])
+
+        # percent missing
+        dqr_percent_missing = pd.DataFrame(100 * (df.isnull().sum() / len(df)).round(3), columns=['% Missing'])
+
+        # unique values
+        dqr_unique_values = pd.DataFrame(columns=['Unique Values'])
+        for c in df:
+            dqr_unique_values.loc[c] = df[c].nunique()
+
+        # mode 众数
+        dqr_mode = pd.DataFrame(df.mode().loc[0])
+        dqr_mode.rename(columns={dqr_mode.columns[0]: "Mode"}, inplace=True)
+
+        # count mode
+        dqr_count_mode = pd.DataFrame(columns=['Count Mode'])
+        for c in df:
+            dqr_count_mode.loc[c] = df[c][df[c] == dqr_mode.loc[[c]].iloc[0]['Mode']].count()
+
+            # % mode
+        dqr_percent_mode = pd.DataFrame(100 * (dqr_count_mode['Count Mode'].values / len(df)), \
+                                        index=dqr_count_mode.index, columns=['% Mode'])
+
+        # distribution stats
+        i = 1
+        for c in df:
+            if i == 1:
+                dqr_stats = pd.DataFrame(df[c].describe())
+            if i > 1:
+                dqr_stats = dqr_stats.join(pd.DataFrame(df[c].describe()))
+            i = i + 1
+        dqr_stats = dqr_stats.transpose().drop('count', axis=1)
+
+        print("num of records: {}, num of columns: {}".format(len(df), len(df.columns)))
+
+        return dqr_data_types.join(dqr_unique_values[['Unique Values']].astype(int)). \
+            join(dqr_percent_missing).join(dqr_mode).join(dqr_count_mode[['Count Mode']].astype(int)).join(dqr_percent_mode).join(dqr_stats)
+
+    @classmethod
+    def normalize(cls, X, norm='l2', axis=0):
+        """
+        归一化
+        :param X:
+        :param norm:'l1', 'l2', or 'max', optional ('l2' by default)
+            The norm to use to normalize each non zero sample (or each non-zero
+            feature if axis is 0).
+        :param axis:0 or 1, optional (1 by default)
+            axis used to normalize the data along. If 1, independently normalize
+            each sample, otherwise (if 0) normalize each feature.
+        :return:
+        """
+        return normalize(X, norm, axis)
+
     @classmethod
     def calMissRate(cls, df, col):
         """
@@ -95,7 +163,6 @@ class DataExplore:
         print(f'特征 {col} 非缺失时, label {labels[0]} 占总样本数比 = {round(r2, 2)}')
         return r1, r2
 
-
     @classmethod
     def build_one_hot_features(cls, df, cols):
         """
@@ -133,34 +200,7 @@ class DataPrepare:
     """
 
     """
-    @classmethod
-    def checkTarget(cls, df, targetColoum, mode='classification'):
-        if mode == 'classification':
-            s = df[targetColoum].value_counts().sort_values(ascending=False)
-            print('样本总数：{}'.format(df.shape[0]))
-            print('类别数：{}'.format(s.shape[0]))
-            print(s.sort_index())
-            return s
-        elif mode == 'regression':
-            ## 最大值，最小值
-            # 转换为numpy格式
-            arr = df[targetColoum].values
-            max = np.max(arr)
-            min = np.min(arr)
-            mean = np.mean(arr)
-            median = np.median(arr)
-            p5 = np.percentile(arr, 5)
-            p95 = np.percentile(arr, 95)
-            p1 = np.percentile(arr, 1)
-            p99 = np.percentile(arr, 99)
-            p25 = np.percentile(arr, 25)
-            p75 = np.percentile(arr, 75)
-            print('取值范围: {}-{}'.format(min, max))
-            print('平均数: {}'.format(mean))
-            print('中位数: {}'.format(median))
-            print('%25-75%: {}-{}'.format(p25, p75))
-            print('%5-95%: {}-{}'.format(p5, p95))
-            print('%1-99%: {}-{}'.format(p1, p99))
+    pass
 
 
 if __name__ == '__main__':
@@ -169,7 +209,31 @@ if __name__ == '__main__':
         """
         data explore
         """
-        pass
+        x = np.arange(9).reshape((3, 3))
+        print(x)
+        """
+[[0 1 2]
+ [3 4 5]
+ [6 7 8]]
+        """
+        print(DataExplore.normalize(x, norm='max'))
+        """
+[[0.         0.14285714 0.25      ]
+ [0.5        0.57142857 0.625     ]
+ [1.         1.         1.        ]]
+        """
+        print(DataExplore.normalize(x, norm='l1'))
+        """
+[[0.         0.08333333 0.13333333]
+ [0.33333333 0.33333333 0.33333333]
+ [0.66666667 0.58333333 0.53333333]]
+        """
+        print(DataExplore.normalize(x, norm='l2'))
+        """
+[[0.         0.12309149 0.20739034]
+ [0.4472136  0.49236596 0.51847585]
+ [0.89442719 0.86164044 0.82956136]]
+        """
         # # 删除列全为空的字段
         # mzdf4 = mzdf4.dropna(axis=1, how='all')
         # # 删除行全为空的字段

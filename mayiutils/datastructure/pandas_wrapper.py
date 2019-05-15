@@ -9,6 +9,9 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 #设置value的显示长度为100，默认为50
 pd.set_option('max_colwidth',100)
+
+pandas读取Excel文件，以0开头的数据，出现数据缺失
+    df6 = pd.read_excel('82200946506.xlsx', converters={'出险人客户号': str})
 """
 import pandas as pd
 

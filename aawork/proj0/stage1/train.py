@@ -20,7 +20,7 @@ import xgboost
 import os
 import math
 import itertools
-from feature_selector import FeatureSelector
+# from feature_selector import FeatureSelector
 import lightgbm as lgb
 from sklearn import metrics
 
@@ -28,7 +28,7 @@ from sklearn import metrics
 if __name__ == '__main__':
     mode = 9
     df = picklew.loadFromFile('train_data2.pkl')
-    # print(df.info())
+    print(df.info())
     # print(df.head())
     X = df.values
     print(X.shape)

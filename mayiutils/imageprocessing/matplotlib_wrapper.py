@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # encoding: utf-8
-
+"""
+Installation Issue with matplotlib Python
+    **RuntimeError**: Python is not installed as a framework. The Mac OS X backend will not be able to function correctly if Python is not installed as a framework. See the Python documentation for more information on installing Python as a framework on Mac OS X. Please either reinstall Python as a framework, or try one of the other backends.
+        Solution：
+            I assume you have installed the pip matplotlib, there is a directory in you root called ~/.matplotlib.
+            Create a file ~/.matplotlib/matplotlibrc there and add the following code: backend: TkAgg
+"""
 # 大致的步骤
 # 先新建一个画布
 # plt.figure()
