@@ -26,7 +26,7 @@ from sklearn import metrics
 
 
 if __name__ == '__main__':
-    mode = 8
+    mode = 9
     df = picklew.loadFromFile('train_data2.pkl')
     # print(df.info())
     # print(df.head())
@@ -38,6 +38,42 @@ if __name__ == '__main__':
     # print(list(y))
     y = np.array(list(y))
 
+    if mode == 9:
+        """
+        结果评估
+        """
+        pred = pd.read_csv('tt.csv', header=None)
+        # print(pred[:5])
+        df = pd.DataFrame()
+        df['score'] = pred.iloc[:, 1]
+        df['s0.4'] = 1
+        df.loc[df['score']<0.4, 's0.4']=0
+        print(df['s0.4'].value_counts())
+        print(classification_report(y, list(df['s0.4'])))
+
+        df['s0.5'] = 1
+        df.loc[df['score']<0.5, 's0.5']=0
+        print(df['s0.5'].value_counts())
+        print(classification_report(y, list(df['s0.5'])))
+        """
+0    421
+1    141
+Name: s0.5, dtype: int64
+              precision    recall  f1-score   support
+
+           0       0.98      0.95      0.96       432
+           1       0.85      0.92      0.89       130
+        """
+
+        df['s0.6'] = 1
+        df.loc[df['score']<0.6, 's0.6']=0
+        print(df['s0.6'].value_counts())
+        print(classification_report(y, list(df['s0.6'])))
+
+        df['s0.7'] = 1
+        df.loc[df['score']<0.7, 's0.7']=0
+        print(df['s0.7'].value_counts())
+        print(classification_report(y, list(df['s0.7'])))
     if mode == 8:
         """
         使用lightgbm, 输出概率

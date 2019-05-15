@@ -21,6 +21,7 @@
         数据处理：features selector
             删除掉完全缺失的字段和唯一值字段
             对缺失率很高的字段进行处理
+                获取缺失字段对label的影响
             异常值处理
             类别变量转换
                 如果有顺序关系，就用数值表示
@@ -48,10 +49,53 @@
 """
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import normalize
+# from sklearn.preprocessing import normalize
 
 
 class DataExplore:
+    @classmethod
+    def calMissRate(cls, df, col):
+        """
+        计算某一列的缺失率
+        :param df:
+        :param col:
+        :return:
+        """
+        r = df[df[col].isnull()].shape[0] / df.shape[0]
+        print(f'字段{col}的缺失率为：{round(r, 2)}')
+        return r
+
+    @classmethod
+    def calMissRateImpact2Labels(cls, df, col, labelCol, labels, verbose=True):
+        """
+        计算缺失率对2分类的影响
+        :param df:
+        :param col:
+        :param labelCol:
+        :param labels: list. [label1, label2]
+        :return:
+        """
+        df_null = df[df[col].isnull()]
+        a = df_null[labelCol].value_counts()
+        if verbose:
+            print(a)
+        if 0 in a:
+            r1 = 1.0 * a[labels[0]] / df_null.shape[0]
+        else:
+            r1 = 0
+        print(f'特征 {col} 缺失时, label {labels[0]} 占总样本数比 = {round(r1, 2)}')
+        df_notnull = df[df[col].notnull()]
+        a = df_notnull[labelCol].value_counts()
+        if verbose:
+            print(a)
+        if 0 in a:
+            r2 = 1.0 * a[labels[0]] / df_notnull.shape[0]
+        else:
+            r2 = 0
+        print(f'特征 {col} 非缺失时, label {labels[0]} 占总样本数比 = {round(r2, 2)}')
+        return r1, r2
+
+
     @classmethod
     def build_one_hot_features(cls, df, cols):
         """
@@ -83,6 +127,8 @@ class DataExplore:
             if x.find('未评级') != -1:
                 return 0
         return hosRankSeries.apply(t)
+
+
 class DataPrepare:
     """
 
@@ -123,7 +169,8 @@ if __name__ == '__main__':
         """
         data explore
         """
-        # 删除列全为空的字段
-        mzdf4 = mzdf4.dropna(axis=1, how='all')
-        # 删除行全为空的字段
-        mzdf4 = mzdf4.dropna(axis=0, how='all')
+        pass
+        # # 删除列全为空的字段
+        # mzdf4 = mzdf4.dropna(axis=1, how='all')
+        # # 删除行全为空的字段
+        # mzdf4 = mzdf4.dropna(axis=0, how='all')

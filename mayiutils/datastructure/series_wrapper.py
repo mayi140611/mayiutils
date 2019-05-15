@@ -62,11 +62,13 @@ class series_wrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 2222
     # series creation
-    s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 1])
+    s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 221])
     s1 = pd.Series([1, None, 3, None, 4, 0])
-
+    print(s)
+    print(9 in s)#True
+    print(221 in s)
     if mode == 1:
         """
         view
