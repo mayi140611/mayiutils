@@ -18,7 +18,127 @@ if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 6
+    mode = 9
+    if mode == 9:
+        """
+        三个点需要关注：
+            1、哪些人在牙科医疗就诊比较多；
+            2、哪些人慢病门诊就诊如糖尿病，但是住院就诊诊断与门诊不一致的；
+            3、哪些人工作日就诊比较多。
+        """
+        mzdf = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0, parse_dates=['就诊结帐费用发生日期'])
+        mzdf['weekday'] = mzdf['就诊结帐费用发生日期'].dt.weekday + 1
+        print(mzdf[['就诊结帐费用发生日期', 'weekday']])
+        dic = dict()
+        for line in mzdf[['出险人客户号', '出险人姓名']].itertuples():
+            if line[1] not in dic:
+                dic[line[1]] = line[2]
+
+        mzdf.loc[mzdf['就诊类型名称'].isin(['牙科医疗', '牙齿护理', '牙科护理', '牙科保健', '紧急牙科治疗']), '就诊类型名称'] = '牙科治疗'
+        mzdf1 = mzdf[mzdf['就诊类型名称']=='牙科治疗']
+        df = mzdf1
+        dfg = df.groupby(['生效日期', '出险人客户号'])
+        dff = pd.DataFrame()
+
+        dft = dfg['ROWNUM'].count()
+        dft.name = 'count'
+        dff['2016就诊次数牙科前十'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2016就诊次数牙科前十姓名'] = dff['2016就诊次数牙科前十'].apply(lambda x: dic[x])
+        dff['2016就诊次数牙科'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        dff['2017就诊次数牙科前十'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2017就诊次数牙科前十姓名'] = dff['2017就诊次数牙科前十'].apply(lambda x: dic[x])
+        dff['2017就诊次数牙科'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        dff['2018就诊次数牙科前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数牙科前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数牙科'] = dff['2018就诊次数牙科前十'].apply(lambda x: dic[x])
+
+        mzdf1 = mzdf[mzdf['weekday'].isin([6, 7])==False]
+        df = mzdf1
+        dfg = df.groupby(['生效日期', '出险人客户号'])
+        dft = dfg['ROWNUM'].count()
+        dft.name = 'count'
+        dff['2016就诊次数工作日前十'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2016就诊次数工作日前十姓名'] = dff['2016就诊次数工作日前十'].apply(lambda x: dic[x])
+        dff['2016就诊次数工作日'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        dff['2017就诊次数工作日前十'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2017就诊次数工作日前十姓名'] = dff['2017就诊次数工作日前十'].apply(lambda x: dic[x])
+        dff['2017就诊次数工作日'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        dff['2018就诊次数工作日前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数工作日前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数工作日'] = dff['2018就诊次数工作日前十'].apply(lambda x: dic[x])
+
+        dff.to_excel('r1.xlsx')
+    if mode == 8:
+        """
+        按年度统计 就诊次数前十和账单金额前十         
+        """
+        df = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0)
+        df.info()
+        dic = dict()
+        for line in df[['出险人客户号', '出险人姓名']].itertuples():
+            if line[1] not in dic:
+                dic[line[1]] = line[2]
+        dfg = df.groupby(['生效日期', '出险人客户号'])
+        df1 = df.drop_duplicates(['生效日期', '出险人客户号'])
+        dff = pd.DataFrame()
+
+        dft = dfg['ROWNUM'].count()
+        dft.name = 'count'
+        # print(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        # print(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        # print(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
+
+        dff['2016就诊次数前十'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2016就诊次数前十姓名'] = dff['2016就诊次数前十'].apply(lambda x: dic[x])
+        dff['2016就诊次数'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        dff['2017就诊次数前十'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2017就诊次数前十姓名'] = dff['2017就诊次数前十'].apply(lambda x: dic[x])
+        dff['2017就诊次数'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        dff['2018就诊次数前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018就诊次数'] = dff['2018就诊次数前十'].apply(lambda x: dic[x])
+        dft = dfg['费用金额'].sum()
+
+        # print(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        # print(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        # print(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
+
+        dff['2016费用金额前十'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2016费用金额前十姓名'] = dff['2016费用金额前十'].apply(lambda x: dic[x])
+        dff['2016费用金额'] = list(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])
+        dff['2017费用金额前十'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2017费用金额前十姓名'] = dff['2017费用金额前十'].apply(lambda x: dic[x])
+        dff['2017费用金额'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
+        dff['2018费用金额前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018费用金额前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
+        dff['2018费用金额'] = dff['2018费用金额前十'].apply(lambda x: dic[x])
+
+        print(dff.head())
+
+        dff.to_excel('r.xlsx')
+        # df1 = pd.merge(df1, dft, left_on=['生效日期', '出险人客户号'], right_index=True)
+        # print(dfg['ROWNUM'].count())
+        # print(df.loc['2016-06-01'])
+    if mode == 7:
+        """
+        
+        """
+        mzdf1 = pd.read_csv('../data/mz_risk_taker_pred_iforest2.csv', encoding='gbk', index_col=0)
+        # mzdf1.info()
+        print(list(mzdf1.columns))
+        # print(mzdf1.index)
+        # mzdf1['event_num'].sort_values(ascending=False)[:10].to_excel('就诊次数前十.xlsx')
+        # mzdf1["('event_num_per_A', Period('2016', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('就诊次数前十2016.xlsx')
+        # mzdf1["('event_num_per_A', Period('2017', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('就诊次数前十2017.xlsx')
+        # mzdf1["('event_num_per_A', Period('2018', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('就诊次数前十2018.xlsx')
+        # mzdf1["('event_num_per_A', Period('2019', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('就诊次数前十2019.xlsx')
+
+
+        mzdf1['费用金额'].sort_values(ascending=False)[:10].to_excel('费用金额前十.xlsx')
+        mzdf1["('费用金额_per_A', Period('2016', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('费用金额前十2016.xlsx')
+        mzdf1["('费用金额_per_A', Period('2017', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('费用金额前十2017.xlsx')
+        mzdf1["('费用金额_per_A', Period('2018', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('费用金额前十2018.xlsx')
+        mzdf1["('费用金额_per_A', Period('2019', 'A-DEC'))"].sort_values(ascending=False)[:10].to_excel('费用金额前十2019.xlsx')
     if mode == 6:
         # mzdf1 = pd.read_csv('../data/mz_rm_tooth_pred_iforest2.csv', encoding='gbk', index_col=0)
         # del mzdf1['收据号']
