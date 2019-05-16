@@ -15,10 +15,19 @@ from keras.datasets import cifar10, cifar100
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import shap  #SHAP package
 
 
 if __name__ == "__main__":
-    mode = 1
+    mode = 5
+    if mode == 5:
+        """
+        506个样本， 13个特征， 目标值y是自有房屋的价值。可用于做回归
+        """
+        X, y = shap.datasets.boston()
+        # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+        print(type(X), type(y))#<class 'pandas.core.frame.DataFrame'> <class 'numpy.ndarray'>
+        print(X.shape, y.shape)  # (506, 13) (506,)
     if mode == 4:
         """
         Diabetes(糖尿病)数据集，可用于做线性回归
