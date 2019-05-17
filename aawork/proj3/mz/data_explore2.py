@@ -18,7 +18,7 @@ if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 9
+    mode = 8
     if mode == 9:
         """
         三个点需要关注：
@@ -110,10 +110,10 @@ if __name__ == '__main__':
         dff['2017费用金额前十姓名'] = dff['2017费用金额前十'].apply(lambda x: dic[x])
         dff['2017费用金额'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
         dff['2018费用金额前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018费用金额前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018费用金额'] = dff['2018费用金额前十'].apply(lambda x: dic[x])
+        dff['2018费用金额前十姓名'] = dff['2018费用金额前十'].apply(lambda x: dic[x])
+        dff['2018费用金额'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
 
-        print(dff.head())
+        # print(dff.head())
 
         dff.to_excel('r.xlsx')
         # df1 = pd.merge(df1, dft, left_on=['生效日期', '出险人客户号'], right_index=True)
