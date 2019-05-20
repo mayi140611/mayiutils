@@ -7,25 +7,12 @@
 @file: model3.py
 @time: 2019/2/27 14:48
 """
-import pandas as pd
-from mayiutils.filesystem.os_wrapper import OsWrapper as osw
-from mayiutils.pickle_wrapper import PickleWrapper as pkw
 import numpy as np
 import cv2
-from keras.utils import np_utils
 import tensorflow as tf
-from tensorflow.keras import layers
 from tensorflow.keras.layers import Conv3D, MaxPooling3D, Flatten, Dense
 from tensorflow.keras.optimizers import Adam
 
-
-from keras.utils import Sequence
-from keras.callbacks import TensorBoard
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import ReduceLROnPlateau
-
-from keras.models import load_model
-import sys
 import os
 def parse4(x, y):
     print(x, y)

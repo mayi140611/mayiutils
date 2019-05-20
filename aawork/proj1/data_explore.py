@@ -9,7 +9,7 @@
 import pandas as pd
 import re
 from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
-from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as picklew
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import os

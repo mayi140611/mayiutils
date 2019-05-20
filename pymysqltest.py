@@ -7,10 +7,7 @@
 @file: pymysqltest.py
 @time: 2019/2/19 18:06
 """
-from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
-from mayiutils.db.pymongo_wrapper import PyMongoWrapper
-from mayiutils.pickle_wrapper import PickleWrapper as pkw
-from mayiutils.filesystem.fileoperation_wrapper import FileOperationWrapper as fow
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as pkw
 from mayiutils.nlp.jieba_wrapper import JieBaWrapper as jbw
 
 if __name__ == '__main__':

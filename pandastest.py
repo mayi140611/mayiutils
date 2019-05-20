@@ -10,7 +10,6 @@
 import pandas as pd
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 from mayiutils.db.pymysql_wrapper import PyMysqlWrapper
-from mayiutils.pickle_wrapper import PickleWrapper as pkw
 
 if __name__=='__main__':
     df = pd.read_excel('tmp/target.xlsx')

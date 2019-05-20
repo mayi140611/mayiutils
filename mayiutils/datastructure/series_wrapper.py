@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # encoding: utf-8
+"""
+http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html
+Series： One-dimensional ndarray with axis labels (including time series).
+
+"""
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
 class series_wrapper(object):
-    """
-    http://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html
-    """
     def __init__(self):
         pass
     @classmethod
@@ -64,19 +66,60 @@ class series_wrapper(object):
 if __name__ == '__main__':
     mode = 1
     # series creation
-    s = pd.Series([1, 2, 3, 4, 5, 4, 2, 1, 2, 221])
-    s1 = pd.Series([1, None, 3, None, 4, 0])
+    s = pd.Series([1.1, 2, 3, None, 4, 5, 4, '2010-04-14'])
+    s1 = pd.Series(range(5))
     # print(s)
+    """
+0           1.1
+1             2
+2             3
+3          None
+4             4
+5             5
+6             4
+7    2010-04-14
+dtype: object
+    """
+    # print(s.index)  # RangeIndex(start=0, stop=8, step=1)
+    # print(s.index.values)  # [0 1 2 3 4 5 6 7]
+    # print(s.values)  # [1.1 2 3 None 4 5 4 '2010-04-14']
+    # print(s.to_numpy())  # 和.values等价
+    # print(s.tolist())  # [1.1 2 3 None 4 5 4 '2010-04-14']
+    # print(s.to_list())  # [1.1 2 3 None 4 5 4 '2010-04-14']
+    # print(s.dtype)  # object
+    # print(s.dtypes)  # object 和dtype相同
+    # print(s.ndim)  # 1 数据的维度，Series都是1维
+    # print(s.shape)  # (8,)
+    # print(s.size)  # 8
+    # print(s.count())  # 7  非None值的数量
+    # print(s.T)  # 其自身
+    # print(s.empty)  # False  如果s为空，返回True
+    # print(s.name)  # None
+
+    # s.fillna('na', inplace=True)
+    # print(s.dtype)  # object
+    # print(s.astype('category'))  # 强制类型转换 int32, int64, category
+    # print(s.astype('category').dtype)  # category
+    # print(s.apply('I am a {}'.format))  # apply 和map差别不大
+    # print(s.map('I am a {}'.format, na_action='ignore'))
     # print(9 in s)#True 指 9 是否在s的index中
-    if mode == 1:
-        """
-        view
-        """
-        # print(s.sort_index())
-        # print(s.sort_values())
-        # print(s.value_counts().sort_values(ascending=False))
-        print(s1.nunique())  # 4 唯一值的数量
-        print(s1.nunique(dropna=False))  # 5 唯一值的数量, 把None也算作一个值
+    # print(s.str.len())
+    # print(s.map(str))
+    # print(s.map(str).str.len())
+    # print(s.astype(str).str.len())
+    # print(s.astype(str).str.get(0))  # 如果字符串，就去第一个字符，如果列表就取第一个元素
+    # print(s.str.capitalize())
+    # print(s.nunique())  # 4 唯一值的数量
+    # print(s.nunique(dropna=False))  # 5 唯一值的数量, 把None也算作一个值
+    # """
+    # sort
+    # """
+    # print(s.sort_index())
+    # print(s.sort_values())
+    # print(s.value_counts().sort_values(ascending=False))
+
+    # print(s1.where(s1>1, 0))  # 找出s1中符合条件的，不符合条件的置0
+    # print(s1.mask(s1>1, 0))  # 找出s1中符合条件的置0，感觉mask更符合人的一般习惯
     if mode == 2:
         """
         selection
@@ -90,11 +133,10 @@ if __name__ == '__main__':
 FutureWarning: Series.nonzero() is deprecated and will be removed in a future version.
 Use Series.to_numpy().nonzero() instead
         """
-        print(s1.to_numpy())#[ 1. nan  3. nan  4.  0.]
-        print(s1.to_numpy().nonzero())#(array([0, 1, 2, 3, 4]),)
+        print(s.to_numpy().nonzero())#(array([0, 1, 2, 3, 4]),)
         #获取非零值
-        print(s1[s1.to_numpy().nonzero()[0]])
-        print(s1.isnull())
+        print(s[s.to_numpy().nonzero()[0]])
+        print(s.isnull())
         """
 0    False
 1     True
@@ -150,8 +192,6 @@ dtype: bool
     if mode == 5:
 
 
-        if s.empty:#如果s1为空
-            print('ppp')
         plt.figure()
         s.hist()
         plt.show()

@@ -8,22 +8,16 @@
 """
 import pandas as pd
 import numpy as np
-from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as picklew
 from mayiutils.algorithm.algorithmset.calcPearson import calcPearson
-from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report, f1_score
-import graphviz
 import xgboost
-import os
-import math
 import itertools
 # from feature_selector import FeatureSelector
 import lightgbm as lgb
-from sklearn import metrics
-
 
 if __name__ == '__main__':
     mode = 9

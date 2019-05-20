@@ -8,7 +8,7 @@
 @time: 2019/3/19 9:32
 """
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper as pmw
-from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as picklew
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 import jieba

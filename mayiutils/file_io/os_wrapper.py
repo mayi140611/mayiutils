@@ -120,7 +120,7 @@ class OsWrapper(object):
 
 
 if __name__=='__main__':
-    print(os.path.exists('../filesystem'))
+    print(os.path.exists('../file_io'))
     # os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
     os.makedirs('result/log')#创建多级目录
     # 移动文件

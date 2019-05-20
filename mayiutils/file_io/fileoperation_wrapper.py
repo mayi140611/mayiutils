@@ -47,6 +47,7 @@ class FileOperationWrapper:
         with open(filepath, 'w+', encoding=encoding) as f:
             f.writelines(list)
 
+
 if __name__ == '__main__':
     mode = 4
     if mode == 4:

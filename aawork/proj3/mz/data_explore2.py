@@ -18,7 +18,7 @@ if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 8
+    mode = 9
     if mode == 9:
         """
         三个点需要关注：
@@ -49,8 +49,8 @@ if __name__ == '__main__':
         dff['2017就诊次数牙科前十姓名'] = dff['2017就诊次数牙科前十'].apply(lambda x: dic[x])
         dff['2017就诊次数牙科'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
         dff['2018就诊次数牙科前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数牙科前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数牙科'] = dff['2018就诊次数牙科前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数牙科前十姓名'] = dff['2018就诊次数牙科前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数牙科'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
 
         mzdf1 = mzdf[mzdf['weekday'].isin([6, 7])==False]
         df = mzdf1
@@ -64,8 +64,8 @@ if __name__ == '__main__':
         dff['2017就诊次数工作日前十姓名'] = dff['2017就诊次数工作日前十'].apply(lambda x: dic[x])
         dff['2017就诊次数工作日'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
         dff['2018就诊次数工作日前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数工作日前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数工作日'] = dff['2018就诊次数工作日前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数工作日前十姓名'] = dff['2018就诊次数工作日前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数工作日'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
 
         dff.to_excel('r1.xlsx')
     if mode == 8:
@@ -95,8 +95,8 @@ if __name__ == '__main__':
         dff['2017就诊次数前十姓名'] = dff['2017就诊次数前十'].apply(lambda x: dic[x])
         dff['2017就诊次数'] = list(dft.loc['2017-06-01'].sort_values(ascending=False)[:10])
         dff['2018就诊次数前十'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数前十姓名'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10].index)
-        dff['2018就诊次数'] = dff['2018就诊次数前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数前十姓名'] = dff['2018就诊次数前十'].apply(lambda x: dic[x])
+        dff['2018就诊次数'] = list(dft.loc['2018-06-01'].sort_values(ascending=False)[:10])
         dft = dfg['费用金额'].sum()
 
         # print(dft.loc['2016-06-01'].sort_values(ascending=False)[:10])

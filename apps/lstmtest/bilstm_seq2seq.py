@@ -10,7 +10,7 @@
 import re
 import numpy as np
 import pandas as pd
-from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as picklew
 import tensorflow as tf
 from tensorflow.keras.layers import Dense, Embedding, LSTM, TimeDistributed, Input, Bidirectional
 from tensorflow.keras.models import Model, load_model

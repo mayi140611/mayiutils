@@ -12,10 +12,7 @@
 # import tensorflow as tf
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from mayiutils.filesystem.os_wrapper import OsWrapper as osw
-from mayiutils.pickle_wrapper import PickleWrapper as pkw
-import pydicom
+from mayiutils.file_io.os_wrapper import OsWrapper as osw
 import os
 import cv2
 import math

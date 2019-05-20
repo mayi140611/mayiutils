@@ -7,7 +7,7 @@
 @time: 2019-04-18 18:03
 """
 import pandas as pd
-from mayiutils.pickle_wrapper import PickleWrapper as picklew
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as picklew
 from feature_selector import FeatureSelector
 
 

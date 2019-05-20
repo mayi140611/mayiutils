@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-from mayiutils.pickle_wrapper import PickleWrapper as pkw
+from mayiutils.file_io.pickle_wrapper import PickleWrapper as pkw
 from mayiutils.crawl import requests_wrapper as rw
 from mayiutils.crawl import pyquery_wrapper as pw
 from mayiutils.db.pymongo_wrapper import PyMongoWrapper
 from mayiutils.nlp.re_wrapper import ReWrapper as rew
-import re
+
 
 def getDocRoot(url):
     '''

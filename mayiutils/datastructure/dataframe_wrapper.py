@@ -8,15 +8,12 @@ import numpy as np
 class DataframeWrapper(object):
     """
     http://pandas.pydata.org/pandas-docs/stable/reference/frame.html
-
     """
-    
     '''
     #####################################
     DataFrame索引数据
     #####################################
     '''
-
     @classmethod
     def get_not_null_df(self,df,cname):
         '''
@@ -142,7 +139,7 @@ if __name__ == '__main__':
     # 通过list生成df
     d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
     print(d.dtypes)  # 每一列的类型
-    print(d.mode(axis=0))  # 求每行的众数
+    print(d.mode())  # 求每列的众数
     # 创建时间序列索引
     # dates = pd.date_range('20130101', periods=6)
     # print(dates)
@@ -485,19 +482,13 @@ rate          0.058672    -0.033340 -0.016172  0.010918  1.000000
         1  2.0  3.0
         2  2.0  3.0
         """
+        pd.a
         print(df.apply(np.sum, axis=0))
         """
         A    12
         B    27       
         """
         print(df.applymap(np.sqrt))
-    if mode == 1111:
-        df =  pd.read_excel("疾病列表190126.xlsx")
-        #获取满足要求的样本
-        df1 = DataframeWrapper.isIn(df, '疾病名称（39）', ['嗜睡症', '脑萎缩'])
-        print(df1)
-
-
 
 
 
