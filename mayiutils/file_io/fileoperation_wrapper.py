@@ -9,6 +9,9 @@
 
 参考链接：https://docs.python.org/3.6/library/io.html
 """
+from six.moves import urllib
+import os
+import zipfile
 
 
 class FileOperationWrapper:
@@ -35,6 +38,20 @@ class FileOperationWrapper:
         :param f:
         :return:
         """
+        return f.read()
+
+    @classmethod
+    def readZipFile(cls, filepath):
+        """
+
+        :param filepath:
+        :return:
+        """
+        with zipfile.ZipFile(filepath) as f:
+            # f.namelist() 返回所有文件夹和文件
+            data = f.read(f.namelist()[2]).decode('utf8')
+        return data
+
     @classmethod
     def writeList2File(cls, list, filepath, encoding='utf8'):
         """
@@ -47,9 +64,40 @@ class FileOperationWrapper:
         with open(filepath, 'w+', encoding=encoding) as f:
             f.writelines(list)
 
+    @classmethod
+    def downloadFromWeb(cls, url, filepath, expected_bytes=-1):
+        """
+        Retrieve a URL into a temporary location on disk if not present, and make sure it's the right size.
+        :param url: 'http://mattmahoney.net/dc/text8.zip'
+        :param filepath: 文件硬盘存放目录
+        :param expected_bytes:
+        :return:
+        """
+        if not os.path.exists(filepath):
+            print('downloading from {}'.format(url))
+            urllib.request.urlretrieve(url, filepath)
+        else:
+            print('{} 已存在，不需要下载')
+        # 获取文件相关属性
+        statinfo = os.stat(filepath)
+        # 比对文件的大小是否正确
+        if expected_bytes != -1:
+            if statinfo.st_size == expected_bytes:
+                print('Found and verified', filepath)
+            else:
+                print(statinfo.st_size)
+                raise Exception(
+                    'Failed to verify ' + filepath + '. Can you get to it with a browser?')
+        return filepath
+
 
 if __name__ == '__main__':
-    mode = 4
+    mode = 5
+    if mode == 5:
+        """
+        """
+        print(FileOperationWrapper.readZipFile('/Users/luoyonggui/Downloads/data.zip'))
+
     if mode == 4:
         """
         把文件按行读取为list

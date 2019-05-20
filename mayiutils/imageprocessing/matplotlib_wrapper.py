@@ -94,6 +94,29 @@ def f(x, y):
     return (1 - x / 2 + x ** 5 + y ** 3) * np.exp(-x ** 2, -y ** 2)
 
 
+def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
+    """
+
+    :param low_dim_embs: 二维数组 (n, 2)
+    :param labels:
+    :param filename:
+    :return:
+    """
+    assert low_dim_embs.shape[0] >= len(labels), "More labels than embeddings"
+    # 设置图片大小
+    plt.figure(figsize=(15, 15))  # in inches
+    for i, label in enumerate(labels):
+        x, y = low_dim_embs[i, :]
+        plt.scatter(x, y)
+        plt.annotate(label,
+                 xy=(x, y),
+                 xytext=(5, 2),
+                 textcoords='offset points',
+                 ha='right',
+                 va='bottom')
+
+    plt.savefig(filename)
+
 if __name__ == '__main__':
     mode = 3
     if mode == 3:

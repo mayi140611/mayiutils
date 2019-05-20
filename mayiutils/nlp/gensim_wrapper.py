@@ -102,7 +102,7 @@ if __name__ == '__main__':
         processed_corpus = [[token for token in text if frequency[token] > 1] for text in texts]
         print(processed_corpus)
         dictionary = corpora.Dictionary(processed_corpus)
-        print(dictionary)#Dictionary(12 unique tokens: ['computer', 'human', 'interface', 'response', 'survey']...)
+        print(dictionary)  # Dictionary(12 unique tokens: ['computer', 'human', 'interface', 'response', 'survey']...)
         print(dictionary.token2id)
         """
         {'computer': 0, 'human': 1, 'interface': 2, 'response': 3, 'survey': 4, 'system': 5, 'time': 6, 'user': 7, 'eps': 8, 'trees': 9, 'graph': 10, 'minors': 11}

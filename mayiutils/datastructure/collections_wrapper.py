@@ -25,7 +25,7 @@ class CollectionsWrapper:
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 2
     if mode == 4:
         """
         Counter是一个简单的计数器，例如，统计字符出现的个数：
@@ -56,6 +56,15 @@ if __name__ == '__main__':
 
         dd = defaultdict(int)
         print(dd['a'])#0
+    if mode == 2:
+        """
+        使用list存储数据时，按索引访问元素很快，但是插入和删除元素就很慢了，因为list是线性存储，数据量大的时候，插入和删除效率很低。
+        deque是为了高效实现插入和删除操作的双向列表，适合用于队列和栈：
+        """
+        q = deque(['a', 'b', 'c'])
+        q.append('x')
+        q.appendleft('y')
+        print(q)  # deque(['y', 'a', 'b', 'c', 'x'])
     if mode == 1:
         """
         namedtuple是一个函数，它用来创建一个自定义的tuple对象，并且规定了tuple元素的个数，并可以用属性而不是索引来引用tuple的某个元素。
@@ -69,15 +78,6 @@ if __name__ == '__main__':
         print(p.x, p.y)
         print(isinstance(p, Point))
         print(isinstance(p, tuple))
-    if mode == 2:
-        """
-        使用list存储数据时，按索引访问元素很快，但是插入和删除元素就很慢了，因为list是线性存储，数据量大的时候，插入和删除效率很低。
-        deque是为了高效实现插入和删除操作的双向列表，适合用于队列和栈：
-        """
-        q = deque(['a', 'b', 'c'])
-        q.append('x')
-        q.appendleft('y')
-        print(q)
 
 
 

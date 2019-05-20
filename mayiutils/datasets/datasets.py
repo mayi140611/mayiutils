@@ -59,7 +59,8 @@ if __name__ == "__main__":
         (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
     if mode == 1:
         """
-        鸢尾花数据集，三分类, 150个样本
+        鸢尾花数据集，三分类['setosa' 'versicolor' 'virginica'], 150个样本
+        4个特征列 sepal_length  sepal_width  petal_length  petal_width
         有两种方式：
             通过sklearn载入
             通过seaborn载入，直接为df类型

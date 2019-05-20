@@ -19,10 +19,9 @@ class OsWrapper(object):
     @classmethod
     def abspath(self, path):
         """
-        获取绝对路径
-        >>>os.path.abspath('.')
-        '/home/ian/code/github/utils/0examples'
-        :param path:
+        输入相对路径，获取绝对路径
+        os.path.abspath('.')
+        :param path: 相对路径
         :return:
         """
         return os.path.abspath(path)
@@ -89,15 +88,38 @@ class OsWrapper(object):
         return os.rename(src, dst)
 
     @classmethod
-    def mkdir(cls, filepath, mode):
+    def mkdir(cls, filepath):
         """
-
+        创建目录
+        os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
         :param filepath:
         :param mode:
         :return:
         """
-        return os.mkdir(filepath, mode)
+        return os.mkdir(filepath)
 
+    @classmethod
+    def mkdirs(cls, filepath):
+        """
+        Super-mkdir; create a leaf directory and all intermediate ones.
+        os.makedirs('reslut/log')
+        :param filepath:
+        :param mode:
+        :return:
+        """
+        return os.makedirs(filepath)
+
+    @classmethod
+    def mv(cls, src, dst):
+        """
+        Recursively move a file or directory to another location. This is
+        similar to the Unix "mv" command.
+        shutil.move('a.txt', 'result/log/a10.txt')
+        :param src:
+        :param dst:
+        :return: Return the file or directory's destination.
+        """
+        return shutil.move(src, dst)
     @classmethod
     def remove(cls, filepath):
         """
@@ -118,12 +140,22 @@ class OsWrapper(object):
         """
         return os.rmdir(filepath)
 
+    @classmethod
+    def exists(cls, filepath):
+        """
+        os.path.exists('../file_io')
+        :param filepath:
+        :return:
+        """
+        return os.path.exists(filepath)
 
 if __name__=='__main__':
-    print(os.path.exists('../file_io'))
-    # os.mkdir('reslut/log')# FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'reslut/log'
-    os.makedirs('result/log')#创建多级目录
-    # 移动文件
-    shutil.move('a.txt', 'result/log/a10.txt')
-            # break
-    # os.path.expanduser()#On Unix and Windows, return the argument with an initial component of ~ or ~user replaced by that user’s home directory.
+    # 获取文件相关属性
+    statinfo = os.stat('os_wrapper.py')
+    print(statinfo)
+    """
+    os.stat_result(st_mode=33188, st_ino=12462088, st_dev=16777220, st_nlink=1, st_uid=502, 
+    st_gid=20, st_size=4673, st_atime=1558342084, st_mtime=1558342084, st_ctime=1558342084)
+    """
+    # 获取文件大小
+    print(statinfo.st_size)  # 4673
