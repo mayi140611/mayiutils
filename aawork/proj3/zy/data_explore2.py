@@ -248,7 +248,7 @@ if __name__ == '__main__':
         zydf.to_csv('../data/zy_all_event2.csv', encoding='gbk', index=True)
     if mode == 2:
         """
-                明细压成收据
+        明细压成收据
         """
         zydf = pd.read_csv('../data/zy_all2.csv', index_col=0, encoding='gbk',
                            parse_dates=['生效日期', '出生日期', '就诊结帐费用发生日期', '入院时间', '出院时间'])

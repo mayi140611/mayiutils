@@ -117,6 +117,7 @@ def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
 
     plt.savefig(filename)
 
+
 if __name__ == '__main__':
     mode = 3
     if mode == 3:

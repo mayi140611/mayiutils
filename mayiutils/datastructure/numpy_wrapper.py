@@ -298,6 +298,8 @@ if __name__ == '__main__':
     # np.arange(start, stop, step, dtype)
     # print(np.arange(1, 9, 2, dtype=np.float))#[[1. 3. 5. 7.]
     # print(np.arange(1, 9, 2))#[1 3 5 7]
+    arr = np.array([])
+    print(arr[:1])
     arr1d = np.arange(9)
     print(arr1d)# [0 1 2 3 4 5 6 7 8]
 

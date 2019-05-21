@@ -12,13 +12,101 @@ from mayiutils.datasets.data_preprocessing import DataExplore as de
 import math
 
 
-
-
 if __name__ == '__main__':
     """
     第二次迭代
     """
-    mode = 9
+    mode = 11
+    if mode == 11:
+        """
+        工作日就诊的要改一下，1、选择在职员工，“人员属性”字段值为“主被保险人”；
+        2、三年的数据合并；3、三年的工作日筛选；
+        4、筛选工作日就诊次数最多的人员信息，包含：客户号、姓名、生日、就诊次数累计（按照就诊日期一个日期算一次）、疾病诊断、费用金额、就诊医院这些信息
+        """
+        mzdf = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0, parse_dates=['就诊结帐费用发生日期'])
+        print(mzdf.shape)  # (267303, 53)
+        mzdf = mzdf[mzdf['出险人客户号']==mzdf['主被保险人客户号']]
+        print(mzdf.shape)  # (138682, 53)
+        print(mzdf.info())
+        mzdf['weekday'] = mzdf['就诊结帐费用发生日期'].dt.weekday + 1
+        dic = dict()
+        for line in mzdf[['出险人客户号', '出险人姓名']].itertuples():
+            if line[1] not in dic:
+                dic[line[1]] = line[2]
+
+        dff = pd.DataFrame()
+
+        mzdf1 = mzdf[mzdf['weekday'].isin([6, 7])==False]
+        df = mzdf1
+        dfg = df.groupby(['出险人客户号'])
+        dft = dfg['ROWNUM'].count()
+        dff['2016-2018工作日就诊次数次数'] = dft.sort_values(ascending=False)
+        dff['姓名'] = dff.index.map(lambda x: dic[x])
+
+        def t(arr):
+            return '; '.join(list(arr))
+
+        def t1(arr):
+            return arr[:1]
+        dft = dfg['出生日期'].agg(t1)
+        dff['出生日期'] = dft
+        dft = dfg['疾病代码'].agg(t)
+        dff['疾病代码'] = dft
+        dft = dfg['疾病名称'].agg(t)
+        dff['疾病名称'] = dft
+        dft = dfg['医院代码'].agg(t)
+        dff['医院代码]'] = dft
+        dft = dfg['医院名称'].agg(t)
+        dff['医院名称]'] = dft
+        dft = dfg['费用金额'].sum()
+        dff['费用金额]'] = dft
+        print(dff.head())
+        dff.to_excel('工作日就诊次数.xlsx')
+    if mode == 10:
+        """
+        9中 2、哪些人慢病门诊就诊如糖尿病，但是住院就诊诊断与门诊不一致的；
+        逻辑：1、查找住院事件（逻辑：入院时间不为空）；
+        2、查找疾病诊断是否为附件的“慢病分析”中任意一种；
+        3、查找入院时间前一段时间（30天内），有无同类慢病的诊断，如果查询落空，则将数据取出作为异常
+        """
+        chronic_df = pd.read_excel('../data/chronic.xlsx')
+        # print(chronic_df.head())
+        list_names = chronic_df['疾病名称'].tolist()  # 疾病名称
+        list_codes = chronic_df['疾病代码'].tolist()  # 疾病code
+        del chronic_df
+        zydf = pd.read_csv('../data/zy_all_featured_event.csv', encoding='gbk', parse_dates=['入院时间'])
+        mzdf = pd.read_csv('../data/mz_all_event2.csv', encoding='gbk', index_col=0, parse_dates=['就诊结帐费用发生日期'])
+
+        zydf.info()  # 10278, 31
+        # print(zydf['出险人客户号'].unique().shape)  # (6859,) 平均1个出险人有2次住院 3年内
+        outliers = []
+        unmatched = set()
+        for line in zydf[['主被保险人客户号', '出险人客户号', '性别', '年龄', '出险原因', '医院代码', '医院等级', '疾病代码', '入院时间', '出院时间']].itertuples():
+            df = mzdf[mzdf['出险人客户号'] == line[2]].copy()
+            df['时间差'] = (df['就诊结帐费用发生日期'] - line[9]).dt.days * -1
+            # print(df['时间差'])
+            # print(df[df['时间差'].isin(range(31))][['疾病名称', '疾病代码']])  #
+            df = df[df['时间差'].isin(range(31))]
+            flag = 0
+            for l in df[['疾病名称', '疾病代码']].itertuples():
+                if l[1] in list_names or l[2] in list_codes:
+                    flag = 1
+                    print('{}{}匹配成功！'.format(l[1], l[2]))
+                    break
+                print('{}{}匹配失败！'.format(l[1], l[2]))
+                unmatched.add((l[1], l[2]))
+            if flag == 0:
+                # print(line)
+                outliers.append(line)
+            else:
+                print('正常住院')
+                # break
+        ddf = pd.DataFrame(outliers)
+        udf = pd.DataFrame(list(unmatched), columns=['疾病名称', '疾病代码'])
+        print(ddf.shape)
+        ddf.to_excel('zy_outliers.xlsx', index=False)
+        udf.to_excel('unmatched.xlsx', index=False)
+
     if mode == 9:
         """
         三个点需要关注：
