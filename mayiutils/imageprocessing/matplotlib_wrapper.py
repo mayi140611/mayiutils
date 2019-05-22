@@ -40,7 +40,6 @@ Installation Issue with matplotlib Python
 # 显示绘制的图形
 # plt.show()
 
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -60,10 +59,21 @@ class MatplotlibWrapper(object):
             'r--': red 虚线
             'bs'： blue squares，蓝色的方框
             'g^'： 绿色的三角形
-        @linestyle or ls: ['solid' | 'dashed', 'dashdot', 'dotted' | (offset, on-off-dash-seq) | ``'-'`` | ``'--'`` | ``'-.'`` | ``':'`` | ``'None'`` | ``' '`` | ``''``]
-        @linewidth or lw: float value in points 
+        marker: 点的形状
+            .   o   v   ^   <   >   s(square)   p(pentagon五边形）   h(hexagon六边形)   +   x   D(diamond)  *   |
+        markersize: 点的大小
+        markeredgecolor: 点的边框色
+        markerfacecolor: 点的填充色
+        @linestyle or ls: 线条风格
+            ['solid' | 'dashed', 'dashdot', 'dotted'
+            ``'-'`` | ``'--'`` | ``'-.'`` | ``':'``
+            | (offset, on-off-dash-seq) |  | ``'None'`` | ``' '`` | ``''``]
+        @linewidth or lw: float value in points
+        c: color
+        label:
         '''
         return plt.plot(x, y, fmt, ls, lw)
+
     def scatter(self, x, y, c=None, marker=None):
         """
         散点图
@@ -119,7 +129,7 @@ def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 0
     if mode == 3:
         """
         条形图
@@ -161,7 +171,7 @@ if __name__ == '__main__':
         """
         mu, sigma = 100, 15
         x = mu + sigma * np.random.randn(10000)
-        n, bins, patches = MatplotlibWrapper.hist(x, 50, density=1, color='g', alpha=0.75)
+        n, bins, patches = plt.hist(x, 50, density=1, color='g', alpha=0.75)
         print(n, bins, patches)
         print(n.shape, bins.shape)
         plt.xlabel('Smarts')
@@ -170,4 +180,26 @@ if __name__ == '__main__':
         plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
         plt.axis([40, 160, 0, 0.03])
         plt.grid(True)
+        plt.show()
+    if mode == 0:
+        """
+        plot 折线图 观察随着x变化，y值的变化。要求x值从小到大排好序
+        """
+        plt.rcParams['font.sans-serif'] = ['STFangsong']
+        plt.rcParams['axes.unicode_minus'] = False
+        x = np.linspace(0, 1.1, 100)
+        y = np.sin(x)
+        plt.figure(figsize=(9, 9))
+        plt.title('y=sin(x)')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.xlim((0, 1))  # x轴显示范围
+        plt.ylim((0, 1))  # y轴显示范围
+        plt.xticks([0, 0.5], rotation=45)  # x轴显示刻度
+        plt.yticks([0, 0.2, 0.7, 1])
+        plt.plot(x, y, ls=':', label='hello啊')  # label 图例显示内容
+        plt.legend(loc='best')  # upper center
+        plt.savefig('a.pdf')  # 注意要在show之前保存，否则为空白
+        plt.savefig('a.png')
+        plt.savefig('a.jpg')
         plt.show()

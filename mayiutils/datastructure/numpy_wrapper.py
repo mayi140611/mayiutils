@@ -59,6 +59,16 @@ class NumpyWrapper(object):
         """
         return np.empty(shape, dtype, order)
 
+    @classmethod
+    def buildNormalArray(cls, loc=0.0, scale=1.0, size=None):
+        """
+        Draw random samples from a normal (Gaussian) distribution.
+        :param loc: Mean ("centre") of the distribution.
+        :param scale: Standard deviation (spread or "width") of the distribution.
+        :param size: int or tuple of ints, optional
+        :return:
+        """
+        return np.random.normal(loc, scale, size)
 
     @classmethod
     def buildFromFunction(cls, function, shape, **kwargs):
