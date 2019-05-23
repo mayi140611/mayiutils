@@ -100,10 +100,11 @@ class DictWrapper:
 
 if __name__ == '__main__':
 
-    mode = 1
+    mode = 3
     if mode == 3:
         d = {i: 0 for i in 'sbme'}#字典生成式
         print(d)
+        print(len(d))
     if mode == 2:
         list1 = list(range(5))
         dict1 = dict()

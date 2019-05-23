@@ -126,7 +126,11 @@ class SetWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 2
+    mode = 3
+    s1 = set(range(4))
+    s2 = set(range(1, 5))
+    print(s1, s2)
+    print(s1 - s2)
     if mode == 2:
         print(set('我是中国人，我爱中国'))#{'人', '中', '国', '，', '爱', '我', '是'}
     if mode == 1:

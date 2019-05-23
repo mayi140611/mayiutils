@@ -48,16 +48,14 @@ class ListWrapper:
 
 
 if __name__ == '__main__':
-    mode = 8
-    l1 = []
-    l1.append('a')
-    l1[0] = -l1[0]
-    print(l1)
+    mode = 7
     if mode == 7:
         #注意remove只删除第一个匹配的元素
         l1 = ['皮肤瘙痒', '瘙痒', '头痛', '瘙痒']
         l1.remove('瘙痒')
         print(l1)#['皮肤瘙痒', '头痛', '瘙痒']
+        random.shuffle(l1)
+        print(l1)
     if mode == 1:
         # 生成有多个重复值的list
         l1 = ['我头疼'] * 5
@@ -129,11 +127,11 @@ if __name__ == '__main__':
     if mode == 5:
         list1 = [0, 1, 2, 3, 4, -1, -5, -3, -4]
         print(list1.extend([6, 7, 8]))#None
-        print(list1)#[0, 1, 2, 3, 4, -1, -5, -3, -4, 6, 7, 8]
+        print(list1)  # [0, 1, 2, 3, 4, -1, -5, -3, -4, 6, 7, 8]
         # 求和
         print(sum(list1))  # 18
         list2 = [6, 7, 8]
-        #删除list1中同时在list2中存在的数据
+        # 删除list1中同时在list2中存在的数据
         print([i for i in list1 if i not in list2])
     if mode == 6:
         """

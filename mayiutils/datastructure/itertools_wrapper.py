@@ -11,7 +11,7 @@ import itertools
 
 
 if __name__ == '__main__':
-    mode = 3
+    mode = 2
     list1 = [1, 2, 3, 4]
     if mode == 5:
         """
@@ -36,6 +36,8 @@ if __name__ == '__main__':
         """
         组合
         """
+        print(itertools.combinations(list1, 2))
+
         for i in itertools.combinations(list1, 2):
             print(i)
     if mode == 1:
@@ -44,8 +46,9 @@ if __name__ == '__main__':
         """
 
         print(itertools.permutations(list1, 2))#<itertools.permutations object at 0x000001806B1CBA98>
-        for i in itertools.permutations(list1, 2):
-            print(i)
+        print(list(itertools.permutations(list1, 2)))#<itertools.permutations object at 0x000001806B1CBA98>
+        # for i in itertools.permutations(list1, 2):
+        #     print(i)
 
 
 
