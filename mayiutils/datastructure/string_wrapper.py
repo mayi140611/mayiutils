@@ -29,15 +29,19 @@ class StringWrapper:
 
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 3
     if mode == 3:
         """
         find
         """
-        s = 'abcdabceabc'
+        s = 'abcdabcEabc'
         print('' == s[:0])#True
         print(s.find('abc'))#0
         print(s.find('abcf'))#-1
+        print(s.capitalize())  # Abcdabceabc make the first character have upper case and the rest lower
+        print(s.lower())
+        print(s.upper())
+        print(s.replace('c', 'C'))
     if mode == 2:
         """
         format

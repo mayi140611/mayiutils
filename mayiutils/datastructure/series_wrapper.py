@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-class series_wrapper(object):
+class SeriesWrapper(object):
     def __init__(self):
         pass
     @classmethod
@@ -20,8 +20,9 @@ class series_wrapper(object):
             ……
         '''
         return series.items()
+
     @classmethod
-    def append(self,to_append, ignore_index=False, verify_integrity=False):
+    def append(self,s1, to_append, ignore_index=False, verify_integrity=False):
         '''
         Concatenate two or more Series.
         注意这里不同于list.append, 相当于list.extend
@@ -31,7 +32,7 @@ class series_wrapper(object):
         verify_integrity : boolean, default False
             If True, raise Exception on creating index with duplicates
         '''
-        return pd.Series(data, index, dtype, name, copy, fastpath)
+        return s1.append(to_append, ignore_index, verify_integrity)
     
     @classmethod
     def nonzero(self,series):
@@ -62,9 +63,26 @@ class series_wrapper(object):
         '''
         return series.iloc[series.nonzero()[0]]
 
+    @classmethod
+    def plot(cls, s, kind, title=None, rot=45):
+        """
+        Series绘图
+        s.plot(kind='line')`` is equivalent to ``s.plot.line()
+        :param s:
+        :param kind:
+            line: 折线图 x: s.index; y: s.values
+            bar: 柱状图
+            barh: 水平柱状图
+            box: 箱线图
+            hist： 频率直方图
+        :return:
+        """
+        s.plot(kind, title=title, rot=rot)
+        plt.show()
+
 
 if __name__ == '__main__':
-    mode = 1
+    mode = 5
     # series creation
     s = pd.Series([1.1, 2, 3, None, 4, 5, 4, '2010-04-14'])
     s1 = pd.Series(range(5))
@@ -190,8 +208,9 @@ dtype: bool
         print(tag[['b', 'e']])
         print(type(tag['m']), tag['m'], tag['m'].reshape(-1, 1))
     if mode == 5:
+        # SeriesWrapper.plot(pd.Series(range(5)), 'hist', 45)
+        SeriesWrapper.plot(pd.Series(range(5)), 'line', 45)
+        SeriesWrapper.plot(pd.Series(range(5)), 'bar', 45)
+        SeriesWrapper.plot(pd.Series(range(5)), 'barh', 45)
+        SeriesWrapper.plot(pd.Series(range(5)), 'box', 45)
 
-
-        plt.figure()
-        s.hist()
-        plt.show()

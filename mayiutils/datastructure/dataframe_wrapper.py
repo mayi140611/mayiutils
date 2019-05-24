@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 # from feature_selector import FeatureSelector
+import matplotlib.pyplot as plt
 
 
 class DataframeWrapper(object):
@@ -125,7 +126,28 @@ class DataframeWrapper(object):
         '''
         return None
 
-
+    @classmethod
+    def plot(cls, df, kind, x, y, by=None, title=None, rot=45):
+        """
+        df.plot(kind='line')`` is equivalent to ``df.plot.line()
+        :param df:
+        :param kind:
+            line
+            scatter
+            bar
+            barh
+            box
+            hist
+            hexbin  ?
+        :param x:
+        :param y:
+        :param by: 分组统计
+        :param title:
+        :param rot:
+        :return:
+        """
+        df.plot(kind='line', x='x', y='y')
+        plt.show()
 
 
 if __name__ == '__main__':
@@ -137,7 +159,10 @@ if __name__ == '__main__':
     DF Creation
     """
     # 通过list生成df
-    d = pd.DataFrame([[0, 0], [0, 1], [1, 1]])
+    d = pd.DataFrame([[0, 0], [0, 1], [1, 1]], columns=['x', 'y'])
+    print(d)
+    d.set_index('y', inplace=True)
+    print(d)
     print(d.dtypes)  # 每一列的类型
     print(d.mode())  # 求每列的众数
     # 创建时间序列索引

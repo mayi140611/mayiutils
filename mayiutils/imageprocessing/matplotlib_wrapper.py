@@ -6,6 +6,19 @@ Installation Issue with matplotlib Python
         Solution：
             I assume you have installed the pip matplotlib, there is a directory in you root called ~/.matplotlib.
             Create a file ~/.matplotlib/matplotlibrc there and add the following code: backend: TkAgg
+几种图的类型和用途
+    A bar plot is a plot that presents categorical data with
+        rectangular bars with lengths proportional to the values that they
+        represent. A bar plot shows comparisons among discrete categories. One
+        axis of the plot shows the specific categories being compared, and the
+        other axis represents a measured value.
+    A box plot is a method for graphically depicting groups of numerical
+        data through their quartiles.
+        The box extends from the Q1 to Q3 quartile values of the data,
+        with a line at the median (Q2). The whiskers extend from the edges
+        of box to show the range of the data. The position of the whiskers
+        is set by default to 1.5*IQR (IQR = Q3 - Q1) from the edges of the
+        box. Outlier points are those past the end of the whiskers.
 """
 # 大致的步骤
 # 先新建一个画布
