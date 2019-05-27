@@ -41,7 +41,6 @@ def standardize(s):
     s = re.sub(r'【', '[', s)
     s = re.sub(r'】', ']', s)
     s = re.sub(r'“|”|’|‘', '"', s)
-    s = re.sub(r'】', ']', s)
     s = re.sub(r'；', ';', s)
     return s
 
@@ -192,10 +191,10 @@ if __name__ == '__main__':
                 dis_name_code_dict[line[3]] = [line[4]]
                 print('新增dis_name_code_dict：{}:{}'.format(line[3], [line[4]]))
                 flag = 1
-        if line[4] not in dis_code_name_dict and line[5]:
-            dis_code_name_dict[line[4]] = line[5]
-            print('新增dis_code_name_dict：{}:{}'.format(line[4], line[5]))
-            flag = 1
+            if line[4] not in dis_code_name_dict and line[5]:
+                dis_code_name_dict[line[4]] = line[5]
+                print('新增dis_code_name_dict：{}:{}'.format(line[4], line[5]))
+                flag = 1
         if flag == 1:
             if not os.path.exists('backups'):
                 os.mkdir('backups')
