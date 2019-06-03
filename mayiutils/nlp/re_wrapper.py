@@ -6,7 +6,7 @@ import re
 import nltk
 
 
-class ReWrapper(object):
+class ReWrapper:
     """
     主要是对python中的re的相关操作的封装
         re.I: 对大小写不敏感
@@ -16,7 +16,7 @@ class ReWrapper(object):
         re.L: 做本地识别匹配
     """
     @classmethod
-    def re_show(self, regexp, string, left='{', right='}'):
+    def re_show(cls, regexp, string, left='{', right='}'):
         '''
         把找到的符合regexp的non-overlapping matches标记出来
         如：
@@ -37,7 +37,7 @@ class ReWrapper(object):
         return re.compile(regex, flags=flags)
 
     @classmethod
-    def findall(self, regexp, string, flags=0):
+    def findall(cls, regexp, string, flags=0):
         '''
         如果regexp中不包含小括号，如
         re.findall('[a-zA-Z]+','12fFdsDFDS3rtG4')#['fFdsDFDS', 'rtG']

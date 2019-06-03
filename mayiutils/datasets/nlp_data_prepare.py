@@ -24,41 +24,62 @@
 
 """
 import collections
+import re
 
 
-def build_dataset(words, vocabulary_size):
-    """
+class NLPDataPrepareWrapper:
+    @classmethod
+    def buildDataset(cls, words, vocabulary_size):
+        """
 
-    :param words: 所有文章分词后的一个words list
-    :param vocabulary_size: 取频率最高的词数
-    :return:
-        data 编号列表，编号形式
-        count 前50000个出现次数最多的词
-        dictionary 词对应编号
-        reverse_dictionary 编号对应词
-    """
-    count = [['UNK', -1]]
-    # 前50000个出现次数最多的词
-    count.extend(collections.Counter(words).most_common(vocabulary_size - 1))
-    # 生成 dictionary，词对应编号, word:id(0-49999)
-    # 词频越高编号越小
-    dictionary = dict()
-    for word, _ in count:
-        dictionary[word] = len(dictionary)
-    # data把数据集的词都编号
-    data = list()
-    unk_count = 0
-    for word in words:
-        if word in dictionary:
-            index = dictionary[word]
-        else:
-            index = 0  # dictionary['UNK']
-            unk_count += 1
-        data.append(index)
-    # 记录UNK词的数量
-    count[0][1] = unk_count
-    # 编号对应词的字典
-    reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
-    return data, count, dictionary, reverse_dictionary
+        :param words: 所有文章分词后的一个words list
+        :param vocabulary_size: 取频率最高的词数
+        :return:
+            data 编号列表，编号形式
+            count 前50000个出现次数最多的词
+            dictionary 词对应编号
+            reverse_dictionary 编号对应词
+        """
+        count = [['UNK', -1]]
+        # 前50000个出现次数最多的词
+        count.extend(collections.Counter(words).most_common(vocabulary_size - 1))
+        # 生成 dictionary，词对应编号, word:id(0-49999)
+        # 词频越高编号越小
+        dictionary = dict()
+        for word, _ in count:
+            dictionary[word] = len(dictionary)
+        # data把数据集的词都编号
+        data = list()
+        unk_count = 0
+        for word in words:
+            if word in dictionary:
+                index = dictionary[word]
+            else:
+                index = 0  # dictionary['UNK']
+                unk_count += 1
+            data.append(index)
+        # 记录UNK词的数量
+        count[0][1] = unk_count
+        # 编号对应词的字典
+        reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
+        return data, count, dictionary, reverse_dictionary
 
-
+    @classmethod
+    def standardize(cls, s):
+        """
+        字符串标准化
+            去除两边的空格
+            中文字符替换： （），【】：“”’‘；
+        :param s:
+        :return:
+        """
+        s = s.strip()
+        s = re.sub(r'（', '(', s)
+        s = re.sub(r'）', ')', s)
+        s = re.sub(r'，', ',', s)
+        s = re.sub(r'：', ':', s)
+        s = re.sub(r'【', '[', s)
+        s = re.sub(r'】', ']', s)
+        s = re.sub(r'“|”|’|‘', '"', s)
+        s = re.sub(r'；', ';', s)
+        return s

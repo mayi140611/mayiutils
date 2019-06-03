@@ -82,10 +82,12 @@ class SeriesWrapper(object):
 
 
 if __name__ == '__main__':
-    mode = 5
+    mode = 999
     # series creation
     s = pd.Series([1.1, 2, 3, None, 4, 5, 4, '2010-04-14'])
     s1 = pd.Series(range(5))
+    print(s1.iloc[0])
+    print(s1.index[0])
     # print(s)
     """
 0           1.1
@@ -129,6 +131,18 @@ dtype: object
     # print(s.str.capitalize())
     # print(s.nunique())  # 4 唯一值的数量
     # print(s.nunique(dropna=False))  # 5 唯一值的数量, 把None也算作一个值
+    # print(s.duplicated())
+    """
+0    False
+1    False
+2    False
+3    False
+4    False
+5    False
+6     True
+7    False
+dtype: bool
+    """
     # """
     # sort
     # """

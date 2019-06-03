@@ -5,6 +5,29 @@
 @author: Ian
 @file: abnormal_detection_gaussian.py
 @time: 2019-04-24 16:39
+需求：
+    给一个name，匹配到标准库中的name
+    要求自学习
+疾病对码思路：
+    标准库构成：
+        dis_code_name_dict  一个code对应一个name
+            这个字典库是不动态更新的，要更新的话，只支持人工添加
+        dis_name_codes_dict 一个name对应多个code
+
+        还有一个name匹配库（同义词库）
+            如：业务专家 把 newname 匹配到了 标准库中的name1，则增加log newname -> name1
+
+            同时 更新dis_name_codes_dict，
+                更新dis_name_codes_dict[newname] = dis_name_codes_dict[name1]
+                同时， 重新训练tfidf
+
+
+对码过程：
+    输入一个code,name list,
+    完全匹配 输出匹配结果
+    未匹配     给出匹配候选
+
+
 """
 import pandas as pd
 import re
@@ -17,6 +40,7 @@ import shutil
 import jieba
 from datetime import datetime
 from sklearn.metrics.pairwise import cosine_similarity
+from mayiutils.datasets.nlp_data_prepare import NLPDataPrepareWrapper as npw
 
 
 def standardize(s):
@@ -29,20 +53,23 @@ def standardize(s):
     :param s:
     :return:
     """
-
+    s = npw.standardize(s)
     s = re.sub(r'\s+', '', s)
-    s = re.sub(r'的$', '', s)# 去掉末尾最后一个 的
-    s = re.sub(r',未特指场所$', '', s)
+    # s = re.sub(r'的$', '', s)# 去掉末尾最后一个 的
+    # s = re.sub(r',未特指场所$', '', s)
     s = s.upper()
-    s = re.sub(r'（', '(', s)
-    s = re.sub(r'）', ')', s)
-    s = re.sub(r'，', ',', s)
-    s = re.sub(r'：', ':', s)
-    s = re.sub(r'【', '[', s)
-    s = re.sub(r'】', ']', s)
-    s = re.sub(r'“|”|’|‘', '"', s)
-    s = re.sub(r'；', ';', s)
     return s
+
+
+def tokenizer(x):
+    """
+    分词
+    :param x:
+    :return:
+    """
+    x = re.sub(r'[a-zA-Zαβγδ]+', 'alphabet', x)
+    x = re.sub(r'[0-9]+', 'num', x)  # 把数字替换为num
+    return ' '.join(jieba.lcut(x))
 
 
 def cal_similarity_by_tfidf(name, threshold=0.9):
@@ -57,6 +84,7 @@ def cal_similarity_by_tfidf(name, threshold=0.9):
     r = pd.Series(r[0]).sort_values(ascending=False)
     return r
 
+
 def cal_similarity_by_editdistance(name, threshold):
     """
     计算name的相似度
@@ -68,7 +96,6 @@ def cal_similarity_by_editdistance(name, threshold):
     size = int(length * (1 - threshold))
     namelist = list(dis_name_code_dict.keys())
     fnamelist = list(filter(lambda x: length-size <= len(x) <= length+size, namelist))
-
 
 
 def match(code1, name1, threshold=0.9):
@@ -109,7 +136,7 @@ def match(code1, name1, threshold=0.9):
         """
         如果未能匹配，返回 相同的code对应的name，及达到匹配度的前三个name对应的code
         [
-            (状态码, 原始code, 原始name, 原始code, 原始code对应的name, -1),
+            # (状态码, 原始code, 原始name, 原始code, 原始code对应的name, -1),
             (状态码, 原始code, 原始name, 匹配的字典code1, 匹配的name1, -1),
             (状态码, 原始code, 原始name, 匹配的字典code2, 匹配的name2, -1),
             (状态码, 原始code, 原始name, 匹配的字典code3, 匹配的name3, -1),
@@ -127,15 +154,7 @@ def match(code1, name1, threshold=0.9):
     return 2, rlist
 
 
-def tokenizer(x):
-    """
-    分词
-    :param x:
-    :return:
-    """
-    x = re.sub(r'[a-zA-Zαβγδ]+', 'alphabet', x)
-    x = re.sub(r'[0-9]+', 'num', x)  # 把数字替换为num
-    return ' '.join(jieba.lcut(x))
+
 
 
 if __name__ == '__main__':
