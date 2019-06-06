@@ -69,7 +69,7 @@ class NLPDataPrepareWrapper:
         """
         字符串标准化
             去除两边的空格
-            中文字符替换： （），【】：“”’‘；
+            中文字符替换： （），【】：“”’‘；?
         :param s:
         :return:
         """
@@ -82,4 +82,5 @@ class NLPDataPrepareWrapper:
         s = re.sub(r'】', ']', s)
         s = re.sub(r'“|”|’|‘', '"', s)
         s = re.sub(r'；', ';', s)
+        s = re.sub(r'？', '?', s)
         return s

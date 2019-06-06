@@ -19,6 +19,7 @@ from gensim.similarities import WmdSimilarity
 from collections import defaultdict
 from gensim import corpora
 from gensim import models
+from gensim import similarities
 import logging
 
 
