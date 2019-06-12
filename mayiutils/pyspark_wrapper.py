@@ -6,10 +6,23 @@
 @contact:yongguiluo@hotmail.com
 @file: pyspark_wrapper.py
 @time: 2019/3/19 11:18
+
+http://spark.apache.org/docs/latest/api/python/index.html
+http://spark.apache.org/docs/latest/api/python/pyspark.sql.html
+
+常用类：
+    pyspark.sql.session.SparkSession: spark入口
+    pyspark.sql.dataframe.DataFrame: 类似pandas的DataFrame
+        show(n)
+        collect(): Returns all the records as a list of :class:`Row`.
 """
 import pyspark
 from pyspark.sql import SparkSession
 
+
+class PysparkWrapper:
+    def init(self):
+        pass
 
 if __name__ == '__main__':
     #生成SparkSession实例

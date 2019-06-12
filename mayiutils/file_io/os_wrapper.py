@@ -27,6 +27,15 @@ class OsWrapper(object):
         return os.path.abspath(path)
 
     @classmethod
+    def basename(cls, p):
+        """
+        Returns the final component of a pathname
+        train_dataset_url = "http://download.tensorflow.org/data/iris_training.csv"
+        print(os.path.basename(train_dataset_url))#iris_training.csv
+        """
+        return os.path.basename(p)
+
+    @classmethod
     def dirname(self, path):
         '''
         获取路径所在的文件夹
@@ -150,6 +159,7 @@ class OsWrapper(object):
         return os.path.exists(filepath)
 
 if __name__=='__main__':
+
     # 获取文件相关属性
     statinfo = os.stat('os_wrapper.py')
     print(statinfo)

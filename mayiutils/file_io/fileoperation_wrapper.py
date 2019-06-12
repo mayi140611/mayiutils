@@ -12,6 +12,7 @@
 from six.moves import urllib
 import os
 import zipfile
+import tensorflow as tf
 
 
 class FileOperationWrapper:
@@ -89,6 +90,14 @@ class FileOperationWrapper:
                 raise Exception(
                     'Failed to verify ' + filepath + '. Can you get to it with a browser?')
         return filepath
+
+    @classmethod
+    def downloadFromWeb2(cls, url, filename, filedir):
+        """
+        Downloads a file from a URL if it not already in the cache.
+        :return:
+        """
+        return tf.keras.utils.get_file(fname=filename, origin=url, cache_dir=filedir, cache_subdir='')
 
 
 if __name__ == '__main__':

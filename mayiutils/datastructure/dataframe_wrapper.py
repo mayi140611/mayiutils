@@ -149,6 +149,25 @@ class DataframeWrapper(object):
         df.plot(kind='line', x='x', y='y')
         plt.show()
 
+    @classmethod
+    def crosstab(cls, index, columns, values=None):
+        """
+        Compute a simple cross-tabulation of two (or more) factors. By default
+        computes a frequency table of the factors unless an array of values and an
+        aggregation function are passed
+        pd.crosstab(Titanic['Pclass'],Titanic['Survived'],values=Titanic['tt'],aggfunc=np.sum)
+        Survived	0	1
+        Pclass
+        1	80	136
+        2	97	87
+        3	372	119
+        :param index:
+        :param columns:
+        :param values:
+        :return:
+        """
+        pass
+
 
 if __name__ == '__main__':
     """
@@ -160,6 +179,7 @@ if __name__ == '__main__':
     """
     # 通过list生成df
     d = pd.DataFrame([[0, 0], [0, 1], [1, 1]], columns=['x', 'y'])
+    pd.crosstab()
     print(d)
     d.set_index('y', inplace=True)
     print(d)

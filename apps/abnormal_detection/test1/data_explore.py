@@ -19,8 +19,9 @@ def viewMissingVal(trainDF):
 
 
 if __name__ == "__main__":
-    mode = 3
+    mode = 4
     df = pd.read_csv('anti_fraud_data.csv')
+    print(df.columns)
     # print(df.shape)#(46978, 96)
     # print(df.columns)
     traincolumns = df.columns[1: -1]

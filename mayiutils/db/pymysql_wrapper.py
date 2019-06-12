@@ -70,8 +70,9 @@ class PyMysqlWrapper:
 
 
 if __name__ == '__main__':
-    pmw = PyMysqlWrapper(host='h1')
-    mode = 2
+    # pmw = PyMysqlWrapper(host='172.17.0.1', db='dics')
+    pmw = PyMysqlWrapper(host='10.0.104.44', db='dics')
+    mode = 1
     if mode == 2:
         sqltemplate = """
         INSERT INTO synonyms SET source = "{}", target = "{}"
@@ -83,12 +84,8 @@ if __name__ == '__main__':
             pmw.executeAndCommit(sqltemplate.format(line[1], line[2]))
     if mode == 1:
         sqltemplate = """
-        SELECT h.hospitalAdd as addr,
-            h.hosOrgCode as hoscode,
-            h.latLng as latlng,
-            h.hospitalGrade as grade
-        from kh_hospital h
-        where h.hosName='{}'
+        SELECT *
+        from disease_dic
         """
         pmw.execute(sqltemplate)
         data = pmw._cursor.fetchone()
