@@ -159,7 +159,8 @@ class OsWrapper(object):
         return os.path.exists(filepath)
 
 if __name__=='__main__':
-
+    print(os.getcwd())  # 返回current working directory的绝对路径
+    # /Users/luoyonggui/PycharmProjects/mayiutils/mayiutils/file_io
     # 获取文件相关属性
     statinfo = os.stat('os_wrapper.py')
     print(statinfo)

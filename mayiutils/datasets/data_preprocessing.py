@@ -92,13 +92,12 @@ class DataExplore:
                                         index=dqr_count_mode.index, columns=['% Mode'])
 
         # distribution stats
-        i = 1
+        df['temp_1a2b3c__'] = 1
+        dqr_stats = pd.DataFrame(df['temp_1a2b3c__'].describe())
+        del df['temp_1a2b3c__']
         for c in df:
-            if i == 1:
-                dqr_stats = pd.DataFrame(df[c].describe())
-            if i > 1:
-                dqr_stats = dqr_stats.join(pd.DataFrame(df[c].describe()))
-            i = i + 1
+            dqr_stats = dqr_stats.join(pd.DataFrame(df[c].describe()))
+        del dqr_stats['temp_1a2b3c__']
         dqr_stats = dqr_stats.transpose().drop('count', axis=1)
 
         print("num of records: {}, num of columns: {}".format(len(df), len(df.columns)))
