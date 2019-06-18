@@ -37,6 +37,7 @@ class pandas_wrapper(object):
 
 if __name__ == '__main__':
     mode = 1
+    pd.to_datetime()
     if mode == 1:
         """
         分类变量 pd.Categorical
