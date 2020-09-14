@@ -61,7 +61,6 @@ if __name__ == "__main__":
         plt.bar(list(range(len(s_sort))), s_sort.values)
         plt.show()
 
-
     if mode == 1:
         """
         查看label的分布
